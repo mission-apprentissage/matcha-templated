@@ -81,7 +81,7 @@ module.exports = () => {
       const item = req.body;
       logger.info("Adding new questionnaire: ", item);
 
-      const sampleToAdd = new Questionnaire({
+      const toAdd = new Questionnaire({
         user_id: req.body.user_id,
         voeux: req.body.voeux,
         experiences: req.body.experiences,
@@ -89,10 +89,8 @@ module.exports = () => {
         recommandations: req.body.recommandations,
       });
 
-      await sampleToAdd.save();
-
-      // return updated list
-      res.json(sampleToAdd);
+      await toAdd.save();
+      res.json(toAdd);
     })
   );
 

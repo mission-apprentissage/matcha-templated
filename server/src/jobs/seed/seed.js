@@ -2,8 +2,7 @@ const logger = require("../../common/logger");
 const { Questionnaire } = require("../../common/model");
 
 module.exports = async (db, users) => {
-  const userCreated = await users.createUser("test", "name", "123", "test@test.fr", "0600000000", "password");
-
+  const userCreated = await users.createUser("test", "name", "271985", "test@test.fr", "0600000000", "password");
   const recommandations = [
     {
       nom: "testR1",

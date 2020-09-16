@@ -1,6 +1,8 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const psupModule = require("../../logic/parcourSupModule");
+const { Questionnaire, User } = require("../../common/model");
+
 const boom = require("boom");
 
 /**
@@ -15,12 +17,23 @@ module.exports = () => {
   router.get(
     "/items/:id",
     tryCatch(async (req, res) => {
-      const retrievedData = psupModule.data.find((item) => item.G_CN_COD === req.params.id);
-      if (retrievedData) {
-        res.json(retrievedData);
-      } else {
-        throw boom.badRequest("Identifiant invalide");
+      const retrievedPsupUser = psupModule.data.find((item) => item.G_CN_COD === req.params.id);
+      const retrievedUser = await User.findOne({ parcoursup_id: `${req.params.id}` });
+
+      if (!retrievedPsupUser) {
+        throw boom.badRequest("Utilisateur Parcoursup non trouvé dans les données Parcoursup");
       }
+
+      if (!retrievedUser) {
+        throw boom.badRequest("Utilisateur Parcoursup non trouvé en base");
+      }
+
+      const retrievedQuestionnaire = await Questionnaire.findOne({ user_id: retrievedUser._id });
+
+      res.json({
+        parcoursup_user: retrievedPsupUser,
+        questionnaire: retrievedQuestionnaire ? retrievedQuestionnaire : null,
+      });
     })
   );
 

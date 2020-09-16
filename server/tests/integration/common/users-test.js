@@ -8,8 +8,8 @@ integrationTests(__filename, () => {
     const { createUser } = await users();
 
     const created = await createUser("user", "name", "123", "user@test.fr", "0600000000", "password");
-    assert.strictEqual(created.nom, "user");
-    assert.strictEqual(created.prenom, "name");
+    assert.strictEqual(created.prenom, "user");
+    assert.strictEqual(created.nom, "name");
     assert.strictEqual(created.username, "user@test.fr");
     assert.strictEqual(created.isAdmin, false);
     assert.strictEqual(created.parcoursup_id, "123");
@@ -18,8 +18,8 @@ integrationTests(__filename, () => {
     assert.strictEqual(created.password.startsWith("$6$rounds=1001"), true);
 
     const found = await User.findOne({ username: "user@test.fr" });
-    assert.strictEqual(found.nom, "user");
-    assert.strictEqual(found.prenom, "name");
+    assert.strictEqual(found.nom, "name");
+    assert.strictEqual(found.prenom, "user");
     assert.strictEqual(found.username, "user@test.fr");
     assert.strictEqual(found.isAdmin, false);
     assert.strictEqual(found.parcoursup_id, "123");

@@ -3,6 +3,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Joi = require("joi");
 const { Questionnaire } = require("../../common/model");
 const logger = require("../../common/logger");
+const boom = require("boom");
 
 /**
  * Schema for validation
@@ -64,7 +65,7 @@ module.exports = () => {
       if (retrievedData) {
         res.json(retrievedData);
       } else {
-        res.json({ message: `Item ${itemId} doesn't exist` });
+        throw boom.badRequest("Identifiant invalide");
       }
     })
   );

@@ -11,6 +11,7 @@ const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const questionnaire = require("./routes/questionnaire");
+const parcoursup = require("./routes/parcoursup");
 const secured = require("./routes/secured");
 const login = require("./routes/login");
 const authentified = require("./routes/authentified");
@@ -29,6 +30,7 @@ module.exports = async (components) => {
   app.use(logMiddleware());
 
   app.use("/api/questionnaire", questionnaire());
+  app.use("/api/parcoursup", parcoursup());
   app.use("/api/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/login", login(components));
   app.use("/api/authentified", checkJwtToken, authentified());

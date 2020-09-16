@@ -1,0 +1,27 @@
+{
+  "appName": "MATCHA_NAME",
+  "env": "MATCHA_ENV",
+  "publicUrl": "MATCHA_PUBLIC_URL",
+  "mongodb": {
+    "uri": "MATCHA_MONGODB_URI"
+  },
+  "apiKey": "MATCHA_API_KEY",
+  "auth": {
+    "passwordHashRounds": "MATCHA_AUTH_PASSWORD_HASH_ROUNDS",
+    "user": {
+      "jwtSecret": "MATCHA_AUTH_USER_JWT_SECRET"
+    },
+    "activation": {
+      "jwtSecret": "MATCHA_AUTH_ACTIVATION_JWT_SECRET"
+    },
+    "password": {
+      "jwtSecret": "MATCHA_AUTH_PASSWORD_JWT_SECRET"
+    }
+  },
+  "log": {
+    "type": "MATCHA_LOG_TYPE",
+    "level": "MATCHA_LOG_LEVEL"
+  },
+  "slackWebhookUrl": "MATCHA_SLACK_WEBHOOK_URL",
+  "outputDir": "MATCHA_OUTPUT_DIR"
+}

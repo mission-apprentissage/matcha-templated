@@ -9,10 +9,10 @@ const { hash } = require("../../../src/common/utils/sha512Utils");
 httpTests(__filename, ({ startServer }) => {
   it("Vérifie qu'on peut se connecter", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password");
+    await components.users.createUser("user", "name", "123", "user@test.fr", "0600000000", "password");
 
     const response = await httpClient.post("/api/login", {
-      username: "user",
+      username: "user@test.fr",
       password: "password",
     });
 
@@ -21,7 +21,7 @@ httpTests(__filename, ({ startServer }) => {
     assert.ok(decoded.iat);
     assert.ok(decoded.exp);
     assert.deepStrictEqual(omit(decoded, ["iat", "exp"]), {
-      sub: "user",
+      sub: "user@test.fr",
       iss: config.appName,
       permissions: {
         isAdmin: false,
@@ -31,10 +31,10 @@ httpTests(__filename, ({ startServer }) => {
 
   it("Vérifie qu'un mot de passe invalide est rejeté", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password");
+    await components.users.createUser("user", "name", "123", "user@test.fr", "0600000000", "password");
 
     const response = await httpClient.post("/api/login", {
-      username: "user",
+      username: "user@test.fr",
       password: "INVALID",
     });
 
@@ -54,19 +54,21 @@ httpTests(__filename, ({ startServer }) => {
 
   it("Vérifie que le mot de passe est rehashé si trop faible", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password", { hash: hash("password", 1000) });
+    await components.users.createUser("user", "name", "123", "user@test.fr", "0600000000", "password", {
+      hash: hash("password", 1000),
+    });
 
     let response = await httpClient.post("/api/login", {
-      username: "user",
+      username: "user@test.fr",
       password: "password",
     });
 
     assert.strictEqual(response.status, 200);
-    const found = await User.findOne({ username: "user" });
+    const found = await User.findOne({ username: "user@test.fr" });
     assert.strictEqual(found.password.startsWith("$6$rounds=1001"), true);
 
     response = await httpClient.post("/api/login", {
-      username: "user",
+      username: "user@test.fr",
       password: "password",
     });
     assert.strictEqual(response.status, 200);
@@ -74,31 +76,35 @@ httpTests(__filename, ({ startServer }) => {
 
   it("Vérifie que le mot de passe n'est pas rehashé si ok", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password", { hash: hash("password", 1001) });
-    const previous = await User.findOne({ username: "user" });
+    await components.users.createUser("user", "name", "123", "user@test.fr", "0600000000", "password", {
+      hash: hash("password", 1001),
+    });
+    const previous = await User.findOne({ username: "user@test.fr" });
 
     const response = await httpClient.post("/api/login", {
-      username: "user",
+      username: "user@test.fr",
       password: "password",
     });
 
     assert.strictEqual(response.status, 200);
-    const found = await User.findOne({ username: "user" });
+    const found = await User.findOne({ username: "user@test.fr" });
     assert.strictEqual(previous.password, found.password);
   });
 
   it("Vérifie que le mot de passe n'est pas rehashé si invalide", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password", { hash: hash("password", 1001) });
-    const previous = await User.findOne({ username: "user" });
+    await components.users.createUser("user", "name", "123", "user@test.fr", "0600000000", "password", {
+      hash: hash("password", 1001),
+    });
+    const previous = await User.findOne({ username: "user@test.fr" });
 
     const response = await httpClient.post("/api/login", {
-      username: "user",
+      username: "user@test.fr",
       password: "invalid",
     });
 
     assert.strictEqual(response.status, 401);
-    const found = await User.findOne({ username: "user" });
+    const found = await User.findOne({ username: "user@test.fr" });
     assert.strictEqual(previous.password, found.password);
   });
 });

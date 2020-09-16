@@ -13,11 +13,11 @@ const startServer = async (options = {}) => {
   return {
     httpClient,
     components,
-    createAndLogUser: async (username, password, options) => {
-      await components.users.createUser(username, password, options);
+    createAndLogUser: async (name, surname, parcoursup_id, email, phone, password, options) => {
+      await components.users.createUser(name, surname, parcoursup_id, email, phone, password, options);
 
       const response = await httpClient.post("/api/login", {
-        username: username,
+        username: email,
         password: password,
       });
 

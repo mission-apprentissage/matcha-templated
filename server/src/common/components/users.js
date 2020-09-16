@@ -24,12 +24,17 @@ module.exports = async () => {
       return null;
     },
     getUser: (username) => User.findOne({ username }),
-    createUser: async (username, password, options = {}) => {
+    createUser: async (surname, name, parcoursup_id, email, telephone, password, options = {}) => {
       const hash = options.hash || sha512Utils.hash(password);
       const permissions = options.permissions || {};
 
       const user = new User({
-        username,
+        username: email,
+        nom: name,
+        prenom: surname,
+        parcoursup_id: parcoursup_id,
+        email: email,
+        telephone: telephone,
         password: hash,
         isAdmin: !!permissions.isAdmin,
       });

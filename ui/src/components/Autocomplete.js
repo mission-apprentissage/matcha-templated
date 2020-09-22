@@ -11,20 +11,20 @@ const Wrapper = styled.div`
   margin: 0;
   padding: 0;
   z-index: 1;
-  position: 'absolute';
+  position: absolute;
   list-style: none;
   background: #fff;
-  overflow: 'auto';
+  overflow: auto;
   max-height: 200;
   border: 1px solid rgba(0, 0, 0, 0.25);
   &li[data-focus='true'] {
-    background: '#4a8df6';
-    color: 'white';
-    cursor: 'pointer';
+    background: #4a8df6;
+    color: black;
+    cursor: pointer;
   }
   &li:active {
-    background: '#2977f5';
-    color: 'white';
+    background: #2977f5;
+    color: black;
   }
 `
 

@@ -8,9 +8,7 @@
     "bootstrap": "^4.5.2",
     "formik": "^2.1.5",
     "lodash": "^4.17.20",
-    "node-sass": "^4.14.1",
     "react": "^16.13.1",
-    "react-autocomplete": "^1.8.1",
     "react-bootstrap": "^1.3.0",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
@@ -19,11 +17,13 @@
     "yup": "^0.29.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-scripts start css-watch",
+    "build": "react-scripts build css-build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint src/**/*.js src/**/*.jsx"
+    "lint": "eslint src/**/*.js src/**/*.jsx",
+    "css-build": "node-sass --omit-source-map-url src/App.scss src/App.css",
+    "css-watch": "yarn css-build -- --watch"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -55,6 +55,7 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.20.6",
-    "eslint-plugin-react-hooks": "^4.1.0"
+    "eslint-plugin-react-hooks": "^4.1.0",
+    "node-sass": "^4.14.1"
   }
 }

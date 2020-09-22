@@ -1,12 +1,11 @@
 import React from 'react'
 import { Layout } from './components'
 import { Switch, Route } from 'react-router-dom'
-
+import { Context } from './context'
 import { NotFound } from './pages'
 import routes from './routes'
 
-import './App.scss'
-import { Context } from './context'
+import './App.css'
 
 const App = () => {
   const { profile } = React.useContext(Context)

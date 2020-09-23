@@ -19,6 +19,7 @@
   "scripts": {
     "start": "react-scripts start css-watch",
     "build": "react-scripts build css-build",
+    "serve": "ws --port 3000 -d build --log.format dev --spa index.html",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.js src/**/*.jsx",

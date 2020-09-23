@@ -18,7 +18,6 @@
       "jwtSecret": "MATCHA_AUTH_PASSWORD_JWT_SECRET"
     }
   },
-  "azureStorageConnectionString": "MATCHA_AZURE_STORAGE_CONNECTION_STRING",
   "log": {
     "type": "MATCHA_LOG_TYPE",
     "level": "MATCHA_LOG_LEVEL"

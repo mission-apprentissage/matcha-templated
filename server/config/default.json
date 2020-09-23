@@ -21,7 +21,6 @@
       "expiresIn": "1h"
     }
   },
-  "azureStorageConnectionString": "DefaultEndpointsProtocol=https;AccountName=mnacatalogstorage;AccountKey=XXXXX;BlobEndpoint=https://mnacatalogstorage.blob.core.windows.net/;QueueEndpoint=https://mnacatalogstorage.queue.core.windows.net/;TableEndpoint=https://mnacatalogstorage.table.core.windows.net/;FileEndpoint=https://mnacatalogstorage.file.core.windows.net/;",
   "log": {
     "type": "console",
     "level": "info"

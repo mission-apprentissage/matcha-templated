@@ -58,7 +58,6 @@ const Input = styled.input`
 `
 
 export default (props) => {
-  console.log(props)
   const [option, setOption] = React.useState()
   const adresse = []
 
@@ -77,7 +76,7 @@ export default (props) => {
     getOptionLabel: (option) => option.name,
     onChange: (event, value) =>
       props.fullAddress && value
-        ? props.handleValues('companyAdress', value.name, props.index)
+        ? props.handleValues('companyAddress', value.name, props.index)
         : value
         ? props.handleValues('name', value.name)
         : '',

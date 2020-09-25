@@ -19,51 +19,18 @@ import { Context } from '../../context'
 const Step = (props) => {
   const {
     name,
-    tasks,
+    task,
     companyName,
     companyAddress,
     startDate,
     endDate,
     number,
     handleChange,
-    handleInputChange,
+    handleRemoveTag,
     index,
     profile,
   } = props
-  const [state, setState] = React.useState({})
-  const [inputState, setInputState] = React.useState(false)
   const [minDate, setMinDate] = React.useState('')
-
-  const handleTag = (event) => {
-    const val = event.target.value
-    if (state.task) {
-      if (state.task.length === 3) {
-        handleChange('tasks', state.task, index)
-        setInputState(true)
-      } else {
-        setInputState(false)
-      }
-    }
-    if (event.keyCode === 13) {
-      if (state.task) {
-        const copy = [...state.task]
-        copy.push(val)
-        setState({ task: copy })
-      } else {
-        setState({ task: [val] })
-      }
-      event.target.value = ''
-    }
-  }
-
-  const handleRemoveTag = (i) => {
-    const copy = [...state.task]
-    copy.splice(i, 1)
-    setInputState(false)
-    setState({ task: copy })
-  }
-
-  console.log('inputstate', inputState, state.task ? state.task.length : '')
 
   return (
     <>
@@ -78,14 +45,13 @@ const Step = (props) => {
         required
         type='text'
         onChange={(e) => handleChange('name', e.target.value, index)}
+        value={name}
       />
-      {/* handleInputChange not working */}
-      {/* <Input placeholder="animateur, cueillette, garde d'enfant, ..." required type="text" onChange={handleInputChange} name="name" value={name} /> */}
       <QuestionTitle title='Vos 3 principales missions ou tâches ?' />
       <div className='pb-1'>
-        {state.task &&
-          state.task.map((x, i) => (
-            <Tag key={i} onClick={() => handleRemoveTag(i)}>
+        {task &&
+          task.map((x, i) => (
+            <Tag key={i} onClick={() => handleRemoveTag(index, i)}>
               {x}
             </Tag>
           ))}
@@ -94,9 +60,13 @@ const Step = (props) => {
         placeholder='entre un mot-clé'
         required
         type='text'
-        onChange={handleTag}
-        onKeyDown={handleTag}
-        disabled={inputState}
+        onKeyDown={(e) => {
+          if (e.keyCode === 13) {
+            handleChange('task', e.target.value, index, true)
+            e.target.value = ''
+          }
+        }}
+        disabled={task && task.length === 3}
       />
       <ChatBubble>
         Les employeurs portent de l’attention à cette information. Aller au plus simple en utilisant des verbes d’action
@@ -107,10 +77,11 @@ const Step = (props) => {
       <Input
         placeholder="entrez le nom de l'entreprise"
         onChange={(e) => handleChange('companyName', e.target.value, index)}
+        value={companyName}
       />
       <Autocomplete
         title="Adresse de l'entreprise"
-        context={companyAddress && companyAddress}
+        context={companyAddress}
         placeholder="entrez l'adresse de l'entreprise"
         handleValues={handleChange}
         index={index}
@@ -123,6 +94,7 @@ const Step = (props) => {
           <Input
             placeholder='sélectionne une date de début'
             required
+            value={startDate}
             type='date'
             onChange={(event) => {
               handleChange('startDate', event.target.value, index)
@@ -136,6 +108,7 @@ const Step = (props) => {
             placeholder='sélectionne une date de fin'
             required
             type='date'
+            value={endDate}
             onChange={(event) => handleChange('endDate', event.target.value, index)}
             min={minDate ? minDate : ''}
           />
@@ -145,46 +118,38 @@ const Step = (props) => {
   )
 }
 
-const stepTemplate = {
-  name: undefined,
-  tasks: undefined,
-  companyName: undefined,
-  companyAddress: undefined,
-  startDate: undefined,
-  endDate: undefined,
-}
-
 export default () => {
-  const { updateUser, profile } = React.useContext(Context)
+  const { profile, addStep, saveData, check } = React.useContext(Context)
   const history = useHistory()
-  const [stepState, setStepState] = React.useState(profile.experience ? profile.experience : [stepTemplate])
-  const [currentStepState, setCurrentStepState] = React.useState()
+  const [stepState, setStepState] = React.useState(profile.experiences ? profile.experiences : [{}])
   const [submit, setSubmit] = React.useState(false)
 
-  const handleChange = (name, value, index) => {
-    const currentStepState = stepState[index]
-    currentStepState[`${name}`] = value
-    setCurrentStepState({ currentStepState })
-    if (Object.values(stepState[0]).every((x) => x !== '')) {
-      setSubmit(true)
-    }
-  }
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target
-    console.log(name, value)
-    setCurrentStepState({ ...currentStepState, [name]: value })
-  }
-
-  const addStep = () => {
+  const handleChange = (name, value, index, tag) => {
     const copy = [...stepState]
-    copy.push(stepTemplate)
-    setStepState([...stepState, copy])
+    if (tag) {
+      if (!copy[index].task) {
+        copy[index].task = [value]
+      } else {
+        copy[index].task.push(value)
+      }
+    } else {
+      copy[index][`${name}`] = value
+      if (copy[index][`${name}`] === '') {
+        copy[index][`${name}`] = undefined
+      }
+    }
+    setStepState(copy)
+    check(stepState, setSubmit, ['name', 'task', 'companyName', 'companyAddress', 'startDate', 'endDate'])
   }
 
-  const handleSubmit = () => {
-    updateUser({ experiences: stepState })
-    history.push('/step-five')
+  const handleRemoveTag = (index, tagIndex) => {
+    const copy = [...stepState]
+    copy[index].task.splice(tagIndex, 1)
+    if (copy[index].task.length === 0) {
+      copy[index].task = undefined
+    }
+    setStepState(copy)
+    check(stepState, setSubmit, ['name', 'task', 'companyName', 'companyAddress', 'startDate', 'endDate'])
   }
 
   return (
@@ -194,13 +159,13 @@ export default () => {
           key={key}
           index={key}
           number={key + 1}
-          {...item}
           handleChange={handleChange}
-          handleInputChange={handleInputChange}
+          handleRemoveTag={handleRemoveTag}
+          {...item}
         />
       ))}
       <hr />
-      <Button experience='true' onClick={() => addStep()}>
+      <Button experience='true' onClick={() => addStep(stepState, setStepState)}>
         + Ajouter une expérience
       </Button>
       <div className='d-flex justify-content-between'>
@@ -208,7 +173,7 @@ export default () => {
           <PreviousButton />
         </Link>
         <Link to='step-five'>
-          <NextButton onClick={() => handleSubmit()} disabled={!submit} />
+          <NextButton onClick={() => saveData(history, 'experiences', stepState, '/step-five')} disabled={!submit} />
         </Link>
       </div>
     </Col>

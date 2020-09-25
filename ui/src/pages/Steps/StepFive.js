@@ -71,14 +71,10 @@ const Step = (props) => {
 }
 
 export default () => {
-  const { updateUser, profile } = React.useContext(Context)
+  const { updateUser, profile, check } = React.useContext(Context)
   const history = useHistory()
-  const [stepState, setStepState] = React.useState(
-    profile.activities ? profile.activities : [{ activityName: undefined, periodicity: undefined, criteria: undefined }]
-  )
+  const [stepState, setStepState] = React.useState(profile.activities ? profile.activities : [{}])
   const [submit, setSubmit] = React.useState(false)
-
-  console.log(JSON.stringify(stepState, null, 2))
 
   const handleChange = (name, value, index, tag) => {
     const copy = [...stepState]
@@ -92,19 +88,17 @@ export default () => {
       copy[index][`${name}`] = value
     }
     setStepState(copy)
-    stepState.reduce((acc, current, index) => {
-      console.log('reduc', acc, current, index)
-    })
-    if (Object.values(stepState[0]).every((x) => x !== undefined)) {
-      console.log('coucou')
-      setSubmit(true)
-    }
+    check(stepState, setSubmit, ['activityName', 'periodicity', 'criteria'])
   }
 
   const handleRemoveTag = (index, tagIndex) => {
     const copy = [...stepState]
     copy[index].criteria.splice(tagIndex, 1)
+    if (copy[index].criteria.length === 0) {
+      copy[index].criteria = undefined
+    }
     setStepState(copy)
+    check(stepState, setSubmit, ['activityName', 'periodicity', 'criteria'])
   }
 
   const addStep = () => {

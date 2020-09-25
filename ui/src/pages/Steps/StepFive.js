@@ -1,7 +1,7 @@
-import React, { Profiler } from 'react'
+import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
-
+import { Context } from '../../context'
 import {
   Button,
   Input,
@@ -13,7 +13,6 @@ import {
   CheckButton,
   Tag,
 } from '../../components'
-import { Context } from '../../context'
 
 const Step = (props) => {
   const { number, handleChange, index, periodicity, activityName, criteria, handleRemoveTag } = props
@@ -71,7 +70,7 @@ const Step = (props) => {
 }
 
 export default () => {
-  const { updateUser, profile, check } = React.useContext(Context)
+  const { profile, check, addStep, saveData } = React.useContext(Context)
   const history = useHistory()
   const [stepState, setStepState] = React.useState(profile.activities ? profile.activities : [{}])
   const [submit, setSubmit] = React.useState(false)
@@ -86,6 +85,9 @@ export default () => {
       }
     } else {
       copy[index][`${name}`] = value
+      if (copy[index][`${name}`] === '') {
+        copy[index][`${name}`] = undefined
+      }
     }
     setStepState(copy)
     check(stepState, setSubmit, ['activityName', 'periodicity', 'criteria'])
@@ -101,17 +103,6 @@ export default () => {
     check(stepState, setSubmit, ['activityName', 'periodicity', 'criteria'])
   }
 
-  const addStep = () => {
-    const copy = [...stepState]
-    copy.push({ activityName: undefined, periodicity: undefined, criteria: undefined })
-    setStepState(copy)
-  }
-
-  const handleSubmit = () => {
-    updateUser({ activities: stepState })
-    history.push('/step-six')
-  }
-
   return (
     <Col>
       {stepState.map((item, key) => (
@@ -119,20 +110,19 @@ export default () => {
           key={key}
           number={key + 1}
           index={key}
-          {...item}
           handleChange={handleChange}
           handleRemoveTag={handleRemoveTag}
+          {...item}
         />
       ))}
-      <Button experience='true' onClick={() => addStep()}>
+      <Button experience='true' onClick={() => addStep(stepState, setStepState)}>
         + Ajouter une activité
       </Button>
       <div className='d-flex justify-content-between'>
         <Link to='step-four'>
           <PreviousButton />
         </Link>
-
-        <NextButton onClick={() => handleSubmit()} disabled={!submit || profile.activities} />
+        <NextButton onClick={() => saveData(history, 'activities', stepState, '/step-six')} disabled={!submit} />
       </div>
     </Col>
   )

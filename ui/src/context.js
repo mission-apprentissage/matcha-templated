@@ -1,5 +1,4 @@
 import React from 'react'
-import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider'
 
 const Context = React.createContext({
   profile: {},
@@ -13,6 +12,8 @@ class ContextProvider extends React.Component {
       profile: {},
       updateUser: this.updateUser,
       check: this.check,
+      addStep: this.addStep,
+      saveData: this.saveData,
     }
   }
 
@@ -35,6 +36,17 @@ class ContextProvider extends React.Component {
       if (!flag) break
     }
     fn(flag)
+  }
+
+  addStep = (state, fn) => {
+    const copy = [...state]
+    copy.push({})
+    fn(copy)
+  }
+
+  saveData = (history, scope, state, path) => {
+    this.updateUser({ [scope]: state })
+    history.push(path)
   }
 
   render() {

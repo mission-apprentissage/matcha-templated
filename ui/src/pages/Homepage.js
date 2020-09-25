@@ -29,11 +29,8 @@ export default () => {
             Etes-vous bien à la recherche
             <br /> d'un <strong>contrat d'apprentissage</strong> ?
           </Title>
-          <div className='d-md-flex justify-content-between'>
-            <RadioButton onClick={() => history.push('/first')}>Oui !</RadioButton>
-            <div className='p-1'></div>
-            <RadioButton onClick={() => history.push('/autres')}>Non</RadioButton>
-          </div>
+          <RadioButton onClick={() => history.push('/first')}>Oui !</RadioButton>
+          <RadioButton onClick={() => history.push('/autres')}>Non</RadioButton>
         </>
       ) : null}
       <Link className='d-flex justify-content-center' to='/first'>

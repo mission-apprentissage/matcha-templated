@@ -15,7 +15,7 @@ const Wrapper = styled.div`
 
 // export default styled.input`
 const Input = styled.input`
-  border: 1px solid ${color.grey};
+  border: 1px solid ${color.middleGrey};
   box-sizing: border-box;
   border-radius: 4px;
   font-family: Inter;
@@ -26,22 +26,22 @@ const Input = styled.input`
   margin-bottom: 1.5rem;
   width: 100%;
   outline: none;
-  background: ${(props) => (props.filled ? color.lightGrey : color.white)};
+  /* background: ${(props) => (props.filled ? color.lightGrey : color.white)}; */
   ::placeholder {
     color: #98b0b7;
   }
   ${(props) =>
     props.value &&
     `
-    background: ${color.lightGrey};
-    border: none;
+    border: 1px solid ${color.black};
   `}
   :hover {
-    border: 1px solid ${color.red};
+    border: 1px solid ${color.grey};
   }
   :focus {
     border: 1px solid ${color.red};
     background: ${color.white} !important;
+    color: ${color.middleGrey};
   }
   :disabled {
     border: 1px solid ${color.lightGrey};
@@ -51,13 +51,13 @@ const Input = styled.input`
 
 export default (props) => {
   return (
-    <Wrapper>
-      {!props.hide && props.value && (
-        <span>
-          <img src={edit} alt='edit' />
-        </span>
-      )}
-      <Input {...props} />
-    </Wrapper>
+    // <Wrapper>
+    //   {!props.hide && props.value && (
+    //     <span>
+    //       <img src={edit} alt='edit' />
+    //     </span>
+    //   )}
+    <Input {...props} />
+    // </Wrapper>
   )
 }

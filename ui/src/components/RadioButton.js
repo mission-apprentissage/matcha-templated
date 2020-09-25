@@ -1,7 +1,8 @@
+import React from 'react'
 import styled from 'styled-components'
 import color from './helper/color'
 
-export default styled.button`
+const Button = styled.button`
   background: ${color.white};
   box-shadow: 0px 1px 8px rgba(8, 67, 85, 0.12);
   border-radius: 40px;
@@ -33,3 +34,6 @@ export default styled.button`
     outline:none;
     `}
 `
+export default (props) => {
+  return <Button {...props}>{props.children}</Button>
+}

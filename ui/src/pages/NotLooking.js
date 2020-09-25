@@ -17,13 +17,10 @@ export default () => {
         </strong>
       </Title>
       <Title>Découvrez les entreprises qui recrutent régulièrement :</Title>
-      <div className='d-md-flex justify-content-between'>
-        <ExternalLink onClick={() => (window.location.href = 'https://labonnealternance.pole-emploi.fr/recherche')}>
-          C'est parti
-        </ExternalLink>
-        <div className='p-1'></div>
-        <RadioButton onClick={() => history.push('/au-revoir')}>Peut être une autre fois</RadioButton>
-      </div>
+      <ExternalLink onClick={() => (window.location.href = 'https://labonnealternance.pole-emploi.fr/recherche')}>
+        C'est parti
+      </ExternalLink>
+      <RadioButton onClick={() => history.push('/au-revoir')}>Peut être une autre fois</RadioButton>
     </Col>
   )
 }

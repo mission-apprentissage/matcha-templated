@@ -59,12 +59,13 @@ export default () => {
       <QuestionTitle title="Jusqu'à quelle distance êtes-vous prêt.e à vous déplacer ?" />
       <Row>
         {distance.map((dist, i) => (
-          <CheckButton
-            btn={dist}
+          <RadioButton
             key={i}
             onClick={() => handleValues('distance', dist)}
             state={values.distance === dist ? true : null}
-          />
+          >
+            {dist}
+          </RadioButton>
         ))}
       </Row>
       <ChatBubble>

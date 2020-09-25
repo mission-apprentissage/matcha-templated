@@ -20,8 +20,9 @@ export default () => {
     const newVal = [...values]
     newVal[index].choice = val
     setValues(newVal)
-    if (values.filter((x) => x.choice !== undefined).length === values.length) {
-      setSubmit(true)
+    if (values.filter((x) => x.choice !== undefined).length === values.length && submit === false) {
+      console.log('test')
+      setSubmit(!submit)
     }
   }
 
@@ -29,8 +30,6 @@ export default () => {
     updateUser({ voeux: values })
     history.push('/step-three')
   }
-
-  console.log('profilevoeux', profile.voeux)
 
   return (
     <Col>
@@ -57,7 +56,7 @@ export default () => {
         <Link to='/step-one'>
           <PreviousButton />
         </Link>
-        <NextButton onClick={() => handleSubmit()} disabled={!submit} />
+        <NextButton onClick={() => handleSubmit()} disabled={!(submit && (submit || profile.voeux)) || !submit} />
       </div>
     </Col>
   )

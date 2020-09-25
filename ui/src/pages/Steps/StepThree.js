@@ -56,10 +56,7 @@ export default () => {
           Non
         </RadioButton>
       </div>
-      <QuestionTitle
-        title="Jusqu'à quelle distance êtes-vous prêt.e à vous déplacer en entreprise ?"
-        subtitle='Vous pouvez selectionner plusieurs réponses'
-      />
+      <QuestionTitle title="Jusqu'à quelle distance êtes-vous prêt.e à vous déplacer ?" />
       <Row>
         {distance.map((dist, i) => (
           <CheckButton

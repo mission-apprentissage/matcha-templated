@@ -17,8 +17,6 @@ import { Context } from '../../context'
 
 const Step = (props) => {
   const { number, handleChange, index, periodicity, activityName, criteria, handleRemoveTag } = props
-  const [state, setState] = React.useState({})
-
   return (
     <Col>
       <StepTitle>Etape 5/6 - Vos activités ({number})</StepTitle>
@@ -58,7 +56,7 @@ const Step = (props) => {
           ))}
       </div>
       <Input
-        placeholder='selectionner un critère'
+        placeholder='ajouter un critère'
         onKeyDown={(e) => {
           if (e.keyCode === 13) {
             handleChange('task', e.target.value, index, true)
@@ -78,26 +76,22 @@ export default () => {
   const [stepState, setStepState] = React.useState(
     profile.activities ? profile.activities : [{ activityName: undefined, periodicity: undefined, criteria: undefined }]
   )
-  const [currentStepState, setCurrentStepState] = React.useState()
   const [submit, setSubmit] = React.useState(false)
 
-  const handleChange = (name, value, index, tag) => {
-    // const copy = [...stepState]
+  console.log(JSON.stringify(stepState, null, 2))
 
-    const currentStepState = stepState[index]
+  const handleChange = (name, value, index, tag) => {
+    const copy = [...stepState]
     if (tag) {
-      if (!currentStepState.criteria) {
-        console.log('create')
-        currentStepState.criteria = [value]
+      if (!copy[index].criteria) {
+        copy[index].criteria = [value]
       } else {
-        currentStepState.criteria.push(value)
+        copy[index].criteria.push(value)
       }
     } else {
-      // copy[index][`${name}`] = value
-      currentStepState[`${name}`] = value
+      copy[index][`${name}`] = value
     }
-    // console.log(copy)
-    setCurrentStepState({ currentStepState })
+    setStepState(copy)
     stepState.reduce((acc, current, index) => {
       console.log('reduc', acc, current, index)
     })

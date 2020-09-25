@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Profiler } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
 
@@ -15,53 +15,9 @@ import {
 } from '../../components'
 import { Context } from '../../context'
 
-const frequence = [
-  'Tous les jours',
-  'Plusieurs fois par semaine',
-  'Plusieurs fois par mois',
-  "Moins d'une fois par mois",
-]
-
-const stepTemplate = {
-  activityName: undefined,
-  periodicity: undefined,
-  criteria: undefined,
-}
-
 const Step = (props) => {
-  const { number, handleChange, index } = props
-  const [inputState, setInputState] = React.useState(false)
+  const { number, handleChange, index, periodicity, activityName, criteria, handleRemoveTag } = props
   const [state, setState] = React.useState({})
-
-  const handleTag = (event) => {
-    const val = event.target.value
-    if (state.task) {
-      if (state.task.length === 3) {
-        console.log('setting true')
-        handleChange('criteria', state.task, index)
-        setInputState(true)
-      } else {
-        console.log('setting false')
-        setInputState(false)
-      }
-    }
-    if (event.keyCode === 13) {
-      if (state.task) {
-        const copy = [...state.task]
-        copy.push(val)
-        setState({ task: copy })
-      } else {
-        setState({ task: [val] })
-      }
-      event.target.value = ''
-    }
-  }
-
-  const handleRemoveTag = (i) => {
-    const copy = [...state.task]
-    copy.splice(i, 1)
-    setState({ task: copy })
-  }
 
   return (
     <Col>
@@ -74,56 +30,92 @@ const Step = (props) => {
         placeholder='blogging, bénévolat, football, ...'
         required
         type='text'
+        value={activityName}
         onChange={(event) => handleChange('activityName', event.target.value, index)}
       />
       <QuestionTitle title='A quelle fréquence pratiquez-vous cette activité' />
       <Row>
-        {frequence.map((x, i) => {
-          return <CheckButton btn={x} key={i} onClick={() => handleChange('periodicity', x, index)} />
-        })}
+        {['Tous les jours', 'Plusieurs fois par semaine', 'Plusieurs fois par mois', "Moins d'une fois par mois"].map(
+          (x, i) => {
+            return (
+              <CheckButton
+                state={periodicity === x ? true : null}
+                btn={x}
+                key={i}
+                onClick={() => handleChange('periodicity', x, index)}
+              />
+            )
+          }
+        )}
       </Row>
       <QuestionTitle title="Qu'est ce qui vous plait le plus dans cette activité (3 critères maximum) ?" />
       <div className='pb-1'>
-        {state.task &&
-          state.task.map((x, i) => (
-            <Tag key={i} onClick={() => handleRemoveTag(i)}>
+        {criteria &&
+          criteria.map((x, i) => (
+            <Tag key={i} onClick={() => handleRemoveTag(index, i)}>
               {x}
             </Tag>
           ))}
       </div>
-      <Input placeholder='selectionner un critère' onChange={handleTag} onKeyDown={handleTag} disabled={inputState} />
+      <Input
+        placeholder='selectionner un critère'
+        onKeyDown={(e) => {
+          if (e.keyCode === 13) {
+            handleChange('task', e.target.value, index, true)
+            e.target.value = ''
+          }
+        }}
+        disabled={criteria && criteria.length === 3}
+      />
       <hr />
     </Col>
   )
 }
 
 export default () => {
-  const { updateUser } = React.useContext(Context)
+  const { updateUser, profile } = React.useContext(Context)
   const history = useHistory()
-  const [stepState, setStepState] = React.useState([stepTemplate])
+  const [stepState, setStepState] = React.useState(
+    profile.activities ? profile.activities : [{ activityName: undefined, periodicity: undefined, criteria: undefined }]
+  )
   const [currentStepState, setCurrentStepState] = React.useState()
   const [submit, setSubmit] = React.useState(false)
 
-  const handleChange = (name, value, index) => {
+  const handleChange = (name, value, index, tag) => {
+    // const copy = [...stepState]
+
     const currentStepState = stepState[index]
-    currentStepState[`${name}`] = value
+    if (tag) {
+      if (!currentStepState.criteria) {
+        console.log('create')
+        currentStepState.criteria = [value]
+      } else {
+        currentStepState.criteria.push(value)
+      }
+    } else {
+      // copy[index][`${name}`] = value
+      currentStepState[`${name}`] = value
+    }
+    // console.log(copy)
     setCurrentStepState({ currentStepState })
+    stepState.reduce((acc, current, index) => {
+      console.log('reduc', acc, current, index)
+    })
     if (Object.values(stepState[0]).every((x) => x !== undefined)) {
+      console.log('coucou')
       setSubmit(true)
     }
   }
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target
-    console.log(name, value)
-    // setValues({ ...stepValues, [name]: value })
+  const handleRemoveTag = (index, tagIndex) => {
+    const copy = [...stepState]
+    copy[index].criteria.splice(tagIndex, 1)
+    setStepState(copy)
   }
-
-  console.log(Object.values(stepState[0]))
 
   const addStep = () => {
     const copy = [...stepState]
-    copy.push(stepTemplate)
+    copy.push({ activityName: undefined, periodicity: undefined, criteria: undefined })
     setStepState(copy)
   }
 
@@ -141,18 +133,18 @@ export default () => {
           index={key}
           {...item}
           handleChange={handleChange}
-          handleInputChange={handleInputChange}
+          handleRemoveTag={handleRemoveTag}
         />
       ))}
       <Button experience='true' onClick={() => addStep()}>
-        + Ajouter une expérience
+        + Ajouter une activité
       </Button>
       <div className='d-flex justify-content-between'>
         <Link to='step-four'>
           <PreviousButton />
         </Link>
 
-        <NextButton onClick={() => handleSubmit()} disabled={!submit} />
+        <NextButton onClick={() => handleSubmit()} disabled={!submit || profile.activities} />
       </div>
     </Col>
   )

@@ -52,7 +52,7 @@ export default () => {
           </div>
         )
       })}
-      <div className='d-flex justify-content-between'>
+      <div className='d-flex justify-content-between mb-5'>
         <Link to='/step-one'>
           <PreviousButton />
         </Link>

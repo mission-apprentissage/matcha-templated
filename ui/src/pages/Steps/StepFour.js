@@ -191,7 +191,7 @@ export default () => {
       <Button experience='true' onClick={() => addItem(stepState, setStepState)}>
         + Ajouter une expérience
       </Button>
-      <div className='d-flex justify-content-between'>
+      <div className='d-flex justify-content-between mb-5'>
         <Link to='/step-three'>
           <PreviousButton />
         </Link>

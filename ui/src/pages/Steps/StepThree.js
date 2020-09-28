@@ -72,7 +72,7 @@ export default () => {
         Attention de bien disposer d’un moyen de déplacement ou d’une possibilité de logement pour vous rendre à
         l’entreprise
       </ChatBubble>
-      <div className='d-flex justify-content-between'>
+      <div className='d-flex justify-content-between mb-5'>
         <Link to='step-two'>
           <PreviousButton />
         </Link>

@@ -72,7 +72,6 @@ const Step = (props) => {
         }}
         disabled={criteria && criteria.length === 3}
       />
-      <hr />
     </Col>
   )
 }
@@ -133,7 +132,7 @@ export default () => {
       <Button experience='true' onClick={() => addItem(stepState, setStepState)}>
         + Ajouter une activité
       </Button>
-      <div className='d-flex justify-content-between'>
+      <div className='d-flex justify-content-between mb-5'>
         <Link to='step-four'>
           <PreviousButton />
         </Link>

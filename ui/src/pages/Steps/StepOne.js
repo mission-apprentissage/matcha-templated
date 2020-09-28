@@ -62,7 +62,7 @@ const Formulaire = () => {
             <MyInput name='phone' type='tel' placeholder='entrez votre téléphone' value={values.phone} />
             <InputTitle mandatory={true}>Courriel</InputTitle>
             <MyInput name='email' type='email' placeholder='entrez votre adresse email' value={values.email} />
-            <div className='d-flex justify-content-end'>
+            <div className='d-flex justify-content-end mb-5'>
               <NextButton type='submit' disabled={!(isValid && (dirty || profile.user)) || isSubmitting} />
             </div>
           </Form>

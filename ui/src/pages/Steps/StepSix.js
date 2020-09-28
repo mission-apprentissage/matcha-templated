@@ -1,86 +1,61 @@
 import React from 'react'
 import { Col } from 'react-bootstrap'
-import { useHistory } from 'react-router-dom'
-import * as Yup from 'yup'
-import { Formik, Form, useField } from 'formik'
-import styled from 'styled-components/macro'
+import { Link, useHistory } from 'react-router-dom'
 
-import { Input, InputTitle, StepTitle, ChatBubble, NextButton } from '../../components'
-import color from '../../components/helper/color'
+import {
+  Input,
+  InputTitle,
+  StepTitle,
+  ChatBubble,
+  NextButton,
+  Button,
+  RemoveLink,
+  PreviousButton,
+} from '../../components'
 import { Context } from '../../context'
 
-const schema = Yup.object().shape({
-  nom: Yup.string(),
-  telephone: Yup.string(),
-  role: Yup.string(),
-  email: Yup.string().email('Adresse email invalide'),
-})
-
-const ErrorMessage = styled.div`
-  font-family: Inter;
-  font-size: 0.75rem;
-  color: ${color.red};
-`
-
-const MyInput = (props) => {
-  const [field, meta] = useField(props)
+const Formulaire = (props) => {
+  const { firstname, lastname, role, phone, email, handleChange, handleRemoveContact, index } = props
   return (
-    <>
-      <Input
-        css={`
-          margin-bottom: 0.2rem;
-        `}
-        {...props}
-        {...field}
-      />
-      {meta.touched && meta.error ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
-    </>
-  )
-}
-
-const Formulaire = () => {
-  const { updateUser } = React.useContext(Context)
-  const history = useHistory()
-
-  return (
-    <Formik
-      initialValues={{
-        nom: '',
-        telephone: '',
-        email: '',
-        role: '',
-      }}
-      validationSchema={schema}
-      onSubmit={(values, { setSubmitting }) => {
-        updateUser({ recommandation: values })
-        setSubmitting(false)
-        history.push('/final')
-      }}
-    >
-      {({ values, isSubmitting, isValid, dirty, errors }) => {
-        return (
-          <Form>
-            <InputTitle>Prénom</InputTitle>
-            <MyInput name='username' type='text' value={values.username} />
-            <InputTitle>Nom</InputTitle>
-            <MyInput name='username' type='text' value={values.username} />
-            <InputTitle>Rôle dans la structure / l'entreprise</InputTitle>
-            <MyInput name='role' type='text' value={values.birthday} />
-            <InputTitle>Téléphone</InputTitle>
-            <MyInput name='phone' type='tel' value={values.phone} />
-            <InputTitle>Courriel</InputTitle>
-            <MyInput name='email' type='email' value={values.email} />
-            <div className='d-flex justify-content-end'>
-              <NextButton type='submit' />
-            </div>
-          </Form>
-        )
-      }}
-    </Formik>
+    <Col>
+      {index > 0 && (
+        <div className='d-flex justify-content-between'>
+          <InputTitle bold={true}>Contact {index + 1}</InputTitle>
+          <RemoveLink onClick={() => handleRemoveContact(index)}>Supprimer</RemoveLink>
+        </div>
+      )}
+      <InputTitle>Prénom</InputTitle>
+      <Input type='text' value={firstname} onChange={(event) => handleChange('firstname', event.target.value, index)} />
+      <InputTitle>Nom</InputTitle>
+      <Input type='text' value={lastname} onChange={(event) => handleChange('lastname', event.target.value, index)} />
+      <InputTitle>Rôle dans la structure / l'entreprise</InputTitle>
+      <Input type='text' value={role} onChange={(event) => handleChange('role', event.target.value, index)} />
+      <InputTitle>Téléphone</InputTitle>
+      <Input type='tel' value={phone} onChange={(event) => handleChange('phone', event.target.value, index)} />
+      <InputTitle>Courriel</InputTitle>
+      <Input type='email' value={email} onChange={(event) => handleChange('email', event.target.value, index)} />
+    </Col>
   )
 }
 
 export default () => {
+  const { profile, addItem, saveData } = React.useContext(Context)
+  const [contactState, setContactState] = React.useState([{}])
+  const history = useHistory()
+
+  const handleChange = (name, value, index) => {
+    const copy = [...contactState]
+    copy[index][`${name}`] = value
+    if (copy[index][`${name}`] === '') {
+      copy[index][`${name}`] = undefined
+    }
+    setContactState(copy)
+  }
+  const handleRemoveContact = (index) => {
+    const copy = [...contactState]
+    copy.splice(index, 1)
+    setContactState(copy)
+  }
   return (
     <Col>
       <StepTitle>Etape 6/6 - Recommandations</StepTitle>
@@ -88,7 +63,18 @@ export default () => {
         Pour terminer, les employeurs sont sensibles aux recommandations, avez-vous des contacts d'anciens employeurs ou
         maîtres de stages qui pourraient parler de vous à leur communiquer ?
       </ChatBubble>
-      <Formulaire />
+      {contactState.map((item, index) => (
+        <Formulaire index={index} handleChange={handleChange} handleRemoveContact={handleRemoveContact} {...item} />
+      ))}
+      <Button experience='true' onClick={() => addItem(contactState, setContactState)}>
+        + Ajouter un contact
+      </Button>
+      <div className='d-flex justify-content-between mb-5'>
+        <Link to='step-five'>
+          <PreviousButton />
+        </Link>
+        <NextButton onClick={() => saveData(history, 'recommandations', contactState, '/final')} />
+      </div>
     </Col>
   )
 }

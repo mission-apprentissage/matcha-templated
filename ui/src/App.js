@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom'
 import { Context } from './context'
 import { NotFound } from './pages'
 import routes from './routes'
+import withTracker from './common/utils/withTracker'
 
 import './App.css'
 
@@ -14,7 +15,7 @@ const App = () => {
     <Layout>
       <Switch>
         {routes.map(({ path, component }, key) => (
-          <Route exact path={path} key={key} component={component} />
+          <Route exact path={path} key={key} component={withTracker(component)} />
         ))}
         <Route component={NotFound} />
       </Switch>

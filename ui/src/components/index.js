@@ -15,6 +15,7 @@ import VoeuTitle from './VoeuTitle'
 import QuestionTitle from './QuestionsTitle'
 import Autocomplete from './Autocomplete'
 import ExternalLink from './ExternalLink'
+import DropdownCombobox from './DropdownCombobox'
 
 export {
   Button,
@@ -34,4 +35,5 @@ export {
   QuestionTitle,
   Autocomplete,
   ExternalLink,
+  DropdownCombobox,
 }

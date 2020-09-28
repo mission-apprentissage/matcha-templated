@@ -1,6 +1,12 @@
 import React from 'react'
 
-const Context = React.createContext({})
+const Context = React.createContext({
+  profile: {},
+  updateUser: () => {},
+  check: () => {},
+  addItem: () => {},
+  saveData: () => {},
+})
 
 class ContextProvider extends React.Component {
   constructor(props) {
@@ -42,7 +48,12 @@ class ContextProvider extends React.Component {
   }
 
   saveData = (history, scope, state, path) => {
-    this.updateUser({ [scope]: state })
+    const check = Object.values(state[0]).length
+    if (check === 0) {
+      this.updateUser({ [scope]: null })
+    } else {
+      this.updateUser({ [scope]: state })
+    }
     history.push(path)
   }
 

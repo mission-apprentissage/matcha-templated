@@ -23,6 +23,7 @@ export default styled.button`
       color: ${color.red};
       border-radius: 8px;
       box-shadow: none;
+      margin-bottom: 2rem;
   `
       : `
       :focus{

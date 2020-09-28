@@ -15,7 +15,40 @@ import {
   CheckButton,
   Tag,
   RemoveLink,
+  RadioButton,
 } from '../../components'
+
+const criteria = [
+  'Pratiquer une activité sportive',
+  'Travailler dehors',
+  'Travailler en contact avec la nature, avec des animaux',
+  'Me déplacer souvent, intervenir sur le terrain',
+  'Avoir le goût du risque',
+  'Défendre, secourir, protéger',
+  "Travailler à l'étranger, voyager",
+  'Concevoir, fabriquer, construire',
+  'Maîtriser les technologies nouvelles, innover',
+  'Faire fonctionner',
+  'Faire un travail minutieux précis',
+  'Travailler un matériau',
+  'Exercer une activité artistique ou créative',
+  'Aimer écrire, rédiger',
+  'Pratiquer les langues vivantes',
+  'Diriger, manager, décider',
+  'Entreprendre',
+  'Convaincre, négocier',
+  'Faire du commerce, acheter, vendre',
+  'Manier les chiffres, les données',
+  'Organiser, planifier, gérer',
+  "Rechercher, traiter, analyser l'information",
+  'Enseigner, former, transmettre',
+  'Informer, communiquer',
+  'Chercher, comprendre, expérimenter',
+  'Aider, conseiller, accompagner',
+  "M'occuper des personnes dépendantes",
+  'Soigner',
+  "Travailler auprès d'enfants",
+]
 
 const Step = (props) => {
   const { index, periodicity, activityName, criteria, handleChange, handleRemoveTag, handleRemoveActivity } = props
@@ -43,12 +76,13 @@ const Step = (props) => {
         {['Tous les jours', 'Plusieurs fois par semaine', 'Plusieurs fois par mois', "Moins d'une fois par mois"].map(
           (x, i) => {
             return (
-              <CheckButton
+              <RadioButton
                 state={periodicity === x ? true : null}
-                btn={x}
                 key={i}
                 onClick={() => handleChange('periodicity', x, index)}
-              />
+              >
+                {x}
+              </RadioButton>
             )
           }
         )}

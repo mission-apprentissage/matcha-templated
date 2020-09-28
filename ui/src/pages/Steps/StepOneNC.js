@@ -123,9 +123,9 @@ export default () => {
   const handleFieldSearch = async (search) => {
     if (search) {
       try {
-        // const result = await fetch(
-        //   `https://idea-mna-api.herokuapp.com/formations?rome=${search}&longitude=2.2&latitude=47&radius=20000`
-        // )
+        const result = await fetch(
+          `https://idea-mna-api.herokuapp.com/formations?rome=${search}&longitude=2.2&latitude=47&radius=20000`
+        )
         // const result = await fetch(`https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod/formations`, {
         //   limit: 100,
         //   query: {

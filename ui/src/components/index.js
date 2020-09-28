@@ -16,6 +16,7 @@ import QuestionTitle from './QuestionsTitle'
 import Autocomplete from './Autocomplete'
 import ExternalLink from './ExternalLink'
 import DropdownCombobox from './DropdownCombobox'
+import RemoveLink from './RemoveLink'
 
 export {
   Button,
@@ -36,4 +37,5 @@ export {
   Autocomplete,
   ExternalLink,
   DropdownCombobox,
+  RemoveLink,
 }

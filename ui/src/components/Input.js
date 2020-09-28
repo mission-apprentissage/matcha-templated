@@ -41,7 +41,7 @@ const Input = styled.input`
   :focus {
     border: 1px solid ${color.red};
     background: ${color.white} !important;
-    color: ${color.middleGrey};
+    color: ${color.black};
   }
   :disabled {
     border: 1px solid ${color.lightGrey};

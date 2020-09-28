@@ -1,9 +1,6 @@
 import React from 'react'
 
-const Context = React.createContext({
-  profile: {},
-  updateUser: () => {},
-})
+const Context = React.createContext({})
 
 class ContextProvider extends React.Component {
   constructor(props) {
@@ -12,7 +9,7 @@ class ContextProvider extends React.Component {
       profile: {},
       updateUser: this.updateUser,
       check: this.check,
-      addStep: this.addStep,
+      addItem: this.addItem,
       saveData: this.saveData,
     }
   }
@@ -38,7 +35,7 @@ class ContextProvider extends React.Component {
     fn(flag)
   }
 
-  addStep = (state, fn) => {
+  addItem = (state, fn) => {
     const copy = [...state]
     copy.push({})
     fn(copy)

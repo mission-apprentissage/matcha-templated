@@ -1,10 +1,12 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
+
 import { Context } from '../../context'
 import {
   Button,
   Input,
+  InputTitle,
   StepTitle,
   ChatBubble,
   NextButton,
@@ -12,13 +14,19 @@ import {
   QuestionTitle,
   CheckButton,
   Tag,
+  RemoveLink,
 } from '../../components'
 
 const Step = (props) => {
-  const { number, handleChange, index, periodicity, activityName, criteria, handleRemoveTag } = props
+  const { index, periodicity, activityName, criteria, handleChange, handleRemoveTag, handleRemoveActivity } = props
   return (
     <Col>
-      <StepTitle>Etape 5/6 - Vos activités ({number})</StepTitle>
+      {index > 0 && (
+        <div className='d-flex justify-content-between'>
+          <InputTitle bold={true}>Activité {index + 1}</InputTitle>
+          <RemoveLink onClick={() => handleRemoveActivity(index)}>Supprimer</RemoveLink>
+        </div>
+      )}
       <ChatBubble>
         Vous avez sûrement encore des compétences à mettre en valeur liées à vos activités et/ou centres d’intérêts !
       </ChatBubble>
@@ -70,7 +78,7 @@ const Step = (props) => {
 }
 
 export default () => {
-  const { profile, check, addStep, saveData } = React.useContext(Context)
+  const { profile, check, addItem, saveData } = React.useContext(Context)
   const history = useHistory()
   const [stepState, setStepState] = React.useState(profile.activities ? profile.activities : [{}])
   const [submit, setSubmit] = React.useState(false)
@@ -103,19 +111,26 @@ export default () => {
     check(stepState, setSubmit, ['activityName', 'periodicity', 'criteria'])
   }
 
+  const handleRemoveActivity = (index) => {
+    const copy = [...stepState]
+    copy.splice(index, 1)
+    setStepState(copy)
+  }
+
   return (
     <Col>
+      <StepTitle>Etape 5/6 - Vos activités </StepTitle>
       {stepState.map((item, key) => (
         <Step
           key={key}
-          number={key + 1}
           index={key}
           handleChange={handleChange}
           handleRemoveTag={handleRemoveTag}
+          handleRemoveActivity={handleRemoveActivity}
           {...item}
         />
       ))}
-      <Button experience='true' onClick={() => addStep(stepState, setStepState)}>
+      <Button experience='true' onClick={() => addItem(stepState, setStepState)}>
         + Ajouter une activité
       </Button>
       <div className='d-flex justify-content-between'>

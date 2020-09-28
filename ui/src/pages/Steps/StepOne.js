@@ -26,13 +26,7 @@ const MyInput = (props) => {
   const [field, meta] = useField(props)
   return (
     <>
-      <Input
-        css={`
-          margin-bottom: 0.2rem;
-        `}
-        {...props}
-        {...field}
-      />
+      <Input {...props} {...field} />
       {meta.touched && meta.error ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
     </>
   )
@@ -60,13 +54,13 @@ const Formulaire = () => {
       {({ values, isSubmitting, isValid, dirty }) => {
         return (
           <Form>
-            <InputTitle>Prénom N.</InputTitle>
+            <InputTitle mandatory={true}>Prénom N.</InputTitle>
             <MyInput name='username' type='text' placeholder='entrez votre prénom et nom' value={values.username} />
-            <InputTitle>Date de naissance</InputTitle>
+            <InputTitle mandatory={true}>Date de naissance</InputTitle>
             <MyInput name='birthday' type='date' value={values.birthday} hide={true} />
-            <InputTitle>Téléphone</InputTitle>
+            <InputTitle mandatory={true}>Téléphone</InputTitle>
             <MyInput name='phone' type='tel' placeholder='entrez votre téléphone' value={values.phone} />
-            <InputTitle>Courriel</InputTitle>
+            <InputTitle mandatory={true}>Courriel</InputTitle>
             <MyInput name='email' type='email' placeholder='entrez votre adresse email' value={values.email} />
             <div className='d-flex justify-content-end'>
               <NextButton type='submit' disabled={!(isValid && (dirty || profile.user)) || isSubmitting} />

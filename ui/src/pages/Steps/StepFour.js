@@ -1,6 +1,8 @@
 import React from 'react'
 import { Col } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
+import styled from 'styled-components'
+import color from '../../components/helper/color'
 
 import {
   Button,
@@ -13,8 +15,17 @@ import {
   QuestionTitle,
   Tag,
   Autocomplete,
+  RemoveLink,
 } from '../../components'
 import { Context } from '../../context'
+
+const Wrapper = styled.div`
+  ${(props) =>
+    props.index % 2 === 0 &&
+    `
+    // background: ${color.veryLightGrey}
+  `}
+`
 
 const Step = (props) => {
   const {
@@ -24,17 +35,22 @@ const Step = (props) => {
     companyAddress,
     startDate,
     endDate,
-    number,
     handleChange,
     handleRemoveTag,
+    handleRemoveExperience,
     index,
     profile,
   } = props
   const [minDate, setMinDate] = React.useState('')
 
   return (
-    <>
-      <StepTitle>Etape 4/6 - Vos expériences ({number})</StepTitle>
+    <Wrapper index={index}>
+      {index > 0 && (
+        <div className='d-flex justify-content-between'>
+          <InputTitle bold={true}>Expérience {index + 1}</InputTitle>
+          <RemoveLink onClick={() => handleRemoveExperience(index)}>Supprimer</RemoveLink>
+        </div>
+      )}
       <ChatBubble>
         Décrivez moi toute expérience avec le monde du travail, qui vous a demandé d’apprendre, de progresser, des
         responsabilités ou dont vous êtes fière.
@@ -114,12 +130,12 @@ const Step = (props) => {
           />
         </div>
       </div>
-    </>
+    </Wrapper>
   )
 }
 
 export default () => {
-  const { profile, addStep, saveData, check } = React.useContext(Context)
+  const { profile, addItem, saveData, check } = React.useContext(Context)
   const history = useHistory()
   const [stepState, setStepState] = React.useState(profile.experiences ? profile.experiences : [{}])
   const [submit, setSubmit] = React.useState(false)
@@ -152,20 +168,27 @@ export default () => {
     check(stepState, setSubmit, ['name', 'task', 'companyName', 'companyAddress', 'startDate', 'endDate'])
   }
 
+  const handleRemoveExperience = (index) => {
+    const copy = [...stepState]
+    copy.splice(index, 1)
+    setStepState(copy)
+  }
+
   return (
     <Col>
+      <StepTitle>Etape 4/6 - Vos expériences</StepTitle>
       {stepState.map((item, key) => (
         <Step
           key={key}
           index={key}
-          number={key + 1}
           handleChange={handleChange}
           handleRemoveTag={handleRemoveTag}
+          handleRemoveExperience={handleRemoveExperience}
           {...item}
         />
       ))}
       <hr />
-      <Button experience='true' onClick={() => addStep(stepState, setStepState)}>
+      <Button experience='true' onClick={() => addItem(stepState, setStepState)}>
         + Ajouter une expérience
       </Button>
       <div className='d-flex justify-content-between'>

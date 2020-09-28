@@ -1,5 +1,5 @@
 import { Homepage, First, Final, NotLooking, End } from './pages'
-import { StepOne, StepTwo, StepThree, StepFour, StepFive, StepSix } from './pages/Steps'
+import { StepOne, StepTwo, StepThree, StepFour, StepFive, StepSix, StepOneNC, StepTwoNC } from './pages/Steps'
 
 export default [
   {
@@ -23,11 +23,11 @@ export default [
     path: '/au-revoir',
   },
   {
-    component: StepOne,
+    component: StepOneNC,
     path: '/step-one',
   },
   {
-    component: StepTwo,
+    component: StepTwoNC,
     path: '/step-two',
   },
   {

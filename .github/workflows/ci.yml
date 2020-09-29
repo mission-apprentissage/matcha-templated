@@ -20,13 +20,13 @@ jobs:
           mongodb-version: 4.2.6
       - run: yarn --cwd server install
       - run: yarn --cwd server test
-      - name: Send slack notification
-        uses: act10ns/slack@v1
-        with:
-          status: ${{ job.status }}
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: failure()
+      # - name: Send slack notification
+      #   uses: act10ns/slack@v1
+      #   with:
+      #     status: ${{ job.status }}
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #   if: failure()
   deploy:
     runs-on: ubuntu-latest
     steps:

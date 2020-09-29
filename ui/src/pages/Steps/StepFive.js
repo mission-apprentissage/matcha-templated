@@ -1,18 +1,19 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
+import { useCombobox, useMultipleSelection } from 'downshift'
+import styled from 'styled-components'
+import color from '../../components/helper/color'
 
 import { Context } from '../../context'
 import {
   Button,
-  Input,
   InputTitle,
   StepTitle,
   ChatBubble,
   NextButton,
   PreviousButton,
   QuestionTitle,
-  CheckButton,
   Tag,
   RemoveLink,
   RadioButton,
@@ -50,10 +51,156 @@ const criteria = [
   "Travailler auprès d'enfants",
 ]
 
-const Step = (props) => {
-  const { index, periodicity, activityName, criteria, handleChange, handleRemoveTag, handleRemoveActivity } = props
+const Wrapper = styled.ul`
+  width: 95%;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+  position: absolute;
+  list-style: none;
+  background: #fff;
+  overflow: auto;
+  box-shadow: 0px 1px 8px rgba(8, 67, 85, 0.24);
+  border-radius: 4px;
+  li {
+    width: 100%;
+    padding: 0.5rem;
+  }
+  li[data-focus='true'] {
+    background: ${color.lightGrey};
+    /* background: ${color.grey}; */
+    /* color: white; */
+  }
+`
+
+const Input = styled.input`
+  border: 1px solid ${color.grey};
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-family: Inter;
+  font-size: 1rem;
+  padding-left: 10px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  outline: none;
+  border: 1px solid ${color.middleGrey};
+  ${(props) =>
+    props.value &&
+    `
+    border: 1px solid ${color.black};
+  `}
+  ::placeholder {
+    color: #98b0b7;
+  }
+  :hover {
+    border: 1px solid ${color.red};
+  }
+  :focus {
+    border: 1px solid ${color.red};
+    background: ${color.white} !important;
+  }
+  :disabled {
+    border: 1px solid ${color.lightGrey};
+    background: ${color.lightGrey};
+  }
+`
+
+const MultiSelect = () => {
+  const [inputValue, setInputValue] = React.useState('')
+  const {
+    getSelectedItemProps,
+    getDropdownProps,
+    addSelectedItem,
+    removeSelectedItem,
+    selectedItems,
+  } = useMultipleSelection({})
+
+  const getFilteredItems = (items) =>
+    items.filter((item) => selectedItems.indexOf(item) < 0 && item.toLowerCase().startsWith(inputValue.toLowerCase()))
+
+  const {
+    isOpen,
+    getToggleButtonProps,
+    getLabelProps,
+    getMenuProps,
+    getInputProps,
+    getComboboxProps,
+    highlightedIndex,
+    getItemProps,
+    selectItem,
+  } = useCombobox({
+    inputValue,
+    items: getFilteredItems(criteria),
+    onStateChange: ({ inputValue, type, selectedItem }) => {
+      switch (type) {
+        case useCombobox.stateChangeTypes.InputChange:
+          setInputValue(inputValue)
+          break
+        case useCombobox.stateChangeTypes.InputKeyDownEnter:
+        case useCombobox.stateChangeTypes.ItemClick:
+        case useCombobox.stateChangeTypes.InputBlur:
+          if (selectedItem) {
+            setInputValue('')
+            addSelectedItem(selectedItem)
+            selectItem(null)
+          }
+          break
+        default:
+          break
+      }
+    },
+  })
   return (
-    <Col>
+    <div>
+      <div>
+        {selectedItems.map((selectedItem, index) => (
+          <Tag
+            key={`selected-item-${index}`}
+            onClick={() => removeSelectedItem(selectedItem)}
+            {...getSelectedItemProps({ selectedItem, index })}
+          >
+            {selectedItem}
+          </Tag>
+        ))}
+        <div {...getComboboxProps()}>
+          <Input
+            placeholder='selectionner un critère'
+            {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
+            disabled={selectedItems && selectedItems.length === 3}
+          />
+        </div>
+      </div>
+      <Wrapper {...getMenuProps()}>
+        {isOpen &&
+          getFilteredItems(criteria).map((item, index) => (
+            <li
+              style={highlightedIndex === index ? { backgroundColor: color.lightGrey } : {}}
+              key={`${item}${index}`}
+              {...getItemProps({ item, index })}
+            >
+              {item}
+            </li>
+          ))}
+      </Wrapper>
+    </div>
+  )
+}
+
+const Step = (props) => {
+  const {
+    index,
+    periodicity,
+    activityName,
+    criteria,
+    handleChange,
+    handleRemoveTag,
+    handleRemoveActivity,
+    handleSearch,
+  } = props
+  return (
+    <Col className='mt-3 mb-3'>
       {index > 0 && (
         <div className='d-flex justify-content-between'>
           <InputTitle bold={true}>Activité {index + 1}</InputTitle>
@@ -88,6 +235,7 @@ const Step = (props) => {
         )}
       </Row>
       <QuestionTitle title="Qu'est ce qui vous plait le plus dans cette activité (3 critères maximum) ?" />
+
       <div className='pb-1'>
         {criteria &&
           criteria.map((x, i) => (
@@ -96,7 +244,8 @@ const Step = (props) => {
             </Tag>
           ))}
       </div>
-      <Input
+      <MultiSelect />
+      {/* <Input
         placeholder='ajouter un critère'
         onKeyDown={(e) => {
           if (e.keyCode === 13) {
@@ -105,7 +254,7 @@ const Step = (props) => {
           }
         }}
         disabled={criteria && criteria.length === 3}
-      />
+      /> */}
     </Col>
   )
 }
@@ -150,6 +299,8 @@ export default () => {
     setStepState(copy)
   }
 
+  const handleSearch = (search) => {}
+
   return (
     <Col>
       <StepTitle>Etape 5/6 - Vos activités </StepTitle>
@@ -163,7 +314,7 @@ export default () => {
           {...item}
         />
       ))}
-      <Button experience='true' onClick={() => addItem(stepState, setStepState)}>
+      <Button className='mt-5' experience='true' onClick={() => addItem(stepState, setStepState)}>
         + Ajouter une activité
       </Button>
       <div className='d-flex justify-content-between mb-5'>

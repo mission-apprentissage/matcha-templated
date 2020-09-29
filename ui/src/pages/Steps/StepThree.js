@@ -39,7 +39,7 @@ export default () => {
       <StepTitle>Etape 3/6 - Votre Mobilité</StepTitle>
       <Autocomplete
         title='Dans quelle commune habitez-vous ?'
-        placeholder='entrez votre ville ou code postal'
+        placeholder='entrez votre ville'
         handleValues={handleValues}
         context={profile.mobility && profile.mobility.name}
       />

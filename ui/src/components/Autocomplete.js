@@ -6,8 +6,8 @@ import _ from 'lodash'
 import { InputTitle } from './index'
 import color from './helper/color'
 
-const Wrapper = styled.div`
-  width: 200;
+const Wrapper = styled.ul`
+  width: 95%;
   margin: 0;
   padding: 0;
   z-index: 1;
@@ -15,16 +15,16 @@ const Wrapper = styled.div`
   list-style: none;
   background: #fff;
   overflow: auto;
-  max-height: 200;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  &li[data-focus='true'] {
-    background: #4a8df6;
-    color: black;
-    cursor: pointer;
+  box-shadow: 0px 1px 8px rgba(8, 67, 85, 0.24);
+  border-radius: 4px;
+  li {
+    width: 100%;
+    padding: 0.5rem;
   }
-  &li:active {
-    background: #2977f5;
-    color: black;
+  li[data-focus='true'] {
+    background: ${color.lightGrey};
+    /* background: ${color.grey}; */
+    /* color: white; */
   }
 `
 
@@ -40,7 +40,12 @@ const Input = styled.input`
   margin-bottom: 1.5rem;
   width: 100%;
   outline: none;
-  background: ${(props) => (props.filled ? color.lightGrey : '#FFFFFF')};
+  border: 1px solid ${color.middleGrey};
+  ${(props) =>
+    props.value &&
+    `
+    border: 1px solid ${color.black};
+  `}
   ::placeholder {
     color: #98b0b7;
   }
@@ -84,7 +89,7 @@ export default (props) => {
     onInputChange: _.throttle(async (event) => {
       if (props.fullAddress) {
         const value = event ? event.target.value : defaultValue
-        const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}&limit=10`)
+        const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}`)
         const data = await result.json()
         data.features.forEach((feat) => {
           const name = `${feat.properties.label}`
@@ -93,10 +98,10 @@ export default (props) => {
         setOption(adresse)
       } else {
         const value = event ? event.target.value : defaultValue
-        const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}&limit=10&type=municipality`)
+        const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}&type=municipality`)
         const data = await result.json()
         data.features.forEach((feat) => {
-          const name = `${feat.properties.city}(${feat.properties.postcode.substring(0, 2)})`
+          const name = `${feat.properties.city} (${feat.properties.postcode.substring(0, 2)})`
           adresse.push({ name: name })
         })
         setOption(adresse)
@@ -113,7 +118,7 @@ export default (props) => {
       {groupedOptions.length > 0 ? (
         <Wrapper {...getListboxProps()}>
           {groupedOptions.map((option, index) => (
-            <li {...getOptionProps({ option, index })}>{option.name}</li>
+            <li {...getOptionProps({ option: option.name, index })}>{option.name}</li>
           ))}
         </Wrapper>
       ) : null}

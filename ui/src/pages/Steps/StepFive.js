@@ -314,7 +314,7 @@ export default () => {
           {...item}
         />
       ))}
-      <Button className='mt-5' experience='true' onClick={() => addItem(stepState, setStepState)}>
+      <Button className='mt-3' experience='true' onClick={() => addItem(stepState, setStepState)}>
         + Ajouter une activité
       </Button>
       <div className='d-flex justify-content-between mb-5'>

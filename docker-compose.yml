@@ -1,0 +1,53 @@
+version: "2.4"
+services:
+  reverse_proxy:
+    image: matcha_reverse_proxy
+    container_name: matcha_reverse_proxy
+    build:
+      context: reverse_proxy
+    mem_limit: 256m
+    restart: unless-stopped
+    ports:
+      - 80:80
+    networks:
+      - matcha_network
+    depends_on:
+      - server
+      - ui
+
+  ui:
+    image: matcha_ui
+    container_name: matcha_ui
+    build:
+      context: ui
+    mem_limit: 256m
+    networks:
+      - matcha_network
+    depends_on:
+      - server
+
+  server:
+    image: matcha_server
+    container_name: matcha_server
+    build:
+      context: server
+    mem_limit: 1g
+    restart: unless-stopped
+    networks:
+      - matcha_network
+    depends_on:
+      - mongodb
+    environment:
+      - MATCHA_MONGODB_URI=mongodb://mongodb:27017/matcha?retryWrites=true&w=majority
+
+  mongodb:
+    image: mongo:4.2.6-bionic
+    container_name: matcha_mongodb
+    mem_limit: 1g
+    restart: unless-stopped
+    networks:
+      - matcha_network
+
+networks:
+  matcha_network:
+    name: matcha_network

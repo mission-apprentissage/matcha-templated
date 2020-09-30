@@ -26,7 +26,7 @@ export default ({ children }) => {
           height: 100vh;
         `}
       >
-        <Row className={`h-100 justify-content-md-center ${bkg && 'backgrd'} `} sm={1} md={2} lg={2}>
+        <Row className={`h-100 justify-content-center ${bkg && 'backgrd'} `} sm={1} md={2} lg={2}>
           {children}
         </Row>
       </Container>

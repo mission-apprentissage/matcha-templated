@@ -54,35 +54,19 @@ const Input = styled.input`
 `
 
 export default (props) => {
-  // const [inputItems, setInputItems] = React.useState([])
-  // const handleSearch = async (search) => {
-  //   if (search) {
-  //     const result = await fetch(`https://idea-mna-api.herokuapp.com/romelabels?title=${search}`)
-  //     const data = await result.json()
-  //     return data.labelsAndRomes
-  //   }
-  //   return inputItems
-  // }
+  const itemToString = (item) => (item ? item.label : '')
 
-  const {
-    isOpen,
-    selectedItem,
-    getToggleButtonProps,
-    getLabelProps,
-    getMenuProps,
-    getInputProps,
-    getComboboxProps,
-    highlightedIndex,
-    getItemProps,
-  } = useCombobox({
+  const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({
     items: props.inputItems,
+    itemToString,
     onInputValueChange: async ({ inputValue }) => props.setInputItems(await props.handleSearch(inputValue)),
+    onSelectedItemChange: ({ selectedItem }) => props.saveSelectedItem(props.valueName, selectedItem),
   })
 
   return (
     <div className='pb-3'>
       <div {...getComboboxProps()}>
-        <Input placeholder='sélectionner un métier' value={selectedItem && selectedItem.label} {...getInputProps()} />
+        <Input placeholder='sélectionner un métier' {...getInputProps()} />
       </div>
       <Wrapper {...getMenuProps()}>
         {isOpen &&
@@ -90,7 +74,7 @@ export default (props) => {
             <li
               style={highlightedIndex === index ? { backgroundColor: color.lightGrey } : {}}
               key={`${item}${index}`}
-              {...getItemProps({ item: item.label, index })}
+              {...getItemProps({ item, index })}
             >
               {item.label}
             </li>

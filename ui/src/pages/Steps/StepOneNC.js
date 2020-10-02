@@ -1,6 +1,6 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { DropdownCombobox, Input, Title } from '../../components'
+import { DropdownCombobox, Input } from '../../components'
 import { Col, Form } from 'react-bootstrap'
 import { StepTitle, ChatBubble, QuestionTitle, NextButton, Button, InputTitle, RemoveLink } from '../../components'
 import { Context } from '../../context'

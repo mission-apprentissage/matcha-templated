@@ -1,7 +1,6 @@
 import React from 'react'
 import { Layout } from './components'
 import { Switch, Route } from 'react-router-dom'
-import { Context } from './context'
 import { NotFound } from './pages'
 import routes from './routes'
 import withTracker from './common/utils/withTracker'

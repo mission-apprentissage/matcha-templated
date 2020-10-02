@@ -40,7 +40,7 @@ const MyInput = (props) => {
 }
 
 const Formulaire = () => {
-  const { updateUser, profile, saveContext } = React.useContext(Context)
+  const { profile, saveContext } = React.useContext(Context)
   const history = useHistory()
 
   return (

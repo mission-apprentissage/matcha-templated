@@ -9,7 +9,6 @@ import {
   PreviousButton,
   RadioButton,
   QuestionTitle,
-  CheckButton,
   Autocomplete,
 } from '../../components'
 import { Context } from '../../context'
@@ -23,7 +22,7 @@ const distance = [
 ]
 
 export default () => {
-  const { saveContext, profile, check } = React.useContext(Context)
+  const { saveContext, profile } = React.useContext(Context)
   const [values, setValues] = React.useState(profile.mobilite ? profile.mobilite : {})
   const [submit, setSubmit] = React.useState(profile.mobilite ? true : false)
   const history = useHistory()

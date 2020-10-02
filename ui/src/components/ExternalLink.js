@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import color from './helper/color'
-import { Button } from 'react-bootstrap'
 
 export default styled.button`
   background: ${color.white};

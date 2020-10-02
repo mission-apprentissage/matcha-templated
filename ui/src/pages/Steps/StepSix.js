@@ -39,7 +39,7 @@ const Formulaire = (props) => {
 }
 
 export default () => {
-  const { profile, addItem, saveContext } = React.useContext(Context)
+  const { addItem, saveContext } = React.useContext(Context)
   const [contactState, setContactState] = React.useState([{}])
   const history = useHistory()
 

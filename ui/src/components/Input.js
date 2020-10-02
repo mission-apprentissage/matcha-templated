@@ -26,7 +26,6 @@ const Input = styled.input`
   margin-bottom: 1.5rem;
   width: 100%;
   outline: none;
-  /* background: ${(props) => (props.filled ? color.lightGrey : color.white)}; */
   ::placeholder {
     color: #98b0b7;
   }

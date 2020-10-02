@@ -1,11 +1,13 @@
 import React from 'react'
+import axios from 'axios'
 
 const Context = React.createContext({
   profile: {},
+  questionnaireId: '',
   updateUser: () => {},
   check: () => {},
   addItem: () => {},
-  saveData: () => {},
+  saveContext: () => {},
 })
 
 class ContextProvider extends React.Component {
@@ -13,10 +15,11 @@ class ContextProvider extends React.Component {
     super(props)
     this.state = {
       profile: {},
+      questionnaireId: null,
       updateUser: this.updateUser,
       check: this.check,
       addItem: this.addItem,
-      saveData: this.saveData,
+      saveContext: this.saveContext,
     }
   }
 
@@ -47,13 +50,28 @@ class ContextProvider extends React.Component {
     fn(copy)
   }
 
-  saveData = (history, scope, state, path) => {
-    const check = Object.values(state[0]).length
-    if (check === 0) {
-      this.updateUser({ [scope]: null })
-    } else {
-      this.updateUser({ [scope]: state })
+  saveDataInDB = () => {
+    console.log('data sent to API', this.state.profile, this.state.questionnaireId)
+    axios
+      .post(`/api/questionnaire/items/${this.state.questionnaireId}`, this.state.profile)
+      .then((res) => {
+        console.log(res)
+        return res
+      })
+      .catch((error) => console.log(error))
+  }
+
+  saveContext = async (history, scope, state, path, questionnaireId) => {
+    const check = scope === 'recommandations' ? Object.values(state[0]).length : 1
+    if (questionnaireId) {
+      await this.setState({ questionnaireId })
     }
+    if (check === 0) {
+      await this.updateUser({ [scope]: null })
+    } else {
+      await this.updateUser({ [scope]: state })
+    }
+    await this.saveDataInDB()
     history.push(path)
   }
 

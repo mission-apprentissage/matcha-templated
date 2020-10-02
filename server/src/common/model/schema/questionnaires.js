@@ -3,46 +3,32 @@ const { Schema } = require("mongoose");
 module.exports = new Schema(
   {
     questionnaire_id: { type: String, unique: true, required: true },
-    user: {
-      type: [
-        {
-          prenom: {
-            type: String,
-            default: null,
-            description: "Prénom du candidat",
-          },
-        },
-        {
-          nom: {
-            type: String,
-            default: null,
-            description: "Nom du candidat",
-          },
-        },
-        {
-          email: {
-            type: String,
-            default: null,
-            description: "Email du candidat",
-          },
-        },
-        {
-          dateNaissance: {
-            type: Date,
-            default: null,
-            description: "Date de naissance du candidat",
-          },
-        },
-        {
-          telephone: {
-            type: String,
-            default: null,
-            description: "Téléphone du candidat",
-          },
-        },
-      ],
-      default: null,
-      description: "Profil du candidat",
+    candidat: {
+      prenom: {
+        type: String,
+        default: null,
+        description: "Prénom du candidat",
+      },
+      nom: {
+        type: String,
+        default: null,
+        description: "Nom du candidat",
+      },
+      email: {
+        type: String,
+        default: null,
+        description: "Email du candidat",
+      },
+      dateNaissance: {
+        type: Date,
+        default: null,
+        description: "Date de naissance du candidat",
+      },
+      telephone: {
+        type: String,
+        default: null,
+        description: "Téléphone du candidat",
+      },
     },
     voeux: {
       type: [
@@ -82,6 +68,20 @@ module.exports = new Schema(
       default: [],
       description: "Liste des voeux",
     },
+    mobilite: {
+      commune: {
+        type: String,
+        description: "Commune de résidence du candidat",
+      },
+      permis: {
+        type: Boolean,
+        description: "Permis de conduire",
+      },
+      distance: {
+        type: Object,
+        dateNaissance: "Distance maximal de déplacement du candidat",
+      },
+    },
     experiences: {
       type: [
         {
@@ -95,22 +95,22 @@ module.exports = new Schema(
             default: [],
             description: "Liste des taches",
           },
-          nom_entreprise: {
+          nomEntreprise: {
             type: String,
             default: null,
             description: "Nom de l'entreprise",
           },
-          adresse_entreprise: {
+          adresseEntreprise: {
             type: String,
             default: null,
             description: "Adresse de l'entreprise",
           },
-          date_debut: {
+          dateDebut: {
             type: Date,
             default: Date.now,
             description: "Date de début",
           },
-          date_fin: {
+          dateFin: {
             type: Date,
             default: Date.now,
             description: "Date de fin",

@@ -81,9 +81,9 @@ export default (props) => {
     getOptionLabel: (option) => option.name,
     onChange: (event, value) =>
       props.fullAddress && value
-        ? props.handleValues('companyAddress', value.name, props.index)
+        ? props.handleValues('adresseEntreprise', value.name, props.index)
         : value
-        ? props.handleValues('name', value.name)
+        ? props.handleValues('commune', value.name)
         : '',
     getOptionSelected: (option, value) => option.name === value.name,
     onInputChange: _.throttle(async (event) => {

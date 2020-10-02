@@ -29,17 +29,16 @@ const Wrapper = styled.div`
 
 const Step = (props) => {
   const {
-    name,
-    task,
-    companyName,
-    companyAddress,
-    startDate,
-    endDate,
+    nom,
+    taches,
+    nomEntreprise,
+    adresseEntreprise,
+    dateDebut,
+    dateFin,
     handleChange,
     handleRemoveTag,
     handleRemoveExperience,
     index,
-    profile,
   } = props
   const [minDate, setMinDate] = React.useState('')
 
@@ -60,13 +59,13 @@ const Step = (props) => {
         placeholder="animateur, cueillette, garde d'enfant, ..."
         required
         type='text'
-        onChange={(e) => handleChange('name', e.target.value, index)}
-        value={name}
+        onChange={(e) => handleChange('nom', e.target.value, index)}
+        value={nom}
       />
       <QuestionTitle title='Vos 3 principales missions ou tâches ?' />
       <div className='pb-1'>
-        {task &&
-          task.map((x, i) => (
+        {taches &&
+          taches.map((x, i) => (
             <Tag key={i} onClick={() => handleRemoveTag(index, i)}>
               {x}
             </Tag>
@@ -78,11 +77,11 @@ const Step = (props) => {
         type='text'
         onKeyDown={(e) => {
           if (e.keyCode === 13) {
-            handleChange('task', e.target.value, index, true)
+            handleChange('taches', e.target.value, index, true)
             e.target.value = ''
           }
         }}
-        disabled={task && task.length === 3}
+        disabled={taches && taches.length === 3}
       />
       <ChatBubble>
         Les employeurs portent de l’attention à cette information. Aller au plus simple en utilisant des verbes d’action
@@ -92,12 +91,12 @@ const Step = (props) => {
       <InputTitle>Nom de l'entreprise</InputTitle>
       <Input
         placeholder="entrez le nom de l'entreprise"
-        onChange={(e) => handleChange('companyName', e.target.value, index)}
-        value={companyName}
+        onChange={(e) => handleChange('nomEntreprise', e.target.value, index)}
+        value={nomEntreprise}
       />
       <Autocomplete
         title="Adresse de l'entreprise"
-        context={companyAddress}
+        context={adresseEntreprise}
         placeholder="entrez l'adresse de l'entreprise"
         handleValues={handleChange}
         index={index}
@@ -110,10 +109,10 @@ const Step = (props) => {
           <Input
             placeholder='sélectionne une date de début'
             required
-            value={startDate}
+            value={dateDebut}
             type='date'
             onChange={(event) => {
-              handleChange('startDate', event.target.value, index)
+              handleChange('dateDebut', event.target.value, index)
               setMinDate(event.target.value)
             }}
           />
@@ -124,8 +123,8 @@ const Step = (props) => {
             placeholder='sélectionne une date de fin'
             required
             type='date'
-            value={endDate}
-            onChange={(event) => handleChange('endDate', event.target.value, index)}
+            value={dateFin}
+            onChange={(event) => handleChange('dateFin', event.target.value, index)}
             min={minDate ? minDate : ''}
           />
         </div>
@@ -135,7 +134,7 @@ const Step = (props) => {
 }
 
 export default () => {
-  const { profile, addItem, saveData, check } = React.useContext(Context)
+  const { profile, addItem, saveContext, check } = React.useContext(Context)
   const history = useHistory()
   const [stepState, setStepState] = React.useState(profile.experiences ? profile.experiences : [{}])
   const [submit, setSubmit] = React.useState(false)
@@ -143,10 +142,10 @@ export default () => {
   const handleChange = (name, value, index, tag) => {
     const copy = [...stepState]
     if (tag) {
-      if (!copy[index].task) {
-        copy[index].task = [value]
+      if (!copy[index].taches) {
+        copy[index].taches = [value]
       } else {
-        copy[index].task.push(value)
+        copy[index].taches.push(value)
       }
     } else {
       copy[index][`${name}`] = value
@@ -155,7 +154,7 @@ export default () => {
       }
     }
     setStepState(copy)
-    check(stepState, setSubmit, ['name', 'task', 'companyName', 'companyAddress', 'startDate', 'endDate'])
+    check(stepState, setSubmit, ['nom', 'taches', 'nomEntreprise', 'adresseEntreprise', 'dateDebut', 'dateFin'])
   }
 
   const handleRemoveTag = (index, tagIndex) => {
@@ -165,7 +164,7 @@ export default () => {
       copy[index].task = undefined
     }
     setStepState(copy)
-    check(stepState, setSubmit, ['name', 'task', 'companyName', 'companyAddress', 'startDate', 'endDate'])
+    check(stepState, setSubmit, ['nom', 'taches', 'nomEntreprise', 'adresseEntreprise', 'dateDebut', 'dateFin'])
   }
 
   const handleRemoveExperience = (index) => {
@@ -196,7 +195,7 @@ export default () => {
           <PreviousButton />
         </Link>
         <Link to='step-five'>
-          <NextButton onClick={() => saveData(history, 'experiences', stepState, '/step-five')} disabled={!submit} />
+          <NextButton onClick={() => saveContext(history, 'experiences', stepState, '/step-five')} disabled={!submit} />
         </Link>
       </div>
     </Col>

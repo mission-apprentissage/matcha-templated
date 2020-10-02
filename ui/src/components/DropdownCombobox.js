@@ -58,9 +58,10 @@ export default (props) => {
 
   const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({
     items: props.inputItems,
+    initialInputValue: props.value ? props.value : '',
     itemToString,
     onInputValueChange: async ({ inputValue }) => props.setInputItems(await props.handleSearch(inputValue)),
-    onSelectedItemChange: ({ selectedItem }) => props.saveSelectedItem(props.valueName, selectedItem),
+    onSelectedItemChange: ({ selectedItem }) => props.saveSelectedItem(props.valueName, selectedItem, props.index),
   })
 
   return (

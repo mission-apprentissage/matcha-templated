@@ -19,7 +19,7 @@ import {
   RadioButton,
 } from '../../components'
 
-const criteria = [
+const criteres = [
   'Pratiquer une activité sportive',
   'Travailler dehors',
   'Travailler en contact avec la nature, avec des animaux',
@@ -107,7 +107,7 @@ const Input = styled.input`
   }
 `
 
-const MultiSelect = () => {
+const MultiSelect = ({ handleChange, handleRemoveTag, index }) => {
   const [inputValue, setInputValue] = React.useState('')
   const {
     getSelectedItemProps,
@@ -122,8 +122,6 @@ const MultiSelect = () => {
 
   const {
     isOpen,
-    getToggleButtonProps,
-    getLabelProps,
     getMenuProps,
     getInputProps,
     getComboboxProps,
@@ -132,7 +130,7 @@ const MultiSelect = () => {
     selectItem,
   } = useCombobox({
     inputValue,
-    items: getFilteredItems(criteria),
+    items: getFilteredItems(criteres),
     onStateChange: ({ inputValue, type, selectedItem }) => {
       switch (type) {
         case useCombobox.stateChangeTypes.InputChange:
@@ -144,6 +142,7 @@ const MultiSelect = () => {
           if (selectedItem) {
             setInputValue('')
             addSelectedItem(selectedItem)
+            handleChange('criteres', selectedItem, index, true)
             selectItem(null)
           }
           break
@@ -155,15 +154,18 @@ const MultiSelect = () => {
   return (
     <div>
       <div>
-        {selectedItems.map((selectedItem, index) => (
+        {/* {selectedItems.map((selectedItem, i) => (
           <Tag
-            key={`selected-item-${index}`}
-            onClick={() => removeSelectedItem(selectedItem)}
-            {...getSelectedItemProps({ selectedItem, index })}
+            key={`selected-item-${i}`}
+            onClick={() => {
+              handleRemoveTag(index, i)
+              removeSelectedItem(selectedItem)
+            }}
+            {...getSelectedItemProps({ selectedItem, i })}
           >
             {selectedItem}
           </Tag>
-        ))}
+        ))} */}
         <div {...getComboboxProps()}>
           <Input
             placeholder='selectionner un critère'
@@ -174,7 +176,7 @@ const MultiSelect = () => {
       </div>
       <Wrapper {...getMenuProps()}>
         {isOpen &&
-          getFilteredItems(criteria).map((item, index) => (
+          getFilteredItems(criteres).map((item, index) => (
             <li
               style={highlightedIndex === index ? { backgroundColor: color.lightGrey } : {}}
               key={`${item}${index}`}
@@ -189,16 +191,7 @@ const MultiSelect = () => {
 }
 
 const Step = (props) => {
-  const {
-    index,
-    periodicity,
-    activityName,
-    criteria,
-    handleChange,
-    handleRemoveTag,
-    handleRemoveActivity,
-    handleSearch,
-  } = props
+  const { index, periodicite, nom, criteres, handleChange, handleRemoveTag, handleRemoveActivity } = props
   return (
     <Col className='mt-3 mb-3'>
       {index > 0 && (
@@ -215,8 +208,8 @@ const Step = (props) => {
         placeholder='blogging, bénévolat, football, ...'
         required
         type='text'
-        value={activityName}
-        onChange={(event) => handleChange('activityName', event.target.value, index)}
+        value={nom}
+        onChange={(event) => handleChange('nom', event.target.value, index)}
       />
       <QuestionTitle title='A quelle fréquence pratiquez-vous cette activité' />
       <Row>
@@ -224,9 +217,9 @@ const Step = (props) => {
           (x, i) => {
             return (
               <RadioButton
-                state={periodicity === x ? true : null}
+                state={periodicite === x ? true : null}
                 key={i}
-                onClick={() => handleChange('periodicity', x, index)}
+                onClick={() => handleChange('periodicite', x, index)}
               >
                 {x}
               </RadioButton>
@@ -235,16 +228,15 @@ const Step = (props) => {
         )}
       </Row>
       <QuestionTitle title="Qu'est ce qui vous plait le plus dans cette activité (3 critères maximum) ?" />
-
       <div className='pb-1'>
-        {criteria &&
-          criteria.map((x, i) => (
+        {criteres &&
+          criteres.map((critere, i) => (
             <Tag key={i} onClick={() => handleRemoveTag(index, i)}>
-              {x}
+              {critere}
             </Tag>
           ))}
       </div>
-      <MultiSelect />
+      <MultiSelect handleChange={handleChange} index={index} handleRemoveTag={handleRemoveTag} />
       {/* <Input
         placeholder='ajouter un critère'
         onKeyDown={(e) => {
@@ -253,25 +245,25 @@ const Step = (props) => {
             e.target.value = ''
           }
         }}
-        disabled={criteria && criteria.length === 3}
+        disabled={criteres && criteres.length === 3}
       /> */}
     </Col>
   )
 }
 
 export default () => {
-  const { profile, check, addItem, saveData } = React.useContext(Context)
+  const { profile, check, addItem, saveContext } = React.useContext(Context)
   const history = useHistory()
-  const [stepState, setStepState] = React.useState(profile.activities ? profile.activities : [{}])
+  const [stepState, setStepState] = React.useState(profile.activites ? profile.activites : [{}])
   const [submit, setSubmit] = React.useState(false)
 
   const handleChange = (name, value, index, tag) => {
     const copy = [...stepState]
     if (tag) {
-      if (!copy[index].criteria) {
-        copy[index].criteria = [value]
+      if (!copy[index].criteres) {
+        copy[index].criteres = [value]
       } else {
-        copy[index].criteria.push(value)
+        copy[index].criteres.push(value)
       }
     } else {
       copy[index][`${name}`] = value
@@ -280,17 +272,17 @@ export default () => {
       }
     }
     setStepState(copy)
-    check(stepState, setSubmit, ['activityName', 'periodicity', 'criteria'])
+    check(stepState, setSubmit, ['nom', 'periodicite', 'criteres'])
   }
 
   const handleRemoveTag = (index, tagIndex) => {
     const copy = [...stepState]
-    copy[index].criteria.splice(tagIndex, 1)
-    if (copy[index].criteria.length === 0) {
-      copy[index].criteria = undefined
+    copy[index].criteres.splice(tagIndex, 1)
+    if (copy[index].criteres.length === 0) {
+      copy[index].criteres = undefined
     }
     setStepState(copy)
-    check(stepState, setSubmit, ['activityName', 'periodicity', 'criteria'])
+    check(stepState, setSubmit, ['nom', 'periodicite', 'criteres'])
   }
 
   const handleRemoveActivity = (index) => {
@@ -299,7 +291,7 @@ export default () => {
     setStepState(copy)
   }
 
-  const handleSearch = (search) => {}
+  console.log(stepState)
 
   return (
     <Col>
@@ -321,7 +313,7 @@ export default () => {
         <Link to='step-four'>
           <PreviousButton />
         </Link>
-        <NextButton onClick={() => saveData(history, 'activities', stepState, '/step-six')} disabled={!submit} />
+        <NextButton onClick={() => saveContext(history, 'activites', stepState, '/step-six')} disabled={!submit} />
       </div>
     </Col>
   )

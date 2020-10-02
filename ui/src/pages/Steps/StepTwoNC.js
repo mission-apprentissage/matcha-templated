@@ -10,10 +10,10 @@ import color from '../../components/helper/color'
 import { Context } from '../../context'
 
 const schema = Yup.object().shape({
-  firstname: Yup.string().required('champ obligatoire*').min(1),
-  lastname: Yup.string().required('champ obligatoire*').min(1),
-  birthday: Yup.date().required('champ obligatoire*'),
-  phone: Yup.string().required('champ obligatoire*').min(1),
+  prenom: Yup.string().required('champ obligatoire*').min(1),
+  nom: Yup.string().required('champ obligatoire*').min(1),
+  dateNaissance: Yup.date().required('champ obligatoire*'),
+  telephone: Yup.string().required('champ obligatoire*').min(1),
   email: Yup.string().email('Adresse email invalide').required('champ obligatoire*').min(1),
 })
 
@@ -40,38 +40,40 @@ const MyInput = (props) => {
 }
 
 const Formulaire = () => {
-  const { updateUser, profile } = React.useContext(Context)
+  const { updateUser, profile, saveContext } = React.useContext(Context)
   const history = useHistory()
 
   return (
     <Formik
       initialValues={{
-        firstname: '',
-        lastname: '',
-        birthday: '',
-        phone: '',
+        prenom: '',
+        nom: '',
+        dateNaissance: '',
+        telephone: '',
         email: '',
       }}
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
-        updateUser({ user: values })
+        saveContext(history, 'candidat', values, '/step-three')
         setSubmitting(false)
-        history.push('/step-three')
       }}
     >
       {({ values, isSubmitting, isValid, dirty }) => {
         return (
           <Form>
             <InputTitle>Votre Prénom</InputTitle>
-            <MyInput name='firstname' type='text' placeholder='' value={values.firstname} />
+            <MyInput name='prenom' type='text' placeholder='' value={values.prenom} />
             <InputTitle>Votre Nom</InputTitle>
-            <MyInput name='lastname' type='text' placeholder='' value={values.lastname} />
+            <MyInput name='nom' type='text' placeholder='' value={values.nom} />
             <InputTitle>Date de naissance</InputTitle>
-            <MyInput name='birthday' type='date' value={values.birthday} hide={true} />
+            <MyInput name='dateNaissance' type='date' value={values.dateNaissance} hide={true} />
             <InputTitle>À quel numéro les employeurs peuvent-ils vous joindre ? *</InputTitle>
-            <MyInput name='phone' type='tel' placeholder='' value={values.phone} />
+            <MyInput name='telephone' type='tel' placeholder='' value={values.telephone} />
             <InputTitle>Sur quelle adresse-mail les employeurs peuvent-ils vous joindre ? *</InputTitle>
             <MyInput name='email' type='email' placeholder='' value={values.email} />
+            {/* Numéro PSUP */}
+            {/* <InputTitle>Sur quelle adresse-mail les employeurs peuvent-ils vous joindre ? *</InputTitle>
+            <MyInput name='email' type='email' placeholder='' value={values.email} /> */}
             <div className='d-flex justify-content-end'>
               <NextButton type='submit' disabled={!(isValid && (dirty || profile.user)) || isSubmitting} />
             </div>

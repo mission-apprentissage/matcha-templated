@@ -15,7 +15,7 @@ import {
 import { Context } from '../../context'
 
 const Formulaire = (props) => {
-  const { firstname, lastname, role, phone, email, handleChange, handleRemoveContact, index } = props
+  const { prenom, nom, role, telephone, email, handleChange, handleRemoveContact, index } = props
   return (
     <Col>
       {index > 0 && (
@@ -25,13 +25,13 @@ const Formulaire = (props) => {
         </div>
       )}
       <InputTitle>Prénom</InputTitle>
-      <Input type='text' value={firstname} onChange={(event) => handleChange('firstname', event.target.value, index)} />
+      <Input type='text' value={prenom} onChange={(event) => handleChange('prenom', event.target.value, index)} />
       <InputTitle>Nom</InputTitle>
-      <Input type='text' value={lastname} onChange={(event) => handleChange('lastname', event.target.value, index)} />
+      <Input type='text' value={nom} onChange={(event) => handleChange('nom', event.target.value, index)} />
       <InputTitle>Rôle dans la structure / l'entreprise</InputTitle>
       <Input type='text' value={role} onChange={(event) => handleChange('role', event.target.value, index)} />
       <InputTitle>Téléphone</InputTitle>
-      <Input type='tel' value={phone} onChange={(event) => handleChange('phone', event.target.value, index)} />
+      <Input type='tel' value={telephone} onChange={(event) => handleChange('telephone', event.target.value, index)} />
       <InputTitle>Courriel</InputTitle>
       <Input type='email' value={email} onChange={(event) => handleChange('email', event.target.value, index)} />
     </Col>
@@ -39,7 +39,7 @@ const Formulaire = (props) => {
 }
 
 export default () => {
-  const { profile, addItem, saveData } = React.useContext(Context)
+  const { profile, addItem, saveContext } = React.useContext(Context)
   const [contactState, setContactState] = React.useState([{}])
   const history = useHistory()
 
@@ -73,7 +73,7 @@ export default () => {
         <Link to='step-five'>
           <PreviousButton />
         </Link>
-        <NextButton onClick={() => saveData(history, 'recommandations', contactState, '/final')} />
+        <NextButton onClick={() => saveContext(history, 'recommandations', contactState, '/final')} />
       </div>
     </Col>
   )

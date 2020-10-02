@@ -14,24 +14,23 @@ import {
 } from '../../components'
 import { Context } from '../../context'
 
-const distance = ['à moins de 2 km', 'à moins de 5 km', 'à moins de 10 km', 'à moins de 20 km', 'à moins de 30 km']
+const distance = [
+  { label: 'à moins de 2 km', code: 2 },
+  { label: 'à moins de 5 km', code: 5 },
+  { label: 'à moins de 10 km', code: 10 },
+  { label: 'à moins de 20 km', code: 20 },
+  { label: 'à moins de 30 km', code: 30 },
+]
 
 export default () => {
-  const { updateUser, profile } = React.useContext(Context)
-  const [values, setValues] = React.useState(profile.mobility ? profile.mobility : {})
+  const { saveContext, profile, check } = React.useContext(Context)
+  const [values, setValues] = React.useState(profile.mobilite ? profile.mobilite : {})
   const [submit, setSubmit] = React.useState(false)
   const history = useHistory()
 
   const handleValues = (name, value) => {
     setValues({ ...values, [name]: value })
-    if (Object.keys(values).length === 2) {
-      setSubmit(true)
-    }
-  }
-
-  const handleSubmit = () => {
-    updateUser({ mobility: values })
-    history.push('/step-four')
+    check(values, setSubmit, ['commune', 'permis', 'distance'])
   }
 
   return (
@@ -41,7 +40,7 @@ export default () => {
         title='Dans quelle commune habitez-vous ?'
         placeholder='entrez votre ville'
         handleValues={handleValues}
-        context={profile.mobility && profile.mobility.name}
+        context={profile.mobilite && profile.mobilite.commune}
       />
       <QuestionTitle title='Avez-vous le permis de conduire ?' />
       <div className='d-md-flex justify-content-between'>
@@ -64,7 +63,7 @@ export default () => {
             onClick={() => handleValues('distance', dist)}
             state={values.distance === dist ? true : null}
           >
-            {dist}
+            {dist.label}
           </RadioButton>
         ))}
       </Row>
@@ -77,7 +76,7 @@ export default () => {
           <PreviousButton />
         </Link>
         <Link to='step-four'>
-          <NextButton onClick={() => handleSubmit()} disabled={!submit} />
+          <NextButton onClick={() => saveContext(history, 'mobilite', values, '/step-four')} disabled={!submit} />
         </Link>
       </div>
     </Col>

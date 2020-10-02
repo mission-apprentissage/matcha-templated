@@ -17,35 +17,56 @@ httpTests(__filename, ({ startServer }) => {
     await Questionnaire.deleteMany({});
 
     const dataToAdd = {
-      user_id: "5f6206373f9a6f10488dd151",
+      questionnaire_id: "5f6206373f9a6f10488dd151",
+      candidat: {
+        prenom: "Test",
+        nom: "Test",
+        telephone: "0612345678",
+        email: "test@mna.test",
+        dateNaissance: "2020-1-10",
+      },
       voeux: [
         {
           code_voeux: "testCode",
+          etablissement: "testEtablissement",
+          metier: "testMetier",
+          niveau: "testNiveau",
           formation: "testFormation",
           choix: true,
         },
         {
-          code_voeux: "codeVoeux2",
-          formation: "formation2",
-          choix: false,
+          code_voeux: "testCode2",
+          etablissement: "testEtablissement2",
+          metier: "testMetier2",
+          niveau: "testNiveau2",
+          formation: "testFormation2",
+          choix: true,
         },
       ],
+      mobilite: {
+        commune: "testCommune",
+        permis: true,
+        distance: {
+          label: "testDistance",
+          code: 3,
+        },
+      },
       experiences: [
         {
           nom: "experience1",
           taches: ["tache1", "tache2"],
-          nom_entreprise: "entreprise",
-          adresse_entreprise: "adresse entreprise",
-          date_debut: Date.now,
-          date_fin: Date.now,
+          nomEntreprise: "entreprise",
+          adresseEntreprise: "adresse entreprise",
+          dateDebut: Date.now,
+          dateFin: Date.now,
         },
         {
           nom: "experience2",
-          taches: ["tache2", "tache3"],
-          nom_entreprise: "entreprise2",
-          adresse_entreprise: "adresse entreprise2",
-          date_debut: Date.now,
-          date_fin: Date.now,
+          taches: ["tache1", "tache2"],
+          nomEntreprise: "entreprise2",
+          adresseEntreprise: "adresse entreprise2",
+          dateDebut: Date.now,
+          dateFin: Date.now,
         },
       ],
       activites: [
@@ -78,7 +99,8 @@ httpTests(__filename, ({ startServer }) => {
       ],
     };
 
-    const response = await httpClient.post("/api/questionnaire/items", dataToAdd);
+    const fakeId = "999bf1d7-a378-4b3f-a35c-1277304cfa1c";
+    const response = await httpClient.post("/api/questionnaire/items/999bf1d7-a378-4b3f-a35c-1277304cfa1c", dataToAdd);
     assert.strictEqual(response.status, 200);
     assert.ok(response.data._id);
 

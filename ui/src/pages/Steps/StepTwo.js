@@ -21,7 +21,6 @@ export default () => {
     newVal[index].choice = val
     setValues(newVal)
     if (values.filter((x) => x.choice !== undefined).length === values.length && submit === false) {
-      console.log('test')
       setSubmit(!submit)
     }
   }

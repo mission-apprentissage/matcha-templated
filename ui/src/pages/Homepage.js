@@ -9,7 +9,6 @@ import { RadioButton, Title } from '../components'
 export default () => {
   const { profile } = React.useContext(Context)
   let history = useHistory()
-  console.log(!profile, !!profile.user)
 
   React.useEffect(() => {
     // setTimeout(() => {

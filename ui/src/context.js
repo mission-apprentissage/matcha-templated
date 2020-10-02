@@ -50,13 +50,11 @@ class ContextProvider extends React.Component {
     fn(copy)
   }
 
-  saveDataInDB = () => {
-    console.log('data sent to API', this.state.profile, this.state.questionnaireId)
+  saveDataInDB = (history, path) => {
     axios
       .post(`/api/questionnaire/items/${this.state.questionnaireId}`, this.state.profile)
       .then((res) => {
-        console.log(res)
-        return res
+        if (res.status === 200) history.push(path)
       })
       .catch((error) => console.log(error))
   }
@@ -71,8 +69,7 @@ class ContextProvider extends React.Component {
     } else {
       await this.updateUser({ [scope]: state })
     }
-    await this.saveDataInDB()
-    history.push(path)
+    await this.saveDataInDB(history, path)
   }
 
   render() {

@@ -291,8 +291,6 @@ export default () => {
     setStepState(copy)
   }
 
-  console.log(stepState)
-
   return (
     <Col>
       <StepTitle>Etape 5/6 - Vos activités </StepTitle>

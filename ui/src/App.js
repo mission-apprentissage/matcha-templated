@@ -9,8 +9,6 @@ import withTracker from './common/utils/withTracker'
 import './App.css'
 
 const App = () => {
-  const { profile } = React.useContext(Context)
-  console.log('context', profile)
   return (
     <Layout>
       <Switch>

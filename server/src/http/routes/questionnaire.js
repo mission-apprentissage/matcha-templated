@@ -4,16 +4,30 @@ const Joi = require("joi");
 const { Questionnaire } = require("../../common/model");
 const logger = require("../../common/logger");
 const boom = require("boom");
+const { join } = require("lodash");
 
 /**
  * Schema for validation
  */
 const questionnaireSchema = Joi.object({
-  user_id: Joi.string(),
+  questionnaire_id: Joi.string(),
+  user: Joi.object({
+    prenom: Joi.string(),
+    nom: Joi.string(),
+    email: Joi.string(),
+    dateNaissance: Joi.date(),
+  }),
+  mobilite: Joi.object({
+    commune: Joi.string(),
+    permis: Joi.string(),
+    distance: Joi.string(),
+  }),
   voeux: Joi.array().items({
     code_voeux: Joi.string(),
     formation: Joi.string(),
+    metier: Joi.string(),
     choix: Joi.boolean(),
+    voeux_manuel: Joi.boolean(),
   }),
   experiences: Joi.array().items({
     nom: Joi.string(),
@@ -91,6 +105,45 @@ module.exports = () => {
 
       await toAdd.save();
       res.json(toAdd);
+    })
+  );
+
+  /**
+   * Update an item by id
+   */
+  router.post(
+    "/items/:questionnaireId",
+    tryCatch(async (req, res) => {
+      const { questionnaireId } = req.params;
+      const item = req.body;
+      const exist = await Questionnaire.findOne({ questionnaire_id: questionnaireId });
+      if (!exist) {
+        logger.info("Adding new questionnaire: ", questionnaireId);
+        await Questionnaire.create({
+          questionnaire_id: questionnaireId,
+          candidat: item.candidat,
+          voeux: item.voeux,
+          experiences: item.experiences,
+          activites: item.activites,
+          recommandations: item.recommandations,
+          mobilite: item.mobilite,
+        }).then((result) => res.json(result));
+      } else {
+        logger.info("Updating questionnaire: ", questionnaireId, item);
+        await Questionnaire.findOneAndUpdate(
+          { questionnaire_id: questionnaireId },
+          {
+            candidat: item.candidat,
+            voeux: item.voeux,
+            experiences: item.experiences,
+            activites: item.activites,
+            recommandations: item.recommandations,
+            mobilite: item.mobilite,
+          },
+          { new: true }
+        ).then((result) => res.json(result));
+      }
+      // await questionnaireSchema.validateAsync(req.body, { abortEarly: false });
     })
   );
 

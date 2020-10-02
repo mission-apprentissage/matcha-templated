@@ -25,12 +25,14 @@ const distance = [
 export default () => {
   const { saveContext, profile, check } = React.useContext(Context)
   const [values, setValues] = React.useState(profile.mobilite ? profile.mobilite : {})
-  const [submit, setSubmit] = React.useState(false)
+  const [submit, setSubmit] = React.useState(profile.mobilite ? true : false)
   const history = useHistory()
 
   const handleValues = (name, value) => {
     setValues({ ...values, [name]: value })
-    check(values, setSubmit, ['commune', 'permis', 'distance'])
+    if (Object.keys(values).length === 2) {
+      setSubmit(true)
+    }
   }
 
   return (

@@ -13,7 +13,6 @@ const Wrapper = styled.div`
   }
 `
 
-// export default styled.input`
 const Input = styled.input`
   border: 1px solid ${color.middleGrey};
   box-sizing: border-box;
@@ -21,9 +20,9 @@ const Input = styled.input`
   font-family: Inter;
   font-size: 1rem;
   padding-left: 10px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  margin-bottom: 1.5rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  margin-bottom: 2rem;
   width: 100%;
   outline: none;
   ::placeholder {
@@ -33,6 +32,11 @@ const Input = styled.input`
     props.value &&
     `
     border: 1px solid ${color.black};
+  `}
+  ${(props) =>
+    props.autocomplete &&
+    `
+    margin-bottom: 0;
   `}
   :hover {
     border: 1px solid ${color.grey};

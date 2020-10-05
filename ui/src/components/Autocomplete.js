@@ -6,6 +6,9 @@ import _ from 'lodash'
 import { InputTitle } from './index'
 import color from './helper/color'
 
+const Container = styled.div`
+  margin-bottom: 2rem;
+`
 const Wrapper = styled.ul`
   width: 95%;
   margin: 0;
@@ -35,8 +38,8 @@ const Input = styled.input`
   font-family: Inter;
   font-size: 1rem;
   padding-left: 10px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
   margin-bottom: 1.5rem;
   width: 100%;
   outline: none;
@@ -110,7 +113,7 @@ export default (props) => {
   })
 
   return (
-    <div>
+    <Container>
       <div {...getRootProps()}>
         <InputTitle {...getInputLabelProps()}>{props.title}</InputTitle>
         <Input {...getInputProps()} placeholder={props.placeholder} required type='text' className='mb-0' />
@@ -122,6 +125,6 @@ export default (props) => {
           ))}
         </Wrapper>
       ) : null}
-    </div>
+    </Container>
   )
 }

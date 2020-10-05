@@ -48,7 +48,6 @@ export default () => {
         <RadioButton onClick={() => handleValues('permis', true)} state={values.permis === true ? true : null}>
           Oui
         </RadioButton>
-        <div className='p-1'></div>
         <RadioButton
           onClick={() => setValues({ ...values, permis: false })}
           state={values.permis === false ? false : null}
@@ -68,10 +67,12 @@ export default () => {
           </RadioButton>
         ))}
       </Row>
-      <ChatBubble>
-        Attention de bien disposer d’un moyen de déplacement ou d’une possibilité de logement pour vous rendre à
-        l’entreprise
-      </ChatBubble>
+      <div className='mt-4'>
+        <ChatBubble>
+          Attention de bien disposer d’un moyen de déplacement ou d’une possibilité de logement pour vous rendre à
+          l’entreprise
+        </ChatBubble>
+      </div>
       <div className='d-flex justify-content-between mb-5'>
         <Link to='step-two'>
           <PreviousButton />

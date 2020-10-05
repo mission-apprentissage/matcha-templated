@@ -26,7 +26,7 @@ const ErrorMessage = styled.div`
 const MyInput = (props) => {
   const [field, meta] = useField(props)
   return (
-    <>
+    <div className='mb-4'>
       <Input
         css={`
           margin-bottom: 0.2rem;
@@ -35,7 +35,7 @@ const MyInput = (props) => {
         {...field}
       />
       {meta.touched && meta.error ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
-    </>
+    </div>
   )
 }
 

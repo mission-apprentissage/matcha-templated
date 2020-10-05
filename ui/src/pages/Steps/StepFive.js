@@ -8,6 +8,7 @@ import color from '../../components/helper/color'
 import { Context } from '../../context'
 import {
   Button,
+  Input,
   InputTitle,
   StepTitle,
   ChatBubble,
@@ -50,7 +51,9 @@ const criteres = [
   'Soigner',
   "Travailler auprès d'enfants",
 ]
-
+const Container = styled.div`
+  margin-bottom: 2rem;
+`
 const Wrapper = styled.ul`
   width: 95%;
   margin: 0;
@@ -73,41 +76,7 @@ const Wrapper = styled.ul`
   }
 `
 
-const Input = styled.input`
-  border: 1px solid ${color.grey};
-  box-sizing: border-box;
-  border-radius: 4px;
-  font-family: Inter;
-  font-size: 1rem;
-  padding-left: 10px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  margin-top: 0.5rem;
-  width: 100%;
-  outline: none;
-  border: 1px solid ${color.middleGrey};
-  ${(props) =>
-    props.value &&
-    `
-    border: 1px solid ${color.black};
-  `}
-  ::placeholder {
-    color: #98b0b7;
-  }
-  :hover {
-    border: 1px solid ${color.red};
-  }
-  :focus {
-    border: 1px solid ${color.red};
-    background: ${color.white} !important;
-  }
-  :disabled {
-    border: 1px solid ${color.lightGrey};
-    background: ${color.lightGrey};
-  }
-`
-
-const MultiSelect = ({ handleChange, handleRemoveTag, index }) => {
+const MultiSelect = ({ handleChange, handleRemoveTag, state, index }) => {
   const [inputValue, setInputValue] = React.useState('')
   const {
     getSelectedItemProps,
@@ -152,7 +121,7 @@ const MultiSelect = ({ handleChange, handleRemoveTag, index }) => {
     },
   })
   return (
-    <div>
+    <Container>
       <div>
         {/* {selectedItems.map((selectedItem, i) => (
           <Tag
@@ -168,9 +137,10 @@ const MultiSelect = ({ handleChange, handleRemoveTag, index }) => {
         ))} */}
         <div {...getComboboxProps()}>
           <Input
+            autocomplete={true}
             placeholder='selectionner un critère'
             {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
-            disabled={selectedItems && selectedItems.length === 3}
+            disabled={state && state.length === 3}
           />
         </div>
       </div>
@@ -186,7 +156,7 @@ const MultiSelect = ({ handleChange, handleRemoveTag, index }) => {
             </li>
           ))}
       </Wrapper>
-    </div>
+    </Container>
   )
 }
 
@@ -212,7 +182,7 @@ const Step = (props) => {
         onChange={(event) => handleChange('nom', event.target.value, index)}
       />
       <QuestionTitle title='A quelle fréquence pratiquez-vous cette activité' />
-      <Row>
+      <Row style={{ marginBottom: '2rem' }}>
         {['Tous les jours', 'Plusieurs fois par semaine', 'Plusieurs fois par mois', "Moins d'une fois par mois"].map(
           (x, i) => {
             return (
@@ -236,7 +206,7 @@ const Step = (props) => {
             </Tag>
           ))}
       </div>
-      <MultiSelect handleChange={handleChange} index={index} handleRemoveTag={handleRemoveTag} />
+      <MultiSelect handleChange={handleChange} index={index} handleRemoveTag={handleRemoveTag} state={criteres} />
       {/* <Input
         placeholder='ajouter un critère'
         onKeyDown={(e) => {

@@ -27,8 +27,8 @@ const Input = styled.input`
   font-family: Inter;
   font-size: 1rem;
   padding-left: 10px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
   width: 100%;
   outline: none;
   ::placeholder {
@@ -65,7 +65,7 @@ export default (props) => {
   })
 
   return (
-    <div className='pb-3'>
+    <div className='pb-3 mb-5'>
       <div {...getComboboxProps()}>
         <Input placeholder='sélectionner un métier' {...getInputProps()} />
       </div>

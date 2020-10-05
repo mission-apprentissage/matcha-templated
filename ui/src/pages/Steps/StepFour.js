@@ -56,7 +56,7 @@ const Step = (props) => {
       </ChatBubble>
       <QuestionTitle title='Votre expérience' />
       <Input
-        placeholder="animateur, cueillette, garde d'enfant, ..."
+        placeholder='ranger les rayons, préparer les plans de travail, ...'
         required
         type='text'
         onChange={(e) => handleChange('nom', e.target.value, index)}
@@ -72,7 +72,7 @@ const Step = (props) => {
           ))}
       </div>
       <Input
-        placeholder='entre un mot-clé'
+        placeholder='entrer un mot-clé'
         required
         type='text'
         onKeyDown={(e) => {
@@ -159,9 +159,9 @@ export default () => {
 
   const handleRemoveTag = (index, tagIndex) => {
     const copy = [...stepState]
-    copy[index].task.splice(tagIndex, 1)
-    if (copy[index].task.length === 0) {
-      copy[index].task = undefined
+    copy[index].taches.splice(tagIndex, 1)
+    if (copy[index].taches.length === 0) {
+      copy[index].taches = undefined
     }
     setStepState(copy)
     check(stepState, setSubmit, ['nom', 'taches', 'nomEntreprise', 'adresseEntreprise', 'dateDebut', 'dateFin'])

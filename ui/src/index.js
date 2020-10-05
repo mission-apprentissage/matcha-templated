@@ -6,9 +6,15 @@ import ReactGA from 'react-ga'
 import { hotjar } from 'react-hotjar'
 import App from './App'
 
+console.log(window.location.hostname)
 if (process.env.NODE_ENV !== 'development') {
-  ReactGA.initialize('UA-178733721-1')
-  hotjar.initialize('2024584', '6')
+  if (window.location.hostname === 'matcha') {
+    ReactGA.initialize('UA-178733721-1')
+    hotjar.initialize('2024584', '6')
+  }
+  if (window.location.hostname === 'matcha-recette') {
+    hotjar.initialize('2024615', '6')
+  }
 }
 
 ReactDOM.render(

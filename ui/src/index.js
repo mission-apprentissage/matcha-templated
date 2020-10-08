@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'development') {
     TagManager.initialize({ gtmId: 'GTM-WPC8P2B' })
   }
   if (window.location.hostname === 'matcha-recette.apprentissage.beta.gouv.fr') {
-    TagManager.initialize({ gtmId: 'GTM-TCBGT84' })
+    TagManager.initialize({ gtmId: 'GTM-KL849C7' })
   }
 }
 

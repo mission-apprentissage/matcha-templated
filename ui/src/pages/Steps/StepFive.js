@@ -1,5 +1,5 @@
 import React from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Col, Row, Dropdown } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
 import { useCombobox, useMultipleSelection } from 'downshift'
 import styled from 'styled-components'
@@ -55,7 +55,8 @@ const Container = styled.div`
   margin-bottom: 2rem;
 `
 const Wrapper = styled.ul`
-  width: 95%;
+  width: 94%;
+  max-height: 200px;
   margin: 0;
   padding: 0;
   z-index: 1;
@@ -65,14 +66,15 @@ const Wrapper = styled.ul`
   overflow: auto;
   box-shadow: 0px 1px 8px rgba(8, 67, 85, 0.24);
   border-radius: 4px;
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: ${color.middleGrey};
+  }
   li {
     width: 100%;
     padding: 0.5rem;
-  }
-  li[data-focus='true'] {
-    background: ${color.lightGrey};
-    /* background: ${color.grey}; */
-    /* color: white; */
   }
 `
 
@@ -94,6 +96,7 @@ const MultiSelect = ({ handleChange, handleRemoveTag, state, index }) => {
     getMenuProps,
     getInputProps,
     getComboboxProps,
+    getToggleButtonProps,
     highlightedIndex,
     getItemProps,
     selectItem,
@@ -140,6 +143,7 @@ const MultiSelect = ({ handleChange, handleRemoveTag, state, index }) => {
             autocomplete={true}
             placeholder='selectionner un critère'
             {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
+            {...getToggleButtonProps()}
             disabled={state && state.length === 3}
           />
         </div>
@@ -197,7 +201,10 @@ const Step = (props) => {
           }
         )}
       </Row>
-      <QuestionTitle title="Qu'est ce qui vous plait le plus dans cette activité (3 critères maximum) ?" />
+      <QuestionTitle
+        title="Qu'est ce qui vous plait le plus dans cette activité (3 critères maximum) ?"
+        subtitle='Appuyer sur Entrer pour insérer un critère'
+      />
       <div className='pb-1'>
         {criteres &&
           criteres.map((critere, i) => (

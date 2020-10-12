@@ -85,6 +85,7 @@ const Step = (props) => {
           }
         }}
         disabled={taches && taches.length === 3}
+        tag={true}
       />
       <ChatBubble>
         Les employeurs portent de l’attention à cette information. Aller au plus simple en utilisant des verbes d’action

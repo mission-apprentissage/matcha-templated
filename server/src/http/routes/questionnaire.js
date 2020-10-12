@@ -4,7 +4,12 @@ const Joi = require("joi");
 const { Questionnaire } = require("../../common/model");
 const logger = require("../../common/logger");
 const boom = require("boom");
-const { join } = require("lodash");
+const { Client } = require("@elastic/elasticsearch");
+const { level } = require("../../common/logger");
+const client = new Client({
+  node: "https://tables-correspondances-recette.apprentissage.beta.gouv.fr/api/es/search/",
+  // node: "https://tables-correspondances-recette.apprentissage.beta.gouv.fr/api/",
+});
 
 /**
  * Schema for validation
@@ -105,6 +110,40 @@ module.exports = () => {
 
       await toAdd.save();
       res.json(toAdd);
+    })
+  );
+
+  /**
+   * Recherche d'une formation sur l'elastic search
+   * https://tables-correspondances-recette.apprentissage.beta.gouv.fr/api/es/search/bcnformationdiplome/_search
+   */
+  router.post(
+    "/search",
+    tryCatch(async (req, res) => {
+      const { search_term, level } = req.body;
+      const { body } = await client.search({
+        index: "bcnformationdiplome",
+        body: {
+          query: {
+            bool: {
+              must: {
+                multi_match: {
+                  query: search_term,
+                  fields: ["LIBELLE_LONG_200^10", "LIBELLE_STAT_33^7"],
+                  type: "phrase_prefix",
+                  operator: "or",
+                },
+              },
+              // filter on level (BTS, CAP, BEP, etc....)
+            },
+          },
+        },
+      });
+      if (body) {
+        res.json(body.hits);
+      } else {
+        throw boom.badRequest("No result returned from the elastic search");
+      }
     })
   );
 

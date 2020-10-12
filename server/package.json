@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@azure/storage-blob": "12.0.0",
+    "@elastic/elasticsearch": "7.9.1",
     "axios": "0.20.0",
     "body-parser": "1.19.0",
     "boom": "7.3.0",

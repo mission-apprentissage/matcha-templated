@@ -8,8 +8,9 @@ const Wrapper = styled.div`
   width: 100%;
   span {
     position: absolute;
-    right: 20px;
-    padding-top: 3px;
+    right: 22px;
+    padding-top: 12px;
+    color: ${color.middleGrey};
   }
 `
 
@@ -53,14 +54,16 @@ const Input = styled.input`
 `
 
 export default (props) => {
+  console.log(props)
   return (
-    // <Wrapper>
-    //   {!props.hide && props.value && (
-    //     <span>
-    //       <img src={edit} alt='edit' />
-    //     </span>
-    //   )}
-    <Input {...props} />
-    // </Wrapper>
+    <Wrapper>
+      {props.tag && (
+        <span>
+          <p>Appuyer sur entrer</p>
+          {/* <img src={edit} alt='edit' /> */}
+        </span>
+      )}
+      <Input {...props} />
+    </Wrapper>
   )
 }

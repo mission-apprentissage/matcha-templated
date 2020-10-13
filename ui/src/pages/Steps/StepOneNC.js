@@ -53,8 +53,13 @@ const Step = (props) => {
       <QuestionTitle title='Niveau de la formation' />
       {/* <FormWrapper> */}
       {/* <Form.Group> */}
-      <FormWrapper value={niveau} onChange={(e) => handleValues('niveau', e.target.value, index)} as='select'>
-        <option disabled selected value></option>
+      <FormWrapper
+        defaultValue='default'
+        value={niveau}
+        onChange={(e) => handleValues('niveau', e.target.value, index)}
+        as='select'
+      >
+        <option disabled value='default'></option>
         <option value='3'>CAP, BEP</option>
         <option value='4'>Baccalauréat</option>
         <option value='5'>DEUG, BTS, DUT, DEUST</option>
@@ -102,9 +107,13 @@ export default () => {
 
   const handleJobSearch = async (search) => {
     if (search) {
-      const result = await fetch(`https://idea-mna-api.herokuapp.com/romelabels?title=${search}`)
-      const data = await result.json()
-      return data.labelsAndRomes
+      try {
+        const result = await fetch(`https://idea.apprentissage.beta.gouv.fr/api/romelabels?title=${search}`)
+        const data = await result.json()
+        return data.labelsAndRomes
+      } catch (error) {
+        throw new Error(error)
+      }
     }
     return inputJobItems
   }

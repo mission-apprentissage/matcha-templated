@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import useAutocomplete from '@material-ui/lab/useAutocomplete'
-import _ from 'lodash'
 
 import { InputTitle } from './index'
 import color from './helper/color'
@@ -89,7 +88,7 @@ export default (props) => {
         ? props.handleValues('commune', value.name)
         : '',
     getOptionSelected: (option, value) => option.name === value.name,
-    onInputChange: _.throttle(async (event) => {
+    onInputChange: async (event) => {
       if (props.fullAddress) {
         const value = event ? event.target.value : defaultValue
         const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}`)
@@ -109,7 +108,7 @@ export default (props) => {
         })
         setOption(adresse)
       }
-    }, 5000),
+    },
   })
 
   return (

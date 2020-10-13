@@ -1,6 +1,10 @@
-gzip on; location / { limit_req zone=flood burst=100 nodelay; proxy_pass
-http://ui:3000; proxy_redirect off; proxy_cache off; proxy_set_header Host
-$host; proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For
+location / { gzip on; gzip_proxied no-cache no-store private expired auth;
+limit_req zone=flood burst=100 nodelay; proxy_pass http://ui:3000;
+proxy_redirect off; proxy_cache off; proxy_set_header Host $host;
+proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For
 $proxy_add_x_forwarded_for; proxy_set_header X-Forwarded-Host $server_name;
 proxy_set_header X-Forwarded-Proto $scheme; proxy_set_header Accept-Encoding
-gzip; }
+gzip; proxy_set_header Strict-Transport-Security
+"max-age:31536000;includeSubdomains"; proxy_set_header X-Frame-Options
+SAMEORIGIN; proxy_set_header X-Content-Type-Options nosniff, proxy_set_header
+Referrer-Policy no-referrer;}

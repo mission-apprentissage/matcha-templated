@@ -1,11 +1,11 @@
 import React from 'react'
 import { Col } from 'react-bootstrap'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import * as Yup from 'yup'
 import { Formik, Form, useField } from 'formik'
 import styled from 'styled-components/macro'
 
-import { Input, InputTitle, StepTitle, ChatBubble, NextButton } from '../../components'
+import { Input, InputTitle, StepTitle, ChatBubble, NextButton, PreviousButton } from '../../components'
 import color from '../../components/helper/color'
 import { Context } from '../../context'
 
@@ -77,7 +77,10 @@ const Formulaire = () => {
             {/* Numéro PSUP */}
             {/* <InputTitle>Sur quelle adresse-mail les employeurs peuvent-ils vous joindre ? *</InputTitle>
             <MyInput name='email' type='email' placeholder='' value={values.email} /> */}
-            <div className='d-flex justify-content-end'>
+            <div className='d-flex justify-content-between mb-5'>
+              <Link to='step-one'>
+                <PreviousButton />
+              </Link>
               <NextButton type='submit' disabled={!(isValid && (dirty || candidat)) || isSubmitting} />
             </div>
           </Form>

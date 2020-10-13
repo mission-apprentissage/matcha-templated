@@ -54,7 +54,6 @@ const Input = styled.input`
 `
 
 export default (props) => {
-  console.log(props)
   return (
     <Wrapper>
       {props.tag && (

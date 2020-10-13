@@ -64,7 +64,13 @@ export default () => {
         maîtres de stages qui pourraient parler de vous à leur communiquer ?
       </ChatBubble>
       {contactState.map((item, index) => (
-        <Formulaire index={index} handleChange={handleChange} handleRemoveContact={handleRemoveContact} {...item} />
+        <Formulaire
+          key={index}
+          index={index}
+          handleChange={handleChange}
+          handleRemoveContact={handleRemoveContact}
+          {...item}
+        />
       ))}
       <Button experience='true' onClick={() => addItem(contactState, setContactState)}>
         + Ajouter un contact

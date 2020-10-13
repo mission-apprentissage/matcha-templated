@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { DropdownCombobox, Input } from '../../components'
-import { Col, Form } from 'react-bootstrap'
+import { Col } from 'react-bootstrap'
 import { StepTitle, ChatBubble, QuestionTitle, NextButton, Button, InputTitle, RemoveLink } from '../../components'
 import { Context } from '../../context'
 import { v4 as uuid } from 'uuid'
@@ -9,6 +9,7 @@ import color from '../../components/helper/color'
 import styled from 'styled-components'
 
 const FormWrapper = styled.select`
+  background: ${color.white};
   border: 1px solid ${color.middleGrey};
   border-radius: 4px;
   width: 100%;
@@ -51,8 +52,7 @@ const Step = (props) => {
       )}
       <p>Dans quelle formation êtes-vous inscrit ou acez-vous l'intention de vous inscrire ?</p>
       <QuestionTitle title='Niveau de la formation' />
-      {/* <FormWrapper> */}
-      {/* <Form.Group> */}
+
       <FormWrapper
         defaultValue='default'
         value={niveau}
@@ -68,8 +68,7 @@ const Step = (props) => {
         <option value='7'>Master 2, DEA, DESS, Ingénieur</option>
         <option value='8'>Doctorat, recherche</option>
       </FormWrapper>
-      {/* </FormWrapper> */}
-      {/* </Form.Group> */}
+
       <QuestionTitle title='Intitulé de la formation' />
       <Input
         placeholder='ex: boulanger, chef de projet digital, ... '

@@ -26,6 +26,7 @@ const Input = styled.input`
   margin-bottom: 2rem;
   width: 100%;
   outline: none;
+  background: ${color.white};
   ::placeholder {
     color: #98b0b7;
   }
@@ -35,7 +36,7 @@ const Input = styled.input`
     border: 1px solid ${color.black};
   `}
   ${(props) =>
-    props.autocomplete &&
+    props.suggestion &&
     `
     margin-bottom: 0;
   `}

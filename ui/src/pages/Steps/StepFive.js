@@ -1,5 +1,5 @@
 import React from 'react'
-import { Col, Row, Dropdown } from 'react-bootstrap'
+import { Col, Row } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
 import { useCombobox, useMultipleSelection } from 'downshift'
 import styled from 'styled-components'
@@ -140,7 +140,7 @@ const MultiSelect = ({ handleChange, handleRemoveTag, state, index }) => {
         ))} */}
         <div {...getComboboxProps()}>
           <Input
-            autocomplete={true}
+            suggestion={true}
             placeholder='selectionner un critère'
             {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
             {...getToggleButtonProps()}

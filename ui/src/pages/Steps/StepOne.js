@@ -33,16 +33,20 @@ const MyInput = (props) => {
 }
 
 const Formulaire = () => {
-  const { updateUser, profile } = React.useContext(Context)
+  const {
+    updateUser,
+    profile: { candidat },
+  } = React.useContext(Context)
   const history = useHistory()
 
   return (
     <Formik
       initialValues={{
-        username: profile.user ? profile.user.username : '',
-        birthday: profile.user ? profile.user.birthday : '',
-        phone: profile.user ? profile.user.phone : '',
-        email: profile.user ? profile.user.email : '',
+        prenom: candidat ? candidat.prenom : '',
+        nom: candidat ? candidat.nom : '',
+        dateNaissance: candidat ? candidat.dateNaissance : '',
+        telephone: candidat ? candidat.telephone : '',
+        email: candidat ? candidat.email : '',
       }}
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
@@ -54,16 +58,18 @@ const Formulaire = () => {
       {({ values, isSubmitting, isValid, dirty }) => {
         return (
           <Form>
-            <InputTitle mandatory={true}>Prénom N.</InputTitle>
-            <MyInput name='username' type='text' placeholder='entrez votre prénom et nom' value={values.username} />
+            <InputTitle mandatory={true}>Prénom</InputTitle>
+            <MyInput name='prenom' type='text' placeholder='entrez votre prénom et nom' value={values.prenom} />
+            <InputTitle mandatory={true}>Nom</InputTitle>
+            <MyInput name='nom' type='text' placeholder='entrez votre prénom et nom' value={values.nom} />
             <InputTitle mandatory={true}>Date de naissance</InputTitle>
-            <MyInput name='birthday' type='date' value={values.birthday} hide={true} />
+            <MyInput name='dateNaissance' type='date' value={values.dateNaissance} hide={true} />
             <InputTitle mandatory={true}>Téléphone</InputTitle>
-            <MyInput name='phone' type='tel' placeholder='entrez votre téléphone' value={values.phone} />
+            <MyInput name='telephone' type='tel' placeholder='entrez votre téléphone' value={values.telephone} />
             <InputTitle mandatory={true}>Courriel</InputTitle>
             <MyInput name='email' type='email' placeholder='entrez votre adresse email' value={values.email} />
             <div className='d-flex justify-content-end mb-5'>
-              <NextButton type='submit' disabled={!(isValid && (dirty || profile.user)) || isSubmitting} />
+              <NextButton type='submit' disabled={!(isValid && (dirty || candidat)) || isSubmitting} />
             </div>
           </Form>
         )

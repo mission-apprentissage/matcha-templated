@@ -40,17 +40,20 @@ const MyInput = (props) => {
 }
 
 const Formulaire = () => {
-  const { profile, saveContext } = React.useContext(Context)
+  const {
+    profile: { candidat },
+    saveContext,
+  } = React.useContext(Context)
   const history = useHistory()
 
   return (
     <Formik
       initialValues={{
-        prenom: '',
-        nom: '',
-        dateNaissance: '',
-        telephone: '',
-        email: '',
+        prenom: candidat ? candidat.prenom : '',
+        nom: candidat ? candidat.nom : '',
+        dateNaissance: candidat ? candidat.dateNaissance : '',
+        telephone: candidat ? candidat.telephone : '',
+        email: candidat ? candidat.email : '',
       }}
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
@@ -75,7 +78,7 @@ const Formulaire = () => {
             {/* <InputTitle>Sur quelle adresse-mail les employeurs peuvent-ils vous joindre ? *</InputTitle>
             <MyInput name='email' type='email' placeholder='' value={values.email} /> */}
             <div className='d-flex justify-content-end'>
-              <NextButton type='submit' disabled={!(isValid && (dirty || profile.user)) || isSubmitting} />
+              <NextButton type='submit' disabled={!(isValid && (dirty || candidat)) || isSubmitting} />
             </div>
           </Form>
         )

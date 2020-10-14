@@ -1,6 +1,5 @@
 import React from 'react'
 import { Navbar, Container } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
 import { Context } from '../context'
 import styled from 'styled-components'
 
@@ -19,9 +18,7 @@ export default () => {
     <Navbar className='backgrd'>
       <Container className='d-flex align-items-center'>
         <Navbar.Brand>
-          <Link to='/'>
-            <img src={logo} className='d-inline-block align-top' alt='logo matcha' />
-          </Link>
+          <img src={logo} className='d-inline-block align-top' alt='logo matcha' />
         </Navbar.Brand>
         {candidat && (
           <Navbar.Text className='ml-auto' as={DropBtn}>

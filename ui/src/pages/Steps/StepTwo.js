@@ -53,9 +53,13 @@ export default () => {
       })}
       <div className='d-flex justify-content-between mb-5'>
         <Link to='/step-one'>
-          <PreviousButton />
+          <PreviousButton className='gtm-previousbutton-steptwo' />
         </Link>
-        <NextButton onClick={() => handleSubmit()} disabled={!(submit && (submit || profile.voeux)) || !submit} />
+        <NextButton
+          onClick={() => handleSubmit()}
+          disabled={!(submit && (submit || profile.voeux)) || !submit}
+          className='gtm-nextbutton-steptwo'
+        />
       </div>
     </Col>
   )

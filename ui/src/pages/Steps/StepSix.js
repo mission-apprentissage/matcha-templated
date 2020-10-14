@@ -77,9 +77,12 @@ export default () => {
       </Button>
       <div className='d-flex justify-content-between mb-5'>
         <Link to='step-five'>
-          <PreviousButton />
+          <PreviousButton className='gtm-previousbutton-stepsix' />
         </Link>
-        <NextButton onClick={() => saveContext(history, 'recommandations', contactState, '/final')} />
+        <NextButton
+          onClick={() => saveContext(history, 'recommandations', contactState, '/final')}
+          className='gtm-nextbutton-stepsix'
+        />
       </div>
     </Col>
   )

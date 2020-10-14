@@ -156,6 +156,7 @@ export default () => {
         <NextButton
           onClick={() => saveContext(history, 'voeux', stepState, '/step-two', questionnaireId)}
           disabled={!submit}
+          className='gtm-nextbutton-stepone-nc'
         />
       </div>
     </Col>

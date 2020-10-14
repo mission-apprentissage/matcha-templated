@@ -75,10 +75,14 @@ export default () => {
       </div>
       <div className='d-flex justify-content-between mb-5'>
         <Link to='step-two'>
-          <PreviousButton />
+          <PreviousButton className='gtm-previousbutton-stepthree' />
         </Link>
         <Link to='step-four'>
-          <NextButton onClick={() => saveContext(history, 'mobilite', values, '/step-four')} disabled={!submit} />
+          <NextButton
+            onClick={() => saveContext(history, 'mobilite', values, '/step-four')}
+            disabled={!submit}
+            className='gtm-nextbutton-stepthree'
+          />
         </Link>
       </div>
     </Col>

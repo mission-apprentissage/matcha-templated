@@ -69,7 +69,11 @@ const Formulaire = () => {
             <InputTitle mandatory={true}>Courriel</InputTitle>
             <MyInput name='email' type='email' placeholder='entrez votre adresse email' value={values.email} />
             <div className='d-flex justify-content-end mb-5'>
-              <NextButton type='submit' disabled={!(isValid && (dirty || candidat)) || isSubmitting} />
+              <NextButton
+                type='submit'
+                disabled={!(isValid && (dirty || candidat)) || isSubmitting}
+                className='gtm-nextbutton-stepone'
+              />
             </div>
           </Form>
         )

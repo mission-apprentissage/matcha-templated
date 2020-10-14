@@ -79,9 +79,13 @@ const Formulaire = () => {
             <MyInput name='email' type='email' placeholder='' value={values.email} /> */}
             <div className='d-flex justify-content-between mb-5'>
               <Link to='step-one'>
-                <PreviousButton />
+                <PreviousButton className='gtm-previousbutton-steptwo-nc' />
               </Link>
-              <NextButton type='submit' disabled={!(isValid && (dirty || candidat)) || isSubmitting} />
+              <NextButton
+                type='submit'
+                disabled={!(isValid && (dirty || candidat)) || isSubmitting}
+                className='gtm-nextbutton-steptwo-nc'
+              />
             </div>
           </Form>
         )

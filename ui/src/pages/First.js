@@ -18,10 +18,10 @@ export default () => {
         </span>
       </ChatBubble>
       <Link to='/step-one'>
-        <Button className='mt-4 mb-3'>Super, ça m'intéresse !</Button>
+        <Button className='mt-4 mb-3 gtm-nextbutton-firstpage'>Super, ça m'intéresse !</Button>
       </Link>
       <Link to='/'>
-        <Button>Peut-être une autre fois</Button>
+        <Button className='gtm-previousbutton-firstpage'>Peut-être une autre fois</Button>
       </Link>
     </Col>
   )

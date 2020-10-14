@@ -1,9 +1,13 @@
 import React from 'react'
-import { Col } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
-import styled from 'styled-components'
 import color from '../../components/helper/color'
-
+import MomentUtils from '@date-io/moment'
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import { ThemeProvider } from '@material-ui/styles'
+import { createMuiTheme } from '@material-ui/core'
+import moment from 'moment'
+import 'moment/locale/fr'
 import {
   Button,
   Input,
@@ -19,13 +23,39 @@ import {
 } from '../../components'
 import { Context } from '../../context'
 
-const Wrapper = styled.div`
-  ${(props) =>
-    props.index % 2 === 0 &&
-    `
-    // background: ${color.veryLightGrey}
-  `}
-`
+const datePickerTheme = createMuiTheme({
+  palette: {
+    primary: { main: color.redLight },
+  },
+  overrides: {
+    MuiTextField: {
+      root: {
+        width: '100%',
+      },
+    },
+    MuiInput: {
+      input: {
+        border: '1px solid #98b0b7',
+        boxSizing: 'border-box',
+        borderRadius: '4px',
+        fontFamily: 'Inter',
+        fontSize: '1rem',
+        paddingLeft: '10px',
+        paddingTop: '1.5rem',
+        paddingBottom: '1.5rem',
+        marginBottom: '1rem',
+
+        '&::placeholder': {
+          color: color.middleGrey,
+          opacity: 1,
+        },
+        '&:not(::placeholder-shown)': {
+          border: '1px solid color.black',
+        },
+      },
+    },
+  },
+})
 
 const Step = (props) => {
   const {
@@ -43,7 +73,7 @@ const Step = (props) => {
   const [minDate, setMinDate] = React.useState('')
 
   return (
-    <Wrapper index={index}>
+    <MuiPickersUtilsProvider utils={MomentUtils} locale='fr'>
       {index > 0 && (
         <div className='d-flex justify-content-between'>
           <InputTitle bold={true}>Expérience {index + 1}</InputTitle>
@@ -85,7 +115,6 @@ const Step = (props) => {
           }
         }}
         disabled={taches && taches.length === 3}
-        tag={true}
       />
       <ChatBubble>
         Les employeurs portent de l’attention à cette information. Aller au plus simple en utilisant des verbes d’action
@@ -107,33 +136,47 @@ const Step = (props) => {
         fullAddress={true}
       />
       <QuestionTitle title='Sur quelle période ?' />
-      <div className='row p-0'>
-        <div className='col'>
-          <InputTitle>Date de début</InputTitle>
-          <Input
-            placeholder='sélectionne une date de début'
-            required
-            value={dateDebut}
-            type='date'
-            onChange={(event) => {
-              handleChange('dateDebut', event.target.value, index)
-              setMinDate(event.target.value)
-            }}
-          />
-        </div>
-        <div className='col'>
-          <InputTitle>Date de fin</InputTitle>
-          <Input
-            placeholder='sélectionne une date de fin'
-            required
-            type='date'
-            value={dateFin}
-            onChange={(event) => handleChange('dateFin', event.target.value, index)}
-            min={minDate ? minDate : ''}
-          />
-        </div>
-      </div>
-    </Wrapper>
+      <ThemeProvider theme={datePickerTheme}>
+        <Row className='p-0 mb-4'>
+          <Col lg={6}>
+            <InputTitle>Date de début</InputTitle>
+            <DatePicker
+              format='dddd DD MMMM yyyy'
+              placeholder='selectionner une date de début'
+              // format='DD/MM/yyyy'
+              openTo='year'
+              views={['year', 'month', 'date']}
+              value={dateDebut ? dateDebut : null}
+              onChange={(date) => {
+                handleChange('dateDebut', moment(date).format(), index)
+                setMinDate(date)
+              }}
+              autoOk={true}
+              InputProps={{ disableUnderline: true }}
+              cancelLabel='Annuler'
+            />
+          </Col>
+          <Col>
+            <InputTitle>Date de fin</InputTitle>
+            <DatePicker
+              format='dddd DD MMMM yyyy'
+              placeholder='selectionner une date de fin'
+              value={dateFin ? (dateFin > minDate ? dateFin : minDate) : null}
+              onChange={(date) => {
+                handleChange('dateFin', moment(date).format(), index)
+                setMinDate(false)
+              }}
+              autoOk={true}
+              cancelLabel='Annuler'
+              initialFocusedDate={minDate}
+              minDate={minDate ? minDate : ''}
+              InputProps={{ disableUnderline: true }}
+              invalidDateMessage={false}
+            />
+          </Col>
+        </Row>
+      </ThemeProvider>
+    </MuiPickersUtilsProvider>
   )
 }
 
@@ -142,6 +185,8 @@ export default () => {
   const history = useHistory()
   const [stepState, setStepState] = React.useState(profile.experiences ? profile.experiences : [{}])
   const [submit, setSubmit] = React.useState(false)
+
+  console.log(stepState)
 
   const handleChange = (name, value, index, tag) => {
     const copy = [...stepState]
@@ -190,20 +235,15 @@ export default () => {
           {...item}
         />
       ))}
-      <hr />
       <Button experience='true' onClick={() => addItem(stepState, setStepState)}>
         + Ajouter une expérience
       </Button>
       <div className='d-flex justify-content-between mb-5'>
         <Link to='/step-three'>
-          <PreviousButton className='gtm-previousbutton-stepfour' />
+          <PreviousButton />
         </Link>
         <Link to='step-five'>
-          <NextButton
-            onClick={() => saveContext(history, 'experiences', stepState, '/step-five')}
-            disabled={!submit}
-            className='gtm-nextbutton-stepfour'
-          />
+          <NextButton onClick={() => saveContext(history, 'experiences', stepState, '/step-five')} disabled={!submit} />
         </Link>
       </div>
     </Col>

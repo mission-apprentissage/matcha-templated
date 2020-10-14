@@ -5,14 +5,7 @@ import { ContextProvider } from './context'
 import TagManager from 'react-gtm-module'
 import App from './App'
 
-if (process.env.NODE_ENV !== 'development') {
-  if (window.location.hostname === 'matcha.apprentissage.beta.gouv.fr') {
-    TagManager.initialize({ gtmId: 'GTM-WPC8P2B' })
-  }
-  if (window.location.hostname === 'matcha-recette.apprentissage.beta.gouv.fr') {
-    TagManager.initialize({ gtmId: 'GTM-KL849C7' })
-  }
-}
+TagManager.initialize({ gtmId: 'GTM-KL849C7' })
 
 ReactDOM.render(
   <BrowserRouter>

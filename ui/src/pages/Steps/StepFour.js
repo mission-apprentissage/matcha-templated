@@ -92,10 +92,7 @@ const Step = (props) => {
         onChange={(e) => handleChange('nom', e.target.value, index)}
         value={nom}
       />
-      <QuestionTitle
-        title='Vos 3 principales missions ou tâches ?'
-        subtitle='Appuyer sur Entrer pour insérer une mission/tâche'
-      />
+      <QuestionTitle title='Vos 3 principales missions ou tâches ?' tag={true} />
       <div className='pb-1'>
         {taches &&
           taches.map((x, i) => (

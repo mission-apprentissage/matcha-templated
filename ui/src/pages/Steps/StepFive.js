@@ -201,10 +201,7 @@ const Step = (props) => {
           }
         )}
       </Row>
-      <QuestionTitle
-        title="Qu'est ce qui vous plait le plus dans cette activité (3 critères maximum) ?"
-        subtitle='Appuyer sur Entrer pour insérer un critère'
-      />
+      <QuestionTitle title="Qu'est ce qui vous plait le plus dans cette activité (3 critères maximum) ?" tag={true} />
       <div className='pb-1'>
         {criteres &&
           criteres.map((critere, i) => (

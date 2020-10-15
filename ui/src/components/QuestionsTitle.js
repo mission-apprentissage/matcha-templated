@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import color from './helper/color'
+import enter from '../assets/images/enter.svg'
 
 const Wrapper = styled.div`
   margin: 1rem 0;
@@ -23,11 +24,16 @@ const Subtitle = styled.p`
   font-size: 0.75rem;
 `
 
-export default ({ title, subtitle }) => {
+export default ({ title, subtitle, tag }) => {
   return (
     <Wrapper>
       <Title>{title}</Title>
       {subtitle && <Subtitle>{subtitle}</Subtitle>}
+      {tag && (
+        <Subtitle>
+          Appuyer sur <img src={enter} width='3%' /> pour insérer une mission/tâche
+        </Subtitle>
+      )}
     </Wrapper>
   )
 }

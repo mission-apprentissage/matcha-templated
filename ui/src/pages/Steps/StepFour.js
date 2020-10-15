@@ -22,6 +22,7 @@ import {
   RemoveLink,
 } from '../../components'
 import { Context } from '../../context'
+import styled from 'styled-components'
 
 const datePickerTheme = createMuiTheme({
   palette: {
@@ -57,7 +58,75 @@ const datePickerTheme = createMuiTheme({
   },
 })
 
+const TagWrapper = styled.div`
+  display: flex;
+  margin-bottom: 2rem;
+  button {
+    position: absolute;
+    right: 20px;
+    margin-top: 4px;
+    padding: 7px 12px;
+    background: ${color.redLight};
+    border: none;
+    border-radius: 4px;
+    color: ${color.white};
+    &:hover {
+      box-shadow: 0px 1px 8px rgba(8, 67, 85, 0.24);
+    }
+    outline: none;
+    &:focus {
+      outline: none;
+    }
+    :disabled {
+      border: 1px solid ${color.lightGrey};
+      background: ${color.lightGrey};
+      &:hover {
+        box-shadow: none;
+      }
+    }
+  }
+  input {
+    width: 100%;
+    border: 1px solid ${color.middleGrey};
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-family: Inter;
+    font-size: 1rem;
+    padding-left: 10px;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    outline: none;
+    background: ${color.white};
+    ::placeholder {
+      color: #98b0b7;
+    }
+    ${(props) =>
+      props.value &&
+      `
+    border: 1px solid ${color.black};
+  `}
+    ${(props) =>
+      props.suggestion &&
+      `
+    margin-bottom: 0;
+  `}
+  :hover {
+      border: 1px solid ${color.grey};
+    }
+    :focus {
+      border: 1px solid ${color.red};
+      background: ${color.white} !important;
+      color: ${color.black};
+    }
+    :disabled {
+      border: 1px solid ${color.lightGrey};
+      background: ${color.lightGrey};
+    }
+  }
+`
+
 const Step = (props) => {
+  const inputRef = React.useRef()
   const {
     nom,
     taches,
@@ -71,6 +140,10 @@ const Step = (props) => {
     index,
   } = props
   const [minDate, setMinDate] = React.useState('')
+
+  React.useEffect(() => {
+    inputRef.current.focus()
+  }, [])
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils} locale='fr'>
@@ -92,7 +165,7 @@ const Step = (props) => {
         onChange={(e) => handleChange('nom', e.target.value, index)}
         value={nom}
       />
-      <QuestionTitle title='Vos 3 principales missions ou tâches ?' tag={true} />
+      <QuestionTitle title='Vos 3 principales missions ou tâches ?' />
       <div className='pb-1'>
         {taches &&
           taches.map((x, i) => (
@@ -101,18 +174,30 @@ const Step = (props) => {
             </Tag>
           ))}
       </div>
-      <Input
-        placeholder='entrer un mot-clé'
-        required
-        type='text'
-        onKeyDown={(e) => {
-          if (e.keyCode === 13) {
-            handleChange('taches', e.target.value, index, true)
-            e.target.value = ''
-          }
-        }}
-        disabled={taches && taches.length === 3}
-      />
+      <TagWrapper>
+        <input
+          ref={inputRef}
+          placeholder='entrer un mot-clé'
+          required
+          type='text'
+          onKeyDown={(e) => {
+            if (e.keyCode === 13) {
+              handleChange('taches', e.target.value, index, true)
+              e.target.value = ''
+            }
+          }}
+          disabled={taches && taches.length === 3}
+        />
+        <button
+          disabled={taches && taches.length === 3}
+          onClick={(e) => {
+            handleChange('taches', inputRef.current.value, index, true)
+            inputRef.current.value = ''
+          }}
+        >
+          OK
+        </button>
+      </TagWrapper>
       <ChatBubble>
         Les employeurs portent de l’attention à cette information. Aller au plus simple en utilisant des verbes d’action
         comme par exemple : ranger les rayons, préparer les plans de travail, organiser les activités du groupe, ...

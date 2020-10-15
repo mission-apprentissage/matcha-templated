@@ -16,6 +16,10 @@ export default () => {
   const [submit, setSubmit] = React.useState(profile.voeux ? true : false)
   const history = useHistory()
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const handleClick = (index, val) => {
     const newVal = [...values]
     newVal[index].choice = val

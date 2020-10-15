@@ -27,6 +27,10 @@ export default () => {
   const [submit, setSubmit] = React.useState(profile.mobilite ? true : false)
   const history = useHistory()
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const handleValues = (name, value) => {
     setValues({ ...values, [name]: value })
     if (Object.keys(values).length === 2) {

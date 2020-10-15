@@ -43,6 +43,10 @@ export default () => {
   const [contactState, setContactState] = React.useState([{}])
   const history = useHistory()
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const handleChange = (name, value, index) => {
     const copy = [...contactState]
     copy[index][`${name}`] = value

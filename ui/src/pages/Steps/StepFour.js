@@ -267,7 +267,9 @@ export default () => {
   const [stepState, setStepState] = React.useState(profile.experiences ? profile.experiences : [{}])
   const [submit, setSubmit] = React.useState(false)
 
-  console.log(stepState)
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const handleChange = (name, value, index, tag) => {
     const copy = [...stepState]

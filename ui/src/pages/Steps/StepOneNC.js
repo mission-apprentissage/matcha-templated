@@ -104,6 +104,10 @@ export default () => {
   const history = useHistory()
   const questionnaireId = uuid()
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const handleJobSearch = async (search) => {
     if (search) {
       try {

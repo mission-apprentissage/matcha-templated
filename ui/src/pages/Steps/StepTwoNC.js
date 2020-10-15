@@ -149,6 +149,9 @@ const Formulaire = () => {
 }
 
 export default () => {
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
   return (
     <Col>
       <StepTitle>Etape 1/6 - Vos coordonnées</StepTitle>

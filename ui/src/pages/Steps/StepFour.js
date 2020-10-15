@@ -141,12 +141,8 @@ const Step = (props) => {
   } = props
   const [minDate, setMinDate] = React.useState('')
 
-  React.useEffect(() => {
-    inputRef.current.focus()
-  }, [])
-
   return (
-    <MuiPickersUtilsProvider utils={MomentUtils} locale='fr'>
+    <>
       {index > 0 && (
         <div className='d-flex justify-content-between'>
           <InputTitle bold={true}>Expérience {index + 1}</InputTitle>
@@ -190,7 +186,8 @@ const Step = (props) => {
         />
         <button
           disabled={taches && taches.length === 3}
-          onClick={(e) => {
+          onClick={async (e) => {
+            await inputRef.current.focus()
             handleChange('taches', inputRef.current.value, index, true)
             inputRef.current.value = ''
           }}
@@ -218,47 +215,49 @@ const Step = (props) => {
         fullAddress={true}
       />
       <QuestionTitle title='Sur quelle période ?' />
-      <ThemeProvider theme={datePickerTheme}>
-        <Row className='p-0 mb-4'>
-          <Col lg={6}>
-            <InputTitle>Date de début</InputTitle>
-            <DatePicker
-              format='dddd DD MMMM yyyy'
-              placeholder='selectionner une date de début'
-              // format='DD/MM/yyyy'
-              openTo='year'
-              views={['year', 'month', 'date']}
-              value={dateDebut ? dateDebut : null}
-              onChange={(date) => {
-                handleChange('dateDebut', moment(date).format(), index)
-                setMinDate(date)
-              }}
-              autoOk={true}
-              InputProps={{ disableUnderline: true }}
-              cancelLabel='Annuler'
-            />
-          </Col>
-          <Col>
-            <InputTitle>Date de fin</InputTitle>
-            <DatePicker
-              format='dddd DD MMMM yyyy'
-              placeholder='selectionner une date de fin'
-              value={dateFin ? (dateFin > minDate ? dateFin : minDate) : null}
-              onChange={(date) => {
-                handleChange('dateFin', moment(date).format(), index)
-                setMinDate(false)
-              }}
-              autoOk={true}
-              cancelLabel='Annuler'
-              initialFocusedDate={minDate}
-              minDate={minDate ? minDate : ''}
-              InputProps={{ disableUnderline: true }}
-              invalidDateMessage={false}
-            />
-          </Col>
-        </Row>
-      </ThemeProvider>
-    </MuiPickersUtilsProvider>
+      <MuiPickersUtilsProvider utils={MomentUtils} locale='fr'>
+        <ThemeProvider theme={datePickerTheme}>
+          <Row className='p-0 mb-4'>
+            <Col lg={6}>
+              <InputTitle>Date de début</InputTitle>
+              <DatePicker
+                format='dddd DD MMMM yyyy'
+                placeholder='selectionner une date de début'
+                // format='DD/MM/yyyy'
+                openTo='year'
+                views={['year', 'month', 'date']}
+                value={dateDebut ? dateDebut : null}
+                onChange={(date) => {
+                  handleChange('dateDebut', moment(date).format(), index)
+                  setMinDate(date)
+                }}
+                autoOk={true}
+                InputProps={{ disableUnderline: true }}
+                cancelLabel='Annuler'
+              />
+            </Col>
+            <Col>
+              <InputTitle>Date de fin</InputTitle>
+              <DatePicker
+                format='dddd DD MMMM yyyy'
+                placeholder='selectionner une date de fin'
+                value={dateFin ? (dateFin > minDate ? dateFin : minDate) : null}
+                onChange={(date) => {
+                  handleChange('dateFin', moment(date).format(), index)
+                  setMinDate(false)
+                }}
+                autoOk={true}
+                cancelLabel='Annuler'
+                initialFocusedDate={minDate}
+                minDate={minDate ? minDate : ''}
+                InputProps={{ disableUnderline: true }}
+                invalidDateMessage={false}
+              />
+            </Col>
+          </Row>
+        </ThemeProvider>
+      </MuiPickersUtilsProvider>
+    </>
   )
 }
 

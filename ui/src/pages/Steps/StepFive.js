@@ -51,6 +51,7 @@ const criteres = [
   'Soigner',
   "Travailler auprès d'enfants",
 ]
+
 const Container = styled.div`
   margin-bottom: 2rem;
 `
@@ -91,6 +92,25 @@ const MultiSelect = ({ handleChange, handleRemoveTag, state, index }) => {
   const getFilteredItems = (items) =>
     items.filter((item) => selectedItems.indexOf(item) < 0 && item.toLowerCase().startsWith(inputValue.toLowerCase()))
 
+  const onStateChange = ({ inputValue, type, selectedItem }) => {
+    switch (type) {
+      case useCombobox.stateChangeTypes.InputChange:
+        setInputValue(inputValue)
+        break
+      case useCombobox.stateChangeTypes.InputKeyDownEnter:
+      case useCombobox.stateChangeTypes.ItemClick:
+      case useCombobox.stateChangeTypes.InputBlur:
+        if (selectedItem) {
+          setInputValue('')
+          addSelectedItem(selectedItem)
+          handleChange('criteres', selectedItem, index, true)
+          selectItem(null)
+        }
+        break
+      default:
+        break
+    }
+  }
   const {
     isOpen,
     getMenuProps,
@@ -102,26 +122,8 @@ const MultiSelect = ({ handleChange, handleRemoveTag, state, index }) => {
     selectItem,
   } = useCombobox({
     inputValue,
+    onStateChange,
     items: getFilteredItems(criteres),
-    onStateChange: ({ inputValue, type, selectedItem }) => {
-      switch (type) {
-        case useCombobox.stateChangeTypes.InputChange:
-          setInputValue(inputValue)
-          break
-        case useCombobox.stateChangeTypes.InputKeyDownEnter:
-        case useCombobox.stateChangeTypes.ItemClick:
-        case useCombobox.stateChangeTypes.InputBlur:
-          if (selectedItem) {
-            setInputValue('')
-            addSelectedItem(selectedItem)
-            handleChange('criteres', selectedItem, index, true)
-            selectItem(null)
-          }
-          break
-        default:
-          break
-      }
-    },
   })
   return (
     <Container>
@@ -201,7 +203,7 @@ const Step = (props) => {
           }
         )}
       </Row>
-      <QuestionTitle title="Qu'est ce qui vous plait le plus dans cette activité (3 critères maximum) ?" tag={true} />
+      <QuestionTitle title="Qu'est ce qui vous plait le plus dans cette activité (3 critères maximum) ?" />
       <div className='pb-1'>
         {criteres &&
           criteres.map((critere, i) => (
@@ -211,16 +213,6 @@ const Step = (props) => {
           ))}
       </div>
       <MultiSelect handleChange={handleChange} index={index} handleRemoveTag={handleRemoveTag} state={criteres} />
-      {/* <Input
-        placeholder='ajouter un critère'
-        onKeyDown={(e) => {
-          if (e.keyCode === 13) {
-            handleChange('task', e.target.value, index, true)
-            e.target.value = ''
-          }
-        }}
-        disabled={criteres && criteres.length === 3}
-      /> */}
     </Col>
   )
 }

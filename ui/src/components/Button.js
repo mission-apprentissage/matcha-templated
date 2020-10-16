@@ -8,7 +8,6 @@ export default styled.button`
   box-shadow: 0px 1px 8px rgba(8, 67, 85, 0.12);
   border-radius: 40px;
   padding: 0.75rem;
-  /* color: ${color.red}; */
   &:hover {
     box-shadow: 0px 1px 8px rgba(8, 67, 85, 0.24);
   }

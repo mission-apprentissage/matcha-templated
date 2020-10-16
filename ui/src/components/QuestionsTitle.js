@@ -24,16 +24,11 @@ const Subtitle = styled.p`
   font-size: 0.75rem;
 `
 
-export default ({ title, subtitle, tag }) => {
+export default ({ title, subtitle }) => {
   return (
     <Wrapper>
       <Title>{title}</Title>
       {subtitle && <Subtitle>{subtitle}</Subtitle>}
-      {tag && (
-        <Subtitle>
-          Appuyer sur <img src={enter} width='3%' /> pour insérer une mission/tâche
-        </Subtitle>
-      )}
     </Wrapper>
   )
 }

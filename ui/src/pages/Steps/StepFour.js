@@ -222,8 +222,7 @@ const Step = (props) => {
               <InputTitle>Date de début</InputTitle>
               <DatePicker
                 format='dddd DD MMMM yyyy'
-                placeholder='selectionner une date de début'
-                // format='DD/MM/yyyy'
+                placeholder='selectionner une date'
                 openTo='year'
                 views={['year', 'month', 'date']}
                 value={dateDebut ? dateDebut : null}
@@ -240,7 +239,7 @@ const Step = (props) => {
               <InputTitle>Date de fin</InputTitle>
               <DatePicker
                 format='dddd DD MMMM yyyy'
-                placeholder='selectionner une date de fin'
+                placeholder='selectionner une date'
                 value={dateFin ? (dateFin > minDate ? dateFin : minDate) : null}
                 onChange={(date) => {
                   handleChange('dateFin', moment(date).format(), index)

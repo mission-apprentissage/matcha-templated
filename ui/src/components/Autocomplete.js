@@ -29,7 +29,6 @@ const Wrapper = styled.ul`
     /* color: white; */
   }
 `
-
 const Input = styled.input`
   border: 1px solid ${color.grey};
   box-sizing: border-box;
@@ -68,6 +67,35 @@ export default (props) => {
   const [option, setOption] = React.useState()
   const adresse = []
 
+  const onChange = (event, value) =>
+    props.fullAddress && value
+      ? props.handleValues('adresseEntreprise', value.name, props.index)
+      : value
+      ? props.handleValues('commune', value.name)
+      : ''
+
+  const onInputChange = async (event) => {
+    if (props.fullAddress) {
+      const value = event ? event.target.value : defaultValue
+      const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}`)
+      const data = await result.json()
+      data.features.forEach((feat) => {
+        const name = `${feat.properties.label}`
+        adresse.push({ name: name })
+      })
+      setOption(adresse)
+    } else {
+      const value = event ? event.target.value : defaultValue
+      const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}&type=municipality`)
+      const data = await result.json()
+      data.features.forEach((feat) => {
+        const name = `${feat.properties.city} (${feat.properties.postcode.substring(0, 2)})`
+        adresse.push({ name: name })
+      })
+      setOption(adresse)
+    }
+  }
+
   const {
     getRootProps,
     getInputLabelProps,
@@ -77,38 +105,12 @@ export default (props) => {
     groupedOptions,
     defaultValue,
   } = useAutocomplete({
-    defaultValue: props.context && { name: props.context },
-    id: 'autocomplete',
+    onChange,
+    onInputChange,
     options: option ? option : [],
     getOptionLabel: (option) => option.name,
-    onChange: (event, value) =>
-      props.fullAddress && value
-        ? props.handleValues('adresseEntreprise', value.name, props.index)
-        : value
-        ? props.handleValues('commune', value.name)
-        : '',
+    defaultValue: props.context && { name: props.context },
     getOptionSelected: (option, value) => option.name === value.name,
-    onInputChange: async (event) => {
-      if (props.fullAddress) {
-        const value = event ? event.target.value : defaultValue
-        const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}`)
-        const data = await result.json()
-        data.features.forEach((feat) => {
-          const name = `${feat.properties.label}`
-          adresse.push({ name: name })
-        })
-        setOption(adresse)
-      } else {
-        const value = event ? event.target.value : defaultValue
-        const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}&type=municipality`)
-        const data = await result.json()
-        data.features.forEach((feat) => {
-          const name = `${feat.properties.city} (${feat.properties.postcode.substring(0, 2)})`
-          adresse.push({ name: name })
-        })
-        setOption(adresse)
-      }
-    },
   })
 
   return (

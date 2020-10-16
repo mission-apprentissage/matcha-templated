@@ -24,14 +24,9 @@ const Button = styled.button`
   }
   :disabled {
     background: ${color.middleGrey};
-    /* color: ${color.grey}; */
-    /* opacity: 0.4; */
     color: rgba(8, 67, 85, 0.4);
     :after {
       content: none;
-      /* color: rgba(8, 67, 85, 0.4); */
-      /* color: ${color.grey}; */
-      /* opacity: 0.4; */
     }
   }
 `

@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row } from 'react-bootstrap'
-import Navbar from './Navbar'
-// eslint-disable-next-line
-import styled from 'styled-components/macro'
 import { useLocation } from 'react-router-dom'
+import styled from 'styled-components'
+import Navbar from './Navbar'
+
+const StyledContainer = styled(Container)`
+  height: 100vh;
+  padding-left: 5px;
+  padding-right: 5px;
+`
 
 export default ({ children }) => {
   const { pathname } = useLocation()
@@ -20,18 +25,11 @@ export default ({ children }) => {
   return (
     <>
       <Navbar />
-      <Container
-        fluid
-        css={`
-          height: 100vh;
-          padding-left: 5px;
-          padding-right: 5px;
-        `}
-      >
+      <StyledContainer fluid>
         <Row className={`h-100 justify-content-center ${bkg && 'backgrd'} `} sm={1} md={2} lg={2}>
           {children}
         </Row>
-      </Container>
+      </StyledContainer>
     </>
   )
 }

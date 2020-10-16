@@ -1,18 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import edit from '../assets/images/edit.svg'
-
 import color from './helper/color'
-
-const Wrapper = styled.div`
-  width: 100%;
-  span {
-    position: absolute;
-    right: 22px;
-    padding-top: 12px;
-    color: ${color.middleGrey};
-  }
-`
 
 const Input = styled.input`
   border: 1px solid ${color.middleGrey};
@@ -27,19 +15,19 @@ const Input = styled.input`
   width: 100%;
   outline: none;
   background: ${color.white};
-  ::placeholder {
-    color: #98b0b7;
-  }
   ${(props) =>
     props.value &&
     `
     border: 1px solid ${color.black};
-  `}
+    `}
   ${(props) =>
     props.suggestion &&
     `
     margin-bottom: 0;
-  `}
+    `}
+  ::placeholder {
+    color: ${color.middleGrey};
+  }
   :hover {
     border: 1px solid ${color.grey};
   }
@@ -54,16 +42,4 @@ const Input = styled.input`
   }
 `
 
-export default (props) => {
-  return (
-    <Wrapper>
-      {props.tag && (
-        <span>
-          <p>Appuyer sur entrer</p>
-          {/* <img src={edit} alt='edit' /> */}
-        </span>
-      )}
-      <Input {...props} />
-    </Wrapper>
-  )
-}
+export default (props) => <Input {...props} />

@@ -10,9 +10,10 @@ import color from '../../components/helper/color'
 import { Context } from '../../context'
 
 const schema = Yup.object().shape({
-  username: Yup.string().required('champ obligatoire*').min(1),
-  birthday: Yup.date().required('champ obligatoire*'),
-  phone: Yup.string().required('champ obligatoire*').min(1),
+  prenom: Yup.string().required('champ obligatoire*').min(1),
+  nom: Yup.string().required('champ obligatoire*').min(1),
+  dateNaissance: Yup.date().required('champ obligatoire*'),
+  telephone: Yup.string().required('champ obligatoire*').min(1),
   email: Yup.string().email('Adresse email invalide').required('champ obligatoire*').min(1),
 })
 

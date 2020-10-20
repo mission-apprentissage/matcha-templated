@@ -45,7 +45,7 @@ export default () => {
     try {
       let { token } = await _post('/api/login', values)
       setAuth(token)
-      history.push('/')
+      history.push('/admin')
     } catch (e) {
       console.error(e)
       setStatus({ error: e.prettyMessage })
@@ -69,7 +69,7 @@ export default () => {
             <InputTitle mandatory={true}>Mot de passe</InputTitle>
             <MyInput name='password' type='text' placeholder='entrez votre prénom et nom' value={values.password} />
             <div className='d-flex justify-content-end mb-5'>
-              <Button type='submit' disabled={!(isValid && dirty) || isSubmitting} className='gtm-nextbutton-stepone'>
+              <Button type='submit' disabled={!(isValid && dirty) || isSubmitting}>
                 Connexion
               </Button>
             </div>

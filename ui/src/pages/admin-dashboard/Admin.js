@@ -1,9 +1,10 @@
 import React from 'react'
-import { useFetch } from '../common/hooks/useFetch'
+import { useFetch } from '../../common/hooks/useFetch'
 import moment from 'moment'
 
-export default () => {
-  let [data, loading] = useFetch('/api/questionnaire/items')
+export default (props) => {
+  const { params } = props.match
+  let [data, loading] = useFetch(`/api/questionnaire/items/${params.id}`)
   console.log(data)
 
   return (
@@ -94,7 +95,6 @@ export default () => {
                       </ul>
                     )
                   })}
-                <hr />
               </div>
             )
           })}

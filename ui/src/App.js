@@ -5,9 +5,8 @@ import { NotFound } from './pages'
 import routes from './routes'
 
 import './App.css'
-import Admin from './pages/Admin'
+import { Admin, List, Login } from './pages/admin-dashboard'
 import useAuth from './common/hooks/useAuth'
-import Login from './pages/Login'
 
 function PrivateRoute({ children, ...rest }) {
   let [auth] = useAuth()
@@ -29,7 +28,8 @@ const App = () => {
         {routes.map(({ path, component }, key) => (
           <Route exact path={path} key={key} component={component} />
         ))}
-        <PrivateRoute exact path='/admin' component={Admin} />
+        <PrivateRoute exact path='/admin' component={List} />
+        <PrivateRoute exact path='/admin/:id' component={Admin} />
         <Route exact path='/login' component={Login} />
         <Route component={NotFound} />
       </Switch>

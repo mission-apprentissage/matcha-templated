@@ -5,10 +5,10 @@ import { Button } from 'react-bootstrap'
 import { Formik, Form, useField } from 'formik'
 import styled from 'styled-components/macro'
 
-import { Input, InputTitle } from '../components'
-import color from '../components/helper/color'
-import useAuth from '../common/hooks/useAuth'
-import { _post } from '../common/httpClient'
+import { Input, InputTitle } from '../../components'
+import color from '../../components/helper/color'
+import useAuth from '../../common/hooks/useAuth'
+import { _post } from '../../common/httpClient'
 
 const schema = Yup.object().shape({
   username: Yup.string().required('champ obligatoire*').min(1),

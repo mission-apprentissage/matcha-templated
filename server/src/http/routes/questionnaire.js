@@ -89,7 +89,7 @@ module.exports = () => {
       const itemId = req.params.id;
       const retrievedData = await Questionnaire.findById(itemId);
       if (retrievedData) {
-        res.json(retrievedData);
+        res.json([retrievedData]);
       } else {
         throw boom.badRequest("Identifiant invalide");
       }

@@ -1,10 +1,13 @@
 import React from 'react'
 import { useFetch } from '../../common/hooks/useFetch'
+import { Button } from 'react-bootstrap'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
 
 export default (props) => {
   const { params } = props.match
   let [data, loading] = useFetch(`/api/questionnaire/items/${params.id}`)
+
   console.log(data)
 
   return (
@@ -98,6 +101,9 @@ export default (props) => {
               </div>
             )
           })}
+          <Link to='/admin'>
+            <Button>Retour</Button>
+          </Link>
         </div>
       )}
     </>

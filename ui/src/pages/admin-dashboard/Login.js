@@ -64,10 +64,10 @@ export default () => {
       {({ values, isSubmitting, isValid, dirty }) => {
         return (
           <Form>
-            <InputTitle mandatory={true}>Username</InputTitle>
-            <MyInput name='username' type='text' placeholder='entrez votre prénom et nom' value={values.username} />
-            <InputTitle mandatory={true}>Mot de passe</InputTitle>
-            <MyInput name='password' type='text' placeholder='entrez votre prénom et nom' value={values.password} />
+            <InputTitle>Utilisateur</InputTitle>
+            <MyInput name='username' type='text' value={values.username} />
+            <InputTitle>Mot de passe</InputTitle>
+            <MyInput name='password' type='password' value={values.password} />
             <div className='d-flex justify-content-end mb-5'>
               <Button type='submit' disabled={!(isValid && dirty) || isSubmitting}>
                 Connexion

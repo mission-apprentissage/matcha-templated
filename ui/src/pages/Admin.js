@@ -14,13 +14,15 @@ export default () => {
             return (
               <div key={index}>
                 <p className='mb-0'>
-                  {candidat.prenom && candidat.prenom} — {candidat.nom && candidat.nom}{' '}
+                  {candidat && candidat.prenom && candidat.prenom} — {candidat && candidat.nom && candidat.nom}{' '}
                 </p>
                 <p className='mb-0'>
-                  {candidat.email && candidat.email} — {candidat.telephone && candidat.telephone}
+                  {candidat && candidat.email && candidat.email} —{' '}
+                  {candidat && candidat.telephone && candidat.telephone}
                 </p>
                 <p>
-                  {mobilite.commune && mobilite.commune} — {mobilite.distance.label && mobilite.distance.label}
+                  {mobilite && mobilite.commune && mobilite.commune} —{' '}
+                  {mobilite && mobilite.distance.label && mobilite.distance.label}
                 </p>
                 <p className=''>Voeux :</p>
                 {voeux &&

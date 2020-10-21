@@ -22,7 +22,6 @@ export default function List() {
         <tbody>
           {data &&
             data.map((item, index) => {
-              console.log(item._id)
               return (
                 <tr key={index}>
                   <td>{item.candidat.nom}</td>

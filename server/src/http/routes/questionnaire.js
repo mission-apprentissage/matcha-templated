@@ -8,7 +8,6 @@ const { Client } = require("@elastic/elasticsearch");
 const { level } = require("../../common/logger");
 const client = new Client({
   node: "https://tables-correspondances-recette.apprentissage.beta.gouv.fr/api/es/search/",
-  // node: "https://tables-correspondances-recette.apprentissage.beta.gouv.fr/api/",
 });
 
 /**
@@ -69,7 +68,15 @@ module.exports = () => {
     "/items",
     tryCatch(async (req, res) => {
       const allData = await Questionnaire.find({});
-      return res.json(allData);
+      /**
+       * TODO :
+       *  - Only save data filled from the form
+       *  - Avoid passing steps if step id not completed from the FRONT
+       */
+      const filtered = allData.filter(
+        (data) => data && data.questionnaire_id !== "null" && data.candidat.prenom !== null
+      );
+      return res.json(filtered);
     })
   );
 
@@ -116,34 +123,53 @@ module.exports = () => {
   /**
    * Recherche d'une formation sur l'elastic search
    * https://tables-correspondances-recette.apprentissage.beta.gouv.fr/api/es/search/bcnformationdiplome/_search
+   * Filtrer les résultats :
+   * - DATE_FERMETURE > 31/08/YYYY, ou YYYY est l'année en cours
+   * - DATE_FERMETURE est vide (La formation est active)
    */
   router.post(
     "/search",
     tryCatch(async (req, res) => {
       const { search_term, level } = req.body;
-      const { body } = await client.search({
-        index: "bcnformationdiplome",
-        body: {
-          query: {
-            bool: {
-              must: {
-                multi_match: {
+      const query = {
+        size: 1000,
+        query: {
+          bool: {
+            must: {
+              match: {
+                LIBELLE_LONG_200: {
                   query: search_term,
-                  fields: ["LIBELLE_LONG_200^10", "LIBELLE_STAT_33^7"],
-                  type: "phrase_prefix",
-                  operator: "or",
                 },
               },
-              // filter on level (BTS, CAP, BEP, etc....)
             },
           },
         },
-      });
-      if (body) {
-        res.json(body.hits);
-      } else {
-        throw boom.badRequest("No result returned from the elastic search");
+      };
+      if (level) {
+        query.query.bool.filter = [
+          {
+            match: {
+              LIBELLE_COURT: {
+                query: level,
+              },
+            },
+          },
+        ];
       }
+      const response = await client.search({
+        index: "bcnformationdiplome",
+        body: query,
+      });
+
+      const filtered = response.body.hits.hits.filter(
+        (hit) => hit._source.DATE_FERMETURE === "" || hit._source.DATE_FERMETURE > "DATEDUJOUR"
+      );
+
+      console.log(response.body.hits.hits.length);
+      console.log(filtered.length);
+
+      // res.json(response.body.hits);
+      res.json(filtered);
     })
   );
 

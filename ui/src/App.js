@@ -10,7 +10,6 @@ import useAuth from './common/hooks/useAuth'
 
 function PrivateRoute({ children, ...rest }) {
   let [auth] = useAuth()
-
   return (
     <Route
       {...rest}
@@ -28,8 +27,12 @@ const App = () => {
         {routes.map(({ path, component }, key) => (
           <Route exact path={path} key={key} component={component} />
         ))}
-        <PrivateRoute exact path='/admin' component={List} />
-        <PrivateRoute exact path='/admin/:id' component={Admin} />
+        <PrivateRoute exact path='/admin'>
+          <List />
+        </PrivateRoute>
+        <PrivateRoute exact path='/admin/:id'>
+          <Admin />
+        </PrivateRoute>
         <Route exact path='/login' component={Login} />
         <Route component={NotFound} />
       </Switch>

@@ -1,10 +1,12 @@
 import React from 'react'
-import { Navbar, Container } from 'react-bootstrap'
-import { Context } from '../context'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
+import { Navbar, Container, Button } from 'react-bootstrap'
 
-import logo from '../assets/images/logo.svg'
 import color from './helper/color'
+import { Context } from '../context'
+import logo from '../assets/images/logo.svg'
+import useAuth from '../common/hooks/useAuth'
 
 const DropBtn = styled(Navbar.Text)`
   color: ${color.black} !important;
@@ -14,6 +16,11 @@ export default () => {
   const {
     profile: { candidat },
   } = React.useContext(Context)
+  let history = useHistory()
+  const [, setAuth] = useAuth()
+
+  const isAdmin = history.location.pathname === '/admin' ? true : false
+
   return (
     <Navbar className='backgrd'>
       <Container className='d-flex align-items-center'>
@@ -32,6 +39,11 @@ export default () => {
               </Dropdown.Menu>
             </Dropdown> */}
           </Navbar.Text>
+        )}
+        {isAdmin && (
+          <Button onClick={() => setAuth('')} variant='outline-dark'>
+            Se deconnecter
+          </Button>
         )}
       </Container>
     </Navbar>

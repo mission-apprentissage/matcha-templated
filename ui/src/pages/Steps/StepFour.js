@@ -242,13 +242,14 @@ const Step = (props) => {
                 placeholder='selectionner une date'
                 value={dateFin ? (dateFin > minDate ? dateFin : minDate) : null}
                 onChange={(date) => {
+                  console.log(date)
+                  setMinDate('')
                   handleChange('dateFin', moment(date).format(), index)
-                  setMinDate(false)
                 }}
                 autoOk={true}
                 cancelLabel='Annuler'
                 initialFocusedDate={minDate}
-                minDate={minDate ? minDate : ''}
+                minDate={dateDebut && dateDebut}
                 InputProps={{ disableUnderline: true }}
                 invalidDateMessage={false}
               />
@@ -268,6 +269,7 @@ export default () => {
 
   React.useEffect(() => {
     window.scrollTo(0, 0)
+    check(stepState, setSubmit, ['nom', 'taches', 'nomEntreprise', 'adresseEntreprise', 'dateDebut', 'dateFin'])
   }, [])
 
   const handleChange = (name, value, index, tag) => {

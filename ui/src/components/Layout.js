@@ -6,8 +6,6 @@ import Navbar from './Navbar'
 
 const StyledContainer = styled(Container)`
   height: 100vh;
-  padding-left: 5px;
-  padding-right: 5px;
 `
 
 export default ({ children }) => {

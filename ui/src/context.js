@@ -7,6 +7,7 @@ const Context = React.createContext({
   check: () => {},
   addItem: () => {},
   saveContext: () => {},
+  check: () => {},
 })
 
 class ContextProvider extends React.Component {
@@ -19,6 +20,7 @@ class ContextProvider extends React.Component {
       check: this.check,
       addItem: this.addItem,
       saveContext: this.saveContext,
+      check: this.check,
     }
   }
 

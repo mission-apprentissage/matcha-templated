@@ -225,6 +225,7 @@ export default () => {
 
   React.useEffect(() => {
     window.scrollTo(0, 0)
+    check(stepState, setSubmit, ['nom', 'periodicite', 'criteres'])
   }, [])
 
   const handleChange = (name, value, index, tag) => {

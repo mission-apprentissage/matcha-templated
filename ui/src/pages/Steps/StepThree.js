@@ -65,7 +65,7 @@ export default () => {
           <RadioButton
             key={i}
             onClick={() => handleValues('distance', dist)}
-            state={values.distance === dist ? true : null}
+            state={values.distance && values.distance.label === dist.label ? true : null}
           >
             {dist.label}
           </RadioButton>

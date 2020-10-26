@@ -106,6 +106,7 @@ export default () => {
 
   React.useEffect(() => {
     window.scrollTo(0, 0)
+    check(stepState, setSubmit, ['formation', 'metier', 'etablissement', 'niveau'])
   }, [])
 
   const handleJobSearch = async (search) => {

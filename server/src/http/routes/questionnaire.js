@@ -80,9 +80,22 @@ module.exports = () => {
     })
   );
 
+  router.get(
+    "/item/:questionnaireId",
+    tryCatch(async (req, res) => {
+      logger.info("COUCOU");
+      const { questionnaireId } = req.params;
+      const data = await Questionnaire.find({ questionnaire_id: questionnaireId });
+      if (data) {
+        res.json(data);
+      } else {
+        throw boom.badRequest("Identifiant invalide");
+      }
+    })
+  );
+
   /**
-   * Get item by id
-   */
+   * Get item by mongodb _id (used for admin page)
   router.get(
     "/items/:id",
     tryCatch(async (req, res) => {
@@ -95,6 +108,7 @@ module.exports = () => {
       }
     })
   );
+  */
 
   /**
    * Add/Post an item validated by schema

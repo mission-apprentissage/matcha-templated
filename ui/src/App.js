@@ -1,7 +1,7 @@
 import React from 'react'
 import { Layout } from './components'
 import { Switch, Route, Redirect } from 'react-router-dom'
-import { NotFound } from './pages'
+import { Edition, NotFound } from './pages'
 import routes from './routes'
 
 import './App.css'
@@ -34,6 +34,7 @@ const App = () => {
           <Admin />
         </PrivateRoute>
         <Route exact path='/login' component={Login} />
+        <Route exact path='/edition/:questionnaireId' component={Edition} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

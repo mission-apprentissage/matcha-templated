@@ -18,6 +18,7 @@
     "seed": "node src/jobs/seed/index.js",
     "clear": "node src/jobs/clear/index.js",
     "import:psup": "node src/jobs/import-psup/index.js",
+    "import:missing-data": "node src/jobs/import-missing-data/index.js",
     "stats": "node src/jobs/stats/index.js"
   },
   "dependencies": {

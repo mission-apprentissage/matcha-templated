@@ -63,7 +63,7 @@ const Step = (props) => {
         <option value='3'>CAP, BEP</option>
         <option value='4'>Baccalauréat</option>
         <option value='5'>DEUG, BTS, DUT, DEUST</option>
-        <option value='6'>License, License professionnelle</option>
+        <option value='6'>Licence, Licence professionnelle</option>
         <option value='6'>Maitrise, master 1</option>
         <option value='7'>Master 2, DEA, DESS, Ingénieur</option>
         <option value='8'>Doctorat, recherche</option>

@@ -2,7 +2,7 @@ const logger = require("../../common/logger");
 const { Questionnaire } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 
-const data = require("../../../data/missingProfiles.json");
+const data = require("../../../data/profiles.json");
 
 module.exports = async () => {
   logger.info(`-- Uploading missing data into the database`);

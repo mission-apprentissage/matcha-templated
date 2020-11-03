@@ -34,7 +34,7 @@ const App = () => {
           <Admin />
         </PrivateRoute>
         <Route exact path='/login' component={Login} />
-        <Route exact path='/edition/:questionnaireId' component={Edition} />
+        <Route exact path='/edition/:questionnaireId/:redirect?' component={Edition} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

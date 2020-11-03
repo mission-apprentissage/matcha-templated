@@ -12,7 +12,7 @@ export default function Edition(props) {
     try {
       let user = await _get(`/api/questionnaire/item/${params.questionnaireId}`)
       await updateUser(user[0])
-      history.push('/step-one')
+      params.redirect ? history.push(`/step-four`) : history.push('/step-one')
     } catch (e) {
       console.error(e)
     }

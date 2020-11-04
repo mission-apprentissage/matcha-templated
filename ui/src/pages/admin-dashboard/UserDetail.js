@@ -101,7 +101,7 @@ export default (props) => {
                     <Link to='/admin'>
                       <Button>Retour</Button>
                     </Link>
-                    <Link to={`/edition/${questionnaire_id}`}>
+                    <Link to={`/edition/${questionnaire_id}`} target='_blank'>
                       <Button>Accéder au questionnaire</Button>
                     </Link>
                   </div>

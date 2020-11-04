@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 export default (props) => {
   const { params } = props.match
-  let [data, loading] = useFetch(`/api/questionnaire/items/${params.id}`)
+  let [data, loading] = useFetch(`/api/questionnaire/items/${params.questionnaireId}`)
 
   return (
     <>

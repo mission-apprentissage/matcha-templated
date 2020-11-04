@@ -17,6 +17,7 @@ export default function List() {
           <th>Email</th>
           <th>Téléphone</th>
           <th>Date de création</th>
+          <th>Date de mise à jour</th>
           <th>Lien</th>
         </thead>
         <tbody>
@@ -28,7 +29,8 @@ export default function List() {
                   <td>{item.candidat.prenom}</td>
                   <td>{item.candidat.email}</td>
                   <td>{item.candidat.telephone}</td>
-                  <td>{moment(item.createdAt).format('DD/MM/YYYY')}</td>
+                  <td>{moment(item.createdAt).format('DD/MM/YYYY hh:mm')}</td>
+                  <td>{moment(item.updatedAt).format('DD/MM/YYYY hh:mm')}</td>
                   <td>
                     <Link to={`/admin/${item.questionnaire_id}`}>Détails</Link>
                   </td>

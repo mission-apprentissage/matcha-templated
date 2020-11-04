@@ -6,7 +6,7 @@ import moment from 'moment'
 
 export default function List() {
   let [data, loading] = useFetch('/api/questionnaire/items')
-  console.log(data)
+
   return (
     <>
       {loading && <div>Chargement des données....</div>}
@@ -30,7 +30,7 @@ export default function List() {
                   <td>{item.candidat.telephone}</td>
                   <td>{moment(item.createdAt).format('DD/MM/YYYY')}</td>
                   <td>
-                    <Link to={`/admin/${item._id}`}>Détails</Link>
+                    <Link to={`/admin/${item.questionnaire_id}`}>Détails</Link>
                   </td>
                 </tr>
               )

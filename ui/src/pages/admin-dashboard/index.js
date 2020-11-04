@@ -1,5 +1,5 @@
-import Admin from './Admin'
-import List from './List'
+import UserDetail from './UserDetail'
+import UserList from './UserList'
 import Login from './Login'
 
-export { Admin, List, Login }
+export { UserDetail, UserList, Login }

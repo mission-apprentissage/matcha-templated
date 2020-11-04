@@ -83,7 +83,6 @@ module.exports = () => {
   router.get(
     "/item/:questionnaireId",
     tryCatch(async (req, res) => {
-      logger.info("COUCOU");
       const { questionnaireId } = req.params;
       const data = await Questionnaire.find({ questionnaire_id: questionnaireId });
       if (data) {

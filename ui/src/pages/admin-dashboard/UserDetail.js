@@ -8,8 +8,6 @@ export default (props) => {
   const { params } = props.match
   let [data, loading] = useFetch(`/api/questionnaire/items/${params.id}`)
 
-  console.log(data)
-
   return (
     <>
       {loading && <div>Chargement des données....</div>}

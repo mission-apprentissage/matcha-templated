@@ -13,7 +13,7 @@ export default ({ children }) => {
   const [bkg, setBkg] = useState(true)
 
   useEffect(() => {
-    if (pathname.includes('step')) {
+    if (pathname.includes('step') || pathname.includes('admin')) {
       setBkg(false)
     } else {
       setBkg(true)

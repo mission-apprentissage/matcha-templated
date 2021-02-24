@@ -38,11 +38,11 @@ const getHeaders = () => {
   /**
    * auth comes from
    */
-  // let auth = getAuth()
+  let auth = getAuth()
 
   return {
     Accept: 'application/json',
-    // ...(auth.sub !== 'anonymous' ? { Authorization: `Bearer ${auth.token}` } : {}),
+    ...(auth.sub !== 'anonymous' ? { Authorization: `Bearer ${auth.token}` } : {}),
     'Content-Type': 'application/json',
   }
 }

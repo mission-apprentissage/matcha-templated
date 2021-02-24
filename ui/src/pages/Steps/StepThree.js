@@ -27,6 +27,10 @@ export default () => {
   const [submit, setSubmit] = React.useState(profile.mobilite ? true : false)
   const history = useHistory()
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const handleValues = (name, value) => {
     setValues({ ...values, [name]: value })
     if (Object.keys(values).length === 2) {
@@ -48,7 +52,6 @@ export default () => {
         <RadioButton onClick={() => handleValues('permis', true)} state={values.permis === true ? true : null}>
           Oui
         </RadioButton>
-        <div className='p-1'></div>
         <RadioButton
           onClick={() => setValues({ ...values, permis: false })}
           state={values.permis === false ? false : null}
@@ -62,22 +65,28 @@ export default () => {
           <RadioButton
             key={i}
             onClick={() => handleValues('distance', dist)}
-            state={values.distance === dist ? true : null}
+            state={values.distance && values.distance.label === dist.label ? true : null}
           >
             {dist.label}
           </RadioButton>
         ))}
       </Row>
-      <ChatBubble>
-        Attention de bien disposer d’un moyen de déplacement ou d’une possibilité de logement pour vous rendre à
-        l’entreprise
-      </ChatBubble>
+      <div className='mt-4'>
+        <ChatBubble>
+          Attention de bien disposer d’un moyen de déplacement ou d’une possibilité de logement pour vous rendre à
+          l’entreprise
+        </ChatBubble>
+      </div>
       <div className='d-flex justify-content-between mb-5'>
         <Link to='step-two'>
-          <PreviousButton />
+          <PreviousButton className='gtm-previousbutton-stepthree' />
         </Link>
         <Link to='step-four'>
-          <NextButton onClick={() => saveContext(history, 'mobilite', values, '/step-four')} disabled={!submit} />
+          <NextButton
+            onClick={() => saveContext(history, 'mobilite', values, '/step-four')}
+            disabled={!submit}
+            className='gtm-nextbutton-stepthree'
+          />
         </Link>
       </div>
     </Col>

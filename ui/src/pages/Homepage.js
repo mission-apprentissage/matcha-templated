@@ -28,8 +28,12 @@ export default () => {
             Etes-vous bien à la recherche
             <br /> d'un <strong>contrat d'apprentissage</strong> ?
           </Title>
-          <RadioButton onClick={() => history.push('/first')}>Oui !</RadioButton>
-          <RadioButton onClick={() => history.push('/autres')}>Non</RadioButton>
+          <RadioButton onClick={() => history.push('/first')} className='gtm-nextbutton-homepage'>
+            Oui !
+          </RadioButton>
+          <RadioButton onClick={() => history.push('/autres')} className='gtm-previousbutton-homepage'>
+            Non
+          </RadioButton>
         </>
       ) : null}
       <Link className='d-flex justify-content-center' to='/first'>

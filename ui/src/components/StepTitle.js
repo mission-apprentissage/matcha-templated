@@ -6,5 +6,5 @@ export default styled.p`
   color: ${color.black};
   font-size: 0.875rem;
   margin-top: 1rem;
-  margin-left: 1rem;
+  margin-bottom: 1.5rem;
 `

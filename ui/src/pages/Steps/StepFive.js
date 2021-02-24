@@ -8,6 +8,7 @@ import color from '../../components/helper/color'
 import { Context } from '../../context'
 import {
   Button,
+  Input,
   InputTitle,
   StepTitle,
   ChatBubble,
@@ -51,8 +52,12 @@ const criteres = [
   "Travailler auprès d'enfants",
 ]
 
+const Container = styled.div`
+  margin-bottom: 2rem;
+`
 const Wrapper = styled.ul`
-  width: 95%;
+  width: 94%;
+  max-height: 200px;
   margin: 0;
   padding: 0;
   z-index: 1;
@@ -62,52 +67,19 @@ const Wrapper = styled.ul`
   overflow: auto;
   box-shadow: 0px 1px 8px rgba(8, 67, 85, 0.24);
   border-radius: 4px;
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: ${color.middleGrey};
+  }
   li {
     width: 100%;
     padding: 0.5rem;
   }
-  li[data-focus='true'] {
-    background: ${color.lightGrey};
-    /* background: ${color.grey}; */
-    /* color: white; */
-  }
 `
 
-const Input = styled.input`
-  border: 1px solid ${color.grey};
-  box-sizing: border-box;
-  border-radius: 4px;
-  font-family: Inter;
-  font-size: 1rem;
-  padding-left: 10px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  margin-top: 0.5rem;
-  width: 100%;
-  outline: none;
-  border: 1px solid ${color.middleGrey};
-  ${(props) =>
-    props.value &&
-    `
-    border: 1px solid ${color.black};
-  `}
-  ::placeholder {
-    color: #98b0b7;
-  }
-  :hover {
-    border: 1px solid ${color.red};
-  }
-  :focus {
-    border: 1px solid ${color.red};
-    background: ${color.white} !important;
-  }
-  :disabled {
-    border: 1px solid ${color.lightGrey};
-    background: ${color.lightGrey};
-  }
-`
-
-const MultiSelect = ({ handleChange, handleRemoveTag, index }) => {
+const MultiSelect = ({ handleChange, handleRemoveTag, state, index }) => {
   const [inputValue, setInputValue] = React.useState('')
   const {
     getSelectedItemProps,
@@ -120,39 +92,41 @@ const MultiSelect = ({ handleChange, handleRemoveTag, index }) => {
   const getFilteredItems = (items) =>
     items.filter((item) => selectedItems.indexOf(item) < 0 && item.toLowerCase().startsWith(inputValue.toLowerCase()))
 
+  const onStateChange = ({ inputValue, type, selectedItem }) => {
+    switch (type) {
+      case useCombobox.stateChangeTypes.InputChange:
+        setInputValue(inputValue)
+        break
+      case useCombobox.stateChangeTypes.InputKeyDownEnter:
+      case useCombobox.stateChangeTypes.ItemClick:
+      case useCombobox.stateChangeTypes.InputBlur:
+        if (selectedItem) {
+          setInputValue('')
+          addSelectedItem(selectedItem)
+          handleChange('criteres', selectedItem, index, true)
+          selectItem(null)
+        }
+        break
+      default:
+        break
+    }
+  }
   const {
     isOpen,
     getMenuProps,
     getInputProps,
     getComboboxProps,
+    getToggleButtonProps,
     highlightedIndex,
     getItemProps,
     selectItem,
   } = useCombobox({
     inputValue,
+    onStateChange,
     items: getFilteredItems(criteres),
-    onStateChange: ({ inputValue, type, selectedItem }) => {
-      switch (type) {
-        case useCombobox.stateChangeTypes.InputChange:
-          setInputValue(inputValue)
-          break
-        case useCombobox.stateChangeTypes.InputKeyDownEnter:
-        case useCombobox.stateChangeTypes.ItemClick:
-        case useCombobox.stateChangeTypes.InputBlur:
-          if (selectedItem) {
-            setInputValue('')
-            addSelectedItem(selectedItem)
-            handleChange('criteres', selectedItem, index, true)
-            selectItem(null)
-          }
-          break
-        default:
-          break
-      }
-    },
   })
   return (
-    <div>
+    <Container>
       <div>
         {/* {selectedItems.map((selectedItem, i) => (
           <Tag
@@ -168,9 +142,11 @@ const MultiSelect = ({ handleChange, handleRemoveTag, index }) => {
         ))} */}
         <div {...getComboboxProps()}>
           <Input
+            suggestion={true}
             placeholder='selectionner un critère'
             {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
-            disabled={selectedItems && selectedItems.length === 3}
+            {...getToggleButtonProps()}
+            disabled={state && state.length === 3}
           />
         </div>
       </div>
@@ -186,7 +162,7 @@ const MultiSelect = ({ handleChange, handleRemoveTag, index }) => {
             </li>
           ))}
       </Wrapper>
-    </div>
+    </Container>
   )
 }
 
@@ -212,7 +188,7 @@ const Step = (props) => {
         onChange={(event) => handleChange('nom', event.target.value, index)}
       />
       <QuestionTitle title='A quelle fréquence pratiquez-vous cette activité' />
-      <Row>
+      <Row style={{ marginBottom: '2rem' }}>
         {['Tous les jours', 'Plusieurs fois par semaine', 'Plusieurs fois par mois', "Moins d'une fois par mois"].map(
           (x, i) => {
             return (
@@ -236,17 +212,7 @@ const Step = (props) => {
             </Tag>
           ))}
       </div>
-      <MultiSelect handleChange={handleChange} index={index} handleRemoveTag={handleRemoveTag} />
-      {/* <Input
-        placeholder='ajouter un critère'
-        onKeyDown={(e) => {
-          if (e.keyCode === 13) {
-            handleChange('task', e.target.value, index, true)
-            e.target.value = ''
-          }
-        }}
-        disabled={criteres && criteres.length === 3}
-      /> */}
+      <MultiSelect handleChange={handleChange} index={index} handleRemoveTag={handleRemoveTag} state={criteres} />
     </Col>
   )
 }
@@ -256,6 +222,11 @@ export default () => {
   const history = useHistory()
   const [stepState, setStepState] = React.useState(profile.activites ? profile.activites : [{}])
   const [submit, setSubmit] = React.useState(false)
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+    check(stepState, setSubmit, ['nom', 'periodicite', 'criteres'])
+  }, [])
 
   const handleChange = (name, value, index, tag) => {
     const copy = [...stepState]
@@ -309,9 +280,13 @@ export default () => {
       </Button>
       <div className='d-flex justify-content-between mb-5'>
         <Link to='step-four'>
-          <PreviousButton />
+          <PreviousButton className='gtm-previousbutton-stepfive' />
         </Link>
-        <NextButton onClick={() => saveContext(history, 'activites', stepState, '/step-six')} disabled={!submit} />
+        <NextButton
+          onClick={() => saveContext(history, 'activites', stepState, '/step-six')}
+          disabled={!submit}
+          className='gtm-nextbutton-stepfive'
+        />
       </div>
     </Col>
   )

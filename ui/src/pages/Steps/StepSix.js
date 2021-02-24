@@ -43,6 +43,10 @@ export default () => {
   const [contactState, setContactState] = React.useState([{}])
   const history = useHistory()
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const handleChange = (name, value, index) => {
     const copy = [...contactState]
     copy[index][`${name}`] = value
@@ -64,16 +68,25 @@ export default () => {
         maîtres de stages qui pourraient parler de vous à leur communiquer ?
       </ChatBubble>
       {contactState.map((item, index) => (
-        <Formulaire index={index} handleChange={handleChange} handleRemoveContact={handleRemoveContact} {...item} />
+        <Formulaire
+          key={index}
+          index={index}
+          handleChange={handleChange}
+          handleRemoveContact={handleRemoveContact}
+          {...item}
+        />
       ))}
       <Button experience='true' onClick={() => addItem(contactState, setContactState)}>
         + Ajouter un contact
       </Button>
       <div className='d-flex justify-content-between mb-5'>
         <Link to='step-five'>
-          <PreviousButton />
+          <PreviousButton className='gtm-previousbutton-stepsix' />
         </Link>
-        <NextButton onClick={() => saveContext(history, 'recommandations', contactState, '/final')} />
+        <NextButton
+          onClick={() => saveContext(history, 'recommandations', contactState, '/final')}
+          className='gtm-nextbutton-stepsix'
+        />
       </div>
     </Col>
   )

@@ -2,10 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import { ContextProvider } from './context'
-import ReactGA from 'react-ga'
+import TagManager from 'react-gtm-module'
 import App from './App'
 
-if (process.env.NODE_ENV !== 'development') ReactGA.initialize('UA-178733721-1')
+TagManager.initialize({ gtmId: 'GTM-KL849C7' })
 
 ReactDOM.render(
   <BrowserRouter>

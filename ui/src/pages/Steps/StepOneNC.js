@@ -1,10 +1,33 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { DropdownCombobox, Input } from '../../components'
-import { Col, Form } from 'react-bootstrap'
+import { Col } from 'react-bootstrap'
 import { StepTitle, ChatBubble, QuestionTitle, NextButton, Button, InputTitle, RemoveLink } from '../../components'
 import { Context } from '../../context'
 import { v4 as uuid } from 'uuid'
+import color from '../../components/helper/color'
+import styled from 'styled-components'
+
+const FormWrapper = styled.select`
+  background: ${color.white};
+  border: 1px solid ${color.middleGrey};
+  border-radius: 4px;
+  width: 100%;
+  padding: 0.625rem 0;
+  padding-left: 10px;
+  margin-bottom: 2rem;
+  :focus {
+    outline: none;
+  }
+  :hover {
+    border-color: ${color.grey};
+  }
+  ${(props) =>
+    props.value &&
+    `
+    border: 1px solid ${color.black};
+  `}
+`
 
 const Step = (props) => {
   const {
@@ -29,18 +52,23 @@ const Step = (props) => {
       )}
       <p>Dans quelle formation êtes-vous inscrit ou acez-vous l'intention de vous inscrire ?</p>
       <QuestionTitle title='Niveau de la formation' />
-      <Form.Group controlId='exampleForm.ControlSelect1'>
-        <Form.Control value={niveau} onChange={(e) => handleValues('niveau', e.target.value, index)} as='select'>
-          <option disabled selected value></option>
-          <option value='3'>CAP, BEP</option>
-          <option value='4'>Baccalauréat</option>
-          <option value='5'>DEUG, BTS, DUT, DEUST</option>
-          <option value='6'>License, License professionnelle</option>
-          <option value='6'>Maitrise, master 1</option>
-          <option value='7'>Master 2, DEA, DESS, Ingénieur</option>
-          <option value='8'>Doctorat, recherche</option>
-        </Form.Control>
-      </Form.Group>
+
+      <FormWrapper
+        defaultValue='default'
+        value={niveau}
+        onChange={(e) => handleValues('niveau', e.target.value, index)}
+        as='select'
+      >
+        <option disabled value='default'></option>
+        <option value='3'>CAP, BEP</option>
+        <option value='4'>Baccalauréat</option>
+        <option value='5'>DEUG, BTS, DUT, DEUST</option>
+        <option value='6'>Licence, Licence professionnelle</option>
+        <option value='6'>Maitrise, master 1</option>
+        <option value='7'>Master 2, DEA, DESS, Ingénieur</option>
+        <option value='8'>Doctorat, recherche</option>
+      </FormWrapper>
+
       <QuestionTitle title='Intitulé de la formation' />
       <Input
         placeholder='ex: boulanger, chef de projet digital, ... '
@@ -74,13 +102,22 @@ export default () => {
   const [submit, setSubmit] = React.useState(false)
 
   const history = useHistory()
-  const questionnaireId = uuid()
+  const questionnaireId = profile.questionnaire_id ? profile.questionnaire_id : uuid()
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+    check(stepState, setSubmit, ['formation', 'metier', 'etablissement', 'niveau'])
+  }, [])
 
   const handleJobSearch = async (search) => {
     if (search) {
-      const result = await fetch(`https://idea-mna-api.herokuapp.com/romelabels?title=${search}`)
-      const data = await result.json()
-      return data.labelsAndRomes
+      try {
+        const result = await fetch(`https://idea.apprentissage.beta.gouv.fr/api/romelabels?title=${search}`)
+        const data = await result.json()
+        return data.labelsAndRomes
+      } catch (error) {
+        throw new Error(error)
+      }
     }
     return inputJobItems
   }
@@ -118,12 +155,13 @@ export default () => {
         />
       ))}
       <Button experience='true' onClick={() => addItem(stepState, setStepState)}>
-        + Ajouter une expérience
+        + Ajouter un projet
       </Button>
       <div className='d-flex justify-content-end mb-5'>
         <NextButton
           onClick={() => saveContext(history, 'voeux', stepState, '/step-two', questionnaireId)}
           disabled={!submit}
+          className='gtm-nextbutton-stepone-nc'
         />
       </div>
     </Col>

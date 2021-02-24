@@ -2,6 +2,7 @@ import React from 'react'
 import { useCombobox } from 'downshift'
 import styled from 'styled-components'
 import color from './helper/color'
+import { Input } from './index'
 
 const Wrapper = styled.ul`
   width: 95%;
@@ -20,54 +21,27 @@ const Wrapper = styled.ul`
   }
 `
 
-const Input = styled.input`
-  border: 1px solid ${color.middleGrey};
-  box-sizing: border-box;
-  border-radius: 4px;
-  font-family: Inter;
-  font-size: 1rem;
-  padding-left: 10px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  width: 100%;
-  outline: none;
-  ::placeholder {
-    color: #98b0b7;
-  }
-  ${(props) =>
-    props.value &&
-    `
-    border: 1px solid ${color.black};
-  `}
-  :hover {
-    border: 1px solid ${color.grey};
-  }
-  :focus {
-    border: 1px solid ${color.red};
-    background: ${color.white} !important;
-    color: ${color.black};
-  }
-  :disabled {
-    border: 1px solid ${color.lightGrey};
-    background: ${color.lightGrey};
-  }
+const CustomizedInput = styled(Input)`
+  margin-bottom: 0;
 `
 
 export default (props) => {
   const itemToString = (item) => (item ? item.label : '')
+  const onSelectedItemChange = ({ selectedItem }) => props.saveSelectedItem(props.valueName, selectedItem, props.index)
+  const onInputValueChange = async ({ inputValue }) => props.setInputItems(await props.handleSearch(inputValue))
 
   const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({
+    itemToString,
+    onInputValueChange,
+    onSelectedItemChange,
     items: props.inputItems,
     initialInputValue: props.value ? props.value : '',
-    itemToString,
-    onInputValueChange: async ({ inputValue }) => props.setInputItems(await props.handleSearch(inputValue)),
-    onSelectedItemChange: ({ selectedItem }) => props.saveSelectedItem(props.valueName, selectedItem, props.index),
   })
 
   return (
-    <div className='pb-3'>
+    <div className='pb-3 mb-5'>
       <div {...getComboboxProps()}>
-        <Input placeholder='sélectionner un métier' {...getInputProps()} />
+        <CustomizedInput placeholder='sélectionner un métier' {...getInputProps()} />
       </div>
       <Wrapper {...getMenuProps()}>
         {isOpen &&

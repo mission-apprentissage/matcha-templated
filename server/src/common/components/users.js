@@ -42,6 +42,20 @@ module.exports = async () => {
       await user.save();
       return user.toObject();
     },
+    createAdmin: async (username, password, options = {}) => {
+      let hash = options.hash || sha512Utils.hash(password);
+      let permissions = options.permissions || {};
+
+      let user = new User({
+        username,
+        password: hash,
+        writeable: !!permissions.writeable,
+        isAdmin: !!permissions.isAdmin,
+      });
+
+      await user.save();
+      return user.toObject();
+    },
     removeUser: async (username) => {
       const user = await User.findOne({ username });
       if (!user) {

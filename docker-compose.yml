@@ -48,6 +48,17 @@ services:
     networks:
       - matcha_network
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.1.1
+    container_name: matcha_elasticsearch
+    environment:
+      - ES_JAVA_OPTS=-Xmx512m -Xms512m
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+    mem_limit: 1g
+    networks:
+      - matcha_network
+
 networks:
   matcha_network:
     name: matcha_network

@@ -16,6 +16,10 @@ export default () => {
   const [submit, setSubmit] = React.useState(profile.voeux ? true : false)
   const history = useHistory()
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const handleClick = (index, val) => {
     const newVal = [...values]
     newVal[index].choice = val
@@ -53,9 +57,13 @@ export default () => {
       })}
       <div className='d-flex justify-content-between mb-5'>
         <Link to='/step-one'>
-          <PreviousButton />
+          <PreviousButton className='gtm-previousbutton-steptwo' />
         </Link>
-        <NextButton onClick={() => handleSubmit()} disabled={!(submit && (submit || profile.voeux)) || !submit} />
+        <NextButton
+          onClick={() => handleSubmit()}
+          disabled={!(submit && (submit || profile.voeux)) || !submit}
+          className='gtm-nextbutton-steptwo'
+        />
       </div>
     </Col>
   )

@@ -4,7 +4,11 @@ const Joi = require("joi");
 const { Questionnaire } = require("../../common/model");
 const logger = require("../../common/logger");
 const boom = require("boom");
-const { join } = require("lodash");
+const { Client } = require("@elastic/elasticsearch");
+const { level } = require("../../common/logger");
+const client = new Client({
+  node: "https://tables-correspondances-recette.apprentissage.beta.gouv.fr/api/es/search/",
+});
 
 /**
  * Schema for validation
@@ -64,25 +68,46 @@ module.exports = () => {
     "/items",
     tryCatch(async (req, res) => {
       const allData = await Questionnaire.find({});
-      return res.json(allData);
+      /**
+       * TODO :
+       *  - Only save data filled from the form
+       *  - Avoid passing steps if step id not completed from the FRONT
+       */
+      const filtered = allData.filter(
+        (data) => data && data.questionnaire_id !== "null" && data.candidat.prenom !== null
+      );
+      return res.json(filtered);
+    })
+  );
+
+  router.get(
+    "/item/:questionnaireId",
+    tryCatch(async (req, res) => {
+      const { questionnaireId } = req.params;
+      const data = await Questionnaire.find({ questionnaire_id: questionnaireId });
+      if (data) {
+        res.json(data);
+      } else {
+        throw boom.badRequest("Identifiant invalide");
+      }
     })
   );
 
   /**
-   * Get item by id
-   */
+   * Get item by mongodb _id (used for admin page)
   router.get(
     "/items/:id",
     tryCatch(async (req, res) => {
       const itemId = req.params.id;
       const retrievedData = await Questionnaire.findById(itemId);
       if (retrievedData) {
-        res.json(retrievedData);
+        res.json([retrievedData]);
       } else {
         throw boom.badRequest("Identifiant invalide");
       }
     })
   );
+  */
 
   /**
    * Add/Post an item validated by schema
@@ -144,6 +169,68 @@ module.exports = () => {
         ).then((result) => res.json(result));
       }
       // await questionnaireSchema.validateAsync(req.body, { abortEarly: false });
+    })
+  );
+
+  router.get(
+    "/export",
+    tryCatch(async (req, res) => {
+      const data = await Questionnaire.find();
+      const filtered = data.filter((data) => data && data.questionnaire_id !== "null" && data.candidat.prenom !== null);
+      res.json(filtered);
+    })
+  );
+
+  /**
+   * Recherche d'une formation sur l'elastic search
+   * https://tables-correspondances-recette.apprentissage.beta.gouv.fr/api/es/search/bcnformationdiplome/_search
+   * Filtrer les résultats :
+   * - DATE_FERMETURE > 31/08/YYYY, ou YYYY est l'année en cours
+   * - DATE_FERMETURE est vide (La formation est active)
+   */
+  router.post(
+    "/search",
+    tryCatch(async (req, res) => {
+      const { search_term, level } = req.body;
+      const query = {
+        size: 1000,
+        query: {
+          bool: {
+            must: {
+              match: {
+                LIBELLE_LONG_200: {
+                  query: search_term,
+                },
+              },
+            },
+          },
+        },
+      };
+      if (level) {
+        query.query.bool.filter = [
+          {
+            match: {
+              LIBELLE_COURT: {
+                query: level,
+              },
+            },
+          },
+        ];
+      }
+      const response = await client.search({
+        index: "bcnformationdiplome",
+        body: query,
+      });
+
+      const filtered = response.body.hits.hits.filter(
+        (hit) => hit._source.DATE_FERMETURE === "" || hit._source.DATE_FERMETURE > "DATEDUJOUR"
+      );
+
+      console.log(response.body.hits.hits.length);
+      console.log(filtered.length);
+
+      // res.json(response.body.hits);
+      res.json(filtered);
     })
   );
 

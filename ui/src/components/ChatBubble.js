@@ -37,7 +37,7 @@ const LogoBubble = styled.div`
 const Wrapper = styled.div`
   display: flex;
   animation: ${animate} 0.5 ease-in infinite;
-  padding-top: 1rem;
+  /* padding-top: 1.5rem; */
   padding-bottom: 2rem;
 `
 

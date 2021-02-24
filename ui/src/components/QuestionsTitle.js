@@ -2,9 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 
 import color from './helper/color'
+import enter from '../assets/images/enter.svg'
 
 const Wrapper = styled.div`
-  margin: 0.5rem 0;
+  margin: 1rem 0;
 `
 
 const Title = styled.p`

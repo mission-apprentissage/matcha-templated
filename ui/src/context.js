@@ -1,5 +1,4 @@
 import React from 'react'
-import axios from 'axios'
 
 const Context = React.createContext({
   profile: {},
@@ -8,6 +7,7 @@ const Context = React.createContext({
   check: () => {},
   addItem: () => {},
   saveContext: () => {},
+  check: () => {},
 })
 
 class ContextProvider extends React.Component {
@@ -20,6 +20,7 @@ class ContextProvider extends React.Component {
       check: this.check,
       addItem: this.addItem,
       saveContext: this.saveContext,
+      check: this.check,
     }
   }
 
@@ -51,8 +52,13 @@ class ContextProvider extends React.Component {
   }
 
   saveDataInDB = (history, path) => {
-    axios
-      .post(`/api/questionnaire/items/${this.state.questionnaireId}`, this.state.profile)
+    fetch(`/api/questionnaire/items/${this.state.questionnaireId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(this.state.profile),
+    })
       .then((res) => {
         if (res.status === 200) history.push(path)
       })

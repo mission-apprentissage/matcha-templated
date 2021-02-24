@@ -1,11 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import useAutocomplete from '@material-ui/lab/useAutocomplete'
-import _ from 'lodash'
 
 import { InputTitle } from './index'
 import color from './helper/color'
 
+const Container = styled.div`
+  margin-bottom: 2rem;
+`
 const Wrapper = styled.ul`
   width: 95%;
   margin: 0;
@@ -27,7 +29,6 @@ const Wrapper = styled.ul`
     /* color: white; */
   }
 `
-
 const Input = styled.input`
   border: 1px solid ${color.grey};
   box-sizing: border-box;
@@ -35,8 +36,8 @@ const Input = styled.input`
   font-family: Inter;
   font-size: 1rem;
   padding-left: 10px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
   margin-bottom: 1.5rem;
   width: 100%;
   outline: none;
@@ -66,6 +67,35 @@ export default (props) => {
   const [option, setOption] = React.useState()
   const adresse = []
 
+  const onChange = (event, value) =>
+    props.fullAddress && value
+      ? props.handleValues('adresseEntreprise', value.name, props.index)
+      : value
+      ? props.handleValues('commune', value.name)
+      : ''
+
+  const onInputChange = async (event) => {
+    if (props.fullAddress) {
+      const value = event ? event.target.value : defaultValue
+      const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}`)
+      const data = await result.json()
+      data.features.forEach((feat) => {
+        const name = `${feat.properties.label}`
+        adresse.push({ name: name })
+      })
+      setOption(adresse)
+    } else {
+      const value = event ? event.target.value : defaultValue
+      const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}&type=municipality`)
+      const data = await result.json()
+      data.features.forEach((feat) => {
+        const name = `${feat.properties.city} (${feat.properties.postcode.substring(0, 2)})`
+        adresse.push({ name: name })
+      })
+      setOption(adresse)
+    }
+  }
+
   const {
     getRootProps,
     getInputLabelProps,
@@ -75,42 +105,16 @@ export default (props) => {
     groupedOptions,
     defaultValue,
   } = useAutocomplete({
-    defaultValue: props.context && { name: props.context },
-    id: 'autocomplete',
+    onChange,
+    onInputChange,
     options: option ? option : [],
     getOptionLabel: (option) => option.name,
-    onChange: (event, value) =>
-      props.fullAddress && value
-        ? props.handleValues('adresseEntreprise', value.name, props.index)
-        : value
-        ? props.handleValues('commune', value.name)
-        : '',
+    defaultValue: props.context && { name: props.context },
     getOptionSelected: (option, value) => option.name === value.name,
-    onInputChange: _.throttle(async (event) => {
-      if (props.fullAddress) {
-        const value = event ? event.target.value : defaultValue
-        const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}`)
-        const data = await result.json()
-        data.features.forEach((feat) => {
-          const name = `${feat.properties.label}`
-          adresse.push({ name: name })
-        })
-        setOption(adresse)
-      } else {
-        const value = event ? event.target.value : defaultValue
-        const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}&type=municipality`)
-        const data = await result.json()
-        data.features.forEach((feat) => {
-          const name = `${feat.properties.city} (${feat.properties.postcode.substring(0, 2)})`
-          adresse.push({ name: name })
-        })
-        setOption(adresse)
-      }
-    }, 5000),
   })
 
   return (
-    <div>
+    <Container>
       <div {...getRootProps()}>
         <InputTitle {...getInputLabelProps()}>{props.title}</InputTitle>
         <Input {...getInputProps()} placeholder={props.placeholder} required type='text' className='mb-0' />
@@ -122,6 +126,6 @@ export default (props) => {
           ))}
         </Wrapper>
       ) : null}
-    </div>
+    </Container>
   )
 }

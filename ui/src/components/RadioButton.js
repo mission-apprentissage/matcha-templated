@@ -10,7 +10,7 @@ const Button = styled.button`
   border: none;
   padding: 0.825rem 1.5rem;
   width: 100%;
-  margin: 0.5rem 0rem;
+  margin: 0.5rem 0.1rem;
   :hover {
     box-shadow: 0px 1px 8px rgba(8, 67, 85, 0.24);
   }

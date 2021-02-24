@@ -11,6 +11,7 @@ services:
     stdin_open: true
     volumes:
       - ./ui:/app #Allows source folders to be watched
+      - /app/node_modules/
 
   server:
     command: ["yarn", "debug"]
@@ -37,6 +38,9 @@ services:
       - matcha_data_elasticsearch:/usr/share/elasticsearch/data:z
 
 volumes:
+  matcha_elasticsearch_data:
+    driver: local
+    name: matcha_elasticsearch_data
   matcha_mongodb_data:
     driver: local
     name: matcha_mongodb_data

@@ -38,15 +38,17 @@ const Wrapper = styled.div`
   display: flex;
   animation: ${animate} 0.5 ease-in infinite;
   /* padding-top: 1.5rem; */
-  padding-bottom: 2rem;
+  padding-bottom: ${(props) => props.margin || '2rem'};
 `
 
-const ChatBubble = ({ children, darken }) => {
+const ChatBubble = ({ children, darken, bubble = true, margin }) => {
   return (
-    <Wrapper>
-      <LogoBubble darken={darken}>
-        <img alt='logo' src={leaf} />
-      </LogoBubble>
+    <Wrapper margin={margin}>
+      {bubble && (
+        <LogoBubble darken={darken}>
+          <img alt='logo' src={leaf} />
+        </LogoBubble>
+      )}
       <Bubble darken={darken} className='flex-grow-1 ml-2'>
         {children}
       </Bubble>

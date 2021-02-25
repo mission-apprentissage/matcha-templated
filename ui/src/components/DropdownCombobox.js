@@ -27,7 +27,8 @@ const CustomizedInput = styled(Input)`
 
 export default (props) => {
   const itemToString = (item) => (item ? item.label : '')
-  const onSelectedItemChange = ({ selectedItem }) => props.saveSelectedItem(props.valueName, selectedItem, props.index)
+  // const onSelectedItemChange = ({ selectedItem }) => props.saveSelectedItem(props.valueName, selectedItem, props.index)
+  const onSelectedItemChange = ({ selectedItem }) => props.saveSelectedItem(props.valueName, selectedItem) // remove index for OPCO ATLAS FORM
   const onInputValueChange = async ({ inputValue }) => props.setInputItems(await props.handleSearch(inputValue))
 
   const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({
@@ -41,7 +42,7 @@ export default (props) => {
   return (
     <div className='pb-3 mb-5'>
       <div {...getComboboxProps()}>
-        <CustomizedInput placeholder='sélectionner un métier' {...getInputProps()} />
+        <CustomizedInput placeholder={props.placeholder || 'sélectionner un métier'} {...getInputProps()} />
       </div>
       <Wrapper {...getMenuProps()}>
         {isOpen &&

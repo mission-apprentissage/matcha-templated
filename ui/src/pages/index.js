@@ -5,5 +5,6 @@ import NotFound from './NotFound'
 import NotLooking from './NotLooking'
 import End from './End'
 import Edition from './Edition'
+import FormulaireOPCO from './FormulaireOPCO'
 
-export { NotFound, Homepage, First, Final, NotLooking, End, Edition }
+export { NotFound, Homepage, First, Final, NotLooking, End, Edition, FormulaireOPCO }

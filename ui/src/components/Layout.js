@@ -8,17 +8,19 @@ const StyledContainer = styled(Container)`
   height: 100vh;
 `
 
+const paths = ['step', 'admin', 'opco-atlas']
+
 export default ({ children }) => {
   const { pathname } = useLocation()
-  const [bkg, setBkg] = useState(true)
+  const [bkg, setBkg] = useState(false)
 
-  useEffect(() => {
-    if (pathname.includes('step') || pathname.includes('admin')) {
-      setBkg(false)
-    } else {
-      setBkg(true)
-    }
-  }, [pathname])
+  // useEffect(() => {
+  //   if (paths.some((s) => pathname.includes(s))) {
+  //     setBkg(false)
+  //   } else {
+  //     setBkg(true)
+  //   }
+  // }, [pathname])
 
   return (
     <>

@@ -32,5 +32,5 @@ const Button = styled.button`
 `
 
 export default (props) => {
-  return <Button {...props}>Suivant</Button>
+  return <Button {...props}>{props.name || 'Suivant'}</Button>
 }

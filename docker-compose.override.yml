@@ -35,7 +35,7 @@ services:
     ports:
       - "127.0.0.1:9200:9200"
     volumes:
-      - matcha_data_elasticsearch:/usr/share/elasticsearch/data:z
+      - matcha_elasticsearch_data:/usr/share/elasticsearch/data:z
 
 volumes:
   matcha_elasticsearch_data:

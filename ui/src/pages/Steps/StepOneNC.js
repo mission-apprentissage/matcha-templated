@@ -112,7 +112,9 @@ export default () => {
   const handleJobSearch = async (search) => {
     if (search) {
       try {
-        const result = await fetch(`https://idea.apprentissage.beta.gouv.fr/api/romelabels?title=${search}`)
+        const result = await fetch(
+          `https://labonnealternance.apprentissage.beta.gouv.fr/api/romelabels?title=${search}`
+        )
         const data = await result.json()
         return data.labelsAndRomes
       } catch (error) {

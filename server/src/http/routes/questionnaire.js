@@ -5,7 +5,6 @@ const { Questionnaire } = require("../../common/model");
 const logger = require("../../common/logger");
 const boom = require("boom");
 const { Client } = require("@elastic/elasticsearch");
-const { level } = require("../../common/logger");
 const client = new Client({
   node: "https://tables-correspondances-recette.apprentissage.beta.gouv.fr/api/es/search/",
 });
@@ -141,34 +140,21 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const { questionnaireId } = req.params;
       const item = req.body;
-      const exist = await Questionnaire.findOne({ questionnaire_id: questionnaireId });
-      if (!exist) {
-        logger.info("Adding new questionnaire: ", questionnaireId);
-        await Questionnaire.create({
-          questionnaire_id: questionnaireId,
+
+      const qna = await Questionnaire.findOneAndUpdate(
+        { questionnaire_id: questionnaireId },
+        {
           candidat: item.candidat,
           voeux: item.voeux,
           experiences: item.experiences,
           activites: item.activites,
           recommandations: item.recommandations,
           mobilite: item.mobilite,
-        }).then((result) => res.json(result));
-      } else {
-        logger.info("Updating questionnaire: ", questionnaireId, item);
-        await Questionnaire.findOneAndUpdate(
-          { questionnaire_id: questionnaireId },
-          {
-            candidat: item.candidat,
-            voeux: item.voeux,
-            experiences: item.experiences,
-            activites: item.activites,
-            recommandations: item.recommandations,
-            mobilite: item.mobilite,
-          },
-          { new: true }
-        ).then((result) => res.json(result));
-      }
-      // await questionnaireSchema.validateAsync(req.body, { abortEarly: false });
+        },
+        { new: true, upsert: true }
+      );
+
+      return res.json(qna);
     })
   );
 

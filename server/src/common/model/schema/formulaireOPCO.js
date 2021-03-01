@@ -14,7 +14,10 @@ module.exports = new Schema(
       type: String,
       default: null,
     },
-    geocoding: {},
+    coordonnees_geo: {
+      type: String,
+      default: null,
+    },
     ville: {
       type: String,
       default: null,

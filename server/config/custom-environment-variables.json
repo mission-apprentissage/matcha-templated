@@ -5,6 +5,9 @@
   "mongodb": {
     "uri": "MATCHA_MONGODB_URI"
   },
+  "elasticSearch": {
+    "node": "MATCHA_ELASTICSEARCH_NODE"
+  },
   "apiKey": "MATCHA_API_KEY",
   "auth": {
     "passwordHashRounds": "MATCHA_AUTH_PASSWORD_HASH_ROUNDS",

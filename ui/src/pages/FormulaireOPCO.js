@@ -119,20 +119,18 @@ const Formulaire = () => {
         return (
           <Form>
             <StepTitle>Renseignements sur votre entreprise</StepTitle>
-            <InputTitle mandatory={true}>Raison sociale</InputTitle>
+            <InputTitle mandatory={true}>Nom de l'enseigne</InputTitle>
             <MyInput name='raison_social' type='text' value={values.raison_social} />
             <InputTitle mandatory={true}>SIRET</InputTitle>
             <MyInput name='siret' type='text' value={values.siret} />
             <InputTitle mandatory={true}>Adresse</InputTitle>
             <MyInput name='adresse' type='text' value={values.adresse} hide={true} />
-            <InputTitle mandatory={true}>Ville</InputTitle>
-            <MyInput name='ville' type='text' placeholder='Entrez votre ville ou code postal' value={values.ville} />
             <StepTitle>Information sur le contact privilégié</StepTitle>
             <InputTitle mandatory={true}>Nom</InputTitle>
             <MyInput name='nom' type='text' value={values.nom} />
             <InputTitle mandatory={true}>Prénom</InputTitle>
             <MyInput name='prenom' type='test' value={values.prenom} />
-            <InputTitle mandatory={true}>Téléhpone</InputTitle>
+            <InputTitle mandatory={true}>Téléphone</InputTitle>
             <MyInput name='telephone' type='tel' value={values.telephone} />
             <InputTitle mandatory={true}>Email</InputTitle>
             <MyInput name='email' type='email' value={values.email} />

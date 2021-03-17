@@ -50,9 +50,20 @@ const MyInput = (props) => {
 }
 
 const Formulaire = () => {
+  const [initialFormState, setInitialFormState] = React.useState({})
   const [inputJobItems, setInputJobItems] = React.useState([])
   const [searchItems, setSearchItems] = React.useState([{}])
   const history = useHistory()
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    let user = {}
+    for (let i of params) {
+      let [key, value] = i
+      user[key] = value
+    }
+    setInitialFormState(user)
+  }, [])
 
   const handleJobSearch = async (search) => {
     if (search) {
@@ -94,17 +105,22 @@ const Formulaire = () => {
     fn(copy)
   }
 
+  if (!initialFormState) {
+    return <div>Chargement en cours...</div>
+  }
+
   return (
     <Formik
+      enableReinitialize={true}
       initialValues={{
-        raison_social: '',
-        siret: '',
-        adresse: '',
-        ville: '',
-        nom: '',
-        prenom: '',
-        telephone: '',
-        email: '',
+        raison_social: initialFormState.raison_social ?? '',
+        siret: initialFormState.siret ?? '',
+        adresse: initialFormState.adresse ?? '',
+        ville: initialFormState.ville ?? '',
+        nom: initialFormState.nom ?? '',
+        prenom: initialFormState.prenom ?? '',
+        telephone: initialFormState.telephone ?? '',
+        email: initialFormState.email ?? '',
         offres: inputJobItems || [],
       }}
       validationSchema={schema}
@@ -115,7 +131,6 @@ const Formulaire = () => {
       }}
     >
       {({ values, isValid, dirty, isSubmitting }) => {
-        console.log({ isValid, isSubmitting })
         return (
           <Form>
             <StepTitle>Renseignements sur votre entreprise</StepTitle>

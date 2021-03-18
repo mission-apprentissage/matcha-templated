@@ -8,6 +8,8 @@ import { Formik, Form, useField } from 'formik'
 import { _get, _post } from '../../common/httpClient'
 import color from '../../components/helper/color'
 
+import ModalAddWish from './ModalAddWish'
+
 import {
   Input,
   Button,
@@ -57,6 +59,7 @@ const Formulaire = (props) => {
   const [initialFormState, setInitialFormState] = React.useState({})
   const [inputJobItems, setInputJobItems] = React.useState([])
   const [searchItems, setSearchItems] = React.useState([{}])
+  const [open, setOpen] = React.useState(false)
   const { params } = props.match
   // const history = useHistory()
 
@@ -119,8 +122,11 @@ const Formulaire = (props) => {
     fn(copy)
   }
 
+  const handlePopup = () => setOpen(!open)
+
   return (
     <Col>
+      <ModalAddWish open={open} handlePopup={handlePopup} />
       <Formik
         enableReinitialize={true}
         initialValues={{
@@ -137,12 +143,13 @@ const Formulaire = (props) => {
         onSubmit={async (values, { setSubmitting }) => {
           // TODO : Save in DB
           console.log(values)
-          let result = await _post(`api/formulaire/${params._id}`, values)
+          await _post(`api/formulaire/${params._id}`, values)
           setSubmitting(false)
           // history.push('/merci')
         }}
       >
         {({ values, isValid, dirty, isSubmitting, errors }) => {
+          console.log({ ctr: !(isValid && dirty), isValid, dirty })
           return (
             <Form>
               <StepTitle>Renseignements sur votre entreprise</StepTitle>
@@ -189,10 +196,16 @@ const Formulaire = (props) => {
                 placeholder="Rechercher un domaine d'activité.."
               />
 
-              <Button experience='true'>+ Ajouter une offre d'apprentissage</Button>
+              <Button type='button' experience='true' onClick={handlePopup}>
+                + Ajouter une offre d'apprentissage
+              </Button>
 
               <div className='d-flex justify-content-end mb-5'>
-                <NextButton name='Envoyer mon besoin' type='submit' disabled={!(isValid && dirty) || isSubmitting} />
+                <NextButton
+                  name='Envoyer mon besoin'
+                  type='submit'
+                  disabled={!(isValid && (dirty || initialFormState)) || isSubmitting}
+                />
               </div>
             </Form>
           )

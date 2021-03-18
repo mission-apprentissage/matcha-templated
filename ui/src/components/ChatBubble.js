@@ -21,6 +21,7 @@ const Bubble = styled.div`
   background: ${(props) => (props.darken ? 'rgba(165, 165, 180, 0.16)' : '#FAFAFC')};
   border-radius: 16px 16px 16px 0px;
   padding: 0.5rem;
+  margin-bottom: 1rem;
 `
 const LogoBubble = styled.div`
   display: flex;

@@ -9,7 +9,7 @@ const App = () => {
   return (
     <Layout>
       <Switch>
-        <Route exact path='/' component={FormulaireOPCO} />
+        <Route exact path='/:_id' component={FormulaireOPCO} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

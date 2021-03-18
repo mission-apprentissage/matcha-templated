@@ -23,13 +23,17 @@ const ErrorMessage = styled.div`
   color: ${color.red};
 `
 
+const Wrapper = styled.div`
+  margin-bottom: 2rem;
+`
+
 const MyInput = (props) => {
   const [field, meta] = useField(props)
   return (
-    <>
-      <Input {...props} {...field} />
+    <Wrapper>
+      <Input suggestion={true} {...props} {...field} />
       {meta.touched && meta.error ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
-    </>
+    </Wrapper>
   )
 }
 
@@ -42,12 +46,13 @@ const Formulaire = () => {
 
   return (
     <Formik
+      enableReinitialize={true}
       initialValues={{
-        prenom: candidat ? candidat.prenom : '',
-        nom: candidat ? candidat.nom : '',
-        dateNaissance: candidat ? candidat.dateNaissance : '',
-        telephone: candidat ? candidat.telephone : '',
-        email: candidat ? candidat.email : '',
+        prenom: candidat?.prenom ?? '',
+        nom: candidat?.nom ?? '',
+        dateNaissance: candidat?.dateNaissance ?? '',
+        telephone: candidat?.telephone ?? '',
+        email: candidat?.email ?? '',
       }}
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {

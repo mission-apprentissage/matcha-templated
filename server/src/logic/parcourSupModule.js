@@ -24,5 +24,5 @@ class ParcoursupModule {
   }
 }
 
-const parcoursupModule = new ParcoursupModule();
-module.exports = parcoursupModule;
+// const parcoursupModule = new ParcoursupModule();
+module.exports = ParcoursupModule;

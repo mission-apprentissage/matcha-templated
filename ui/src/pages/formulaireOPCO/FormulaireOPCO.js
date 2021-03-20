@@ -20,6 +20,7 @@ import {
   QuestionTitle,
   DropdownCombobox,
 } from '../../components'
+import { ListWish } from '../../components/ListWish'
 
 const schema = Yup.object().shape({
   raison_social: Yup.string().required('champs obligatoire').min(1),
@@ -64,7 +65,7 @@ const Formulaire = (props) => {
   // const history = useHistory()
 
   React.useEffect(() => {
-    _get(`api/formulaire/${params._id}`).then((result) => setInitialFormState(result))
+    // _get(`api/formulaire/${params._id}`).then((result) => setInitialFormState(result))
   }, [])
 
   /**
@@ -178,13 +179,12 @@ const Formulaire = (props) => {
               <MyInput name='email' type='email' value={values.email} />
 
               <StepTitle>Votre besoin de recrutement</StepTitle>
-              <StepTitle>Votre offre</StepTitle>
-              <ChatBubble margin={1}>
+              <ChatBubble>
                 Recherchez le domain d'activité se rapprochant le plus de votre offre d'apprentissage. Plusieurs offres
                 possibes
               </ChatBubble>
-              <QuestionTitle title='Métiers' subtitle="Vous pouvez ajouter jusqu'à trois métiers" />
-              <QuestionTitle title="Domaine d'activité" />
+
+              {/* <QuestionTitle title="Domaine d'activité" />
               <DropdownCombobox
                 handleSearch={handleJobSearch}
                 inputItems={inputJobItems}
@@ -194,7 +194,8 @@ const Formulaire = (props) => {
                 name='offres'
                 value={values.offres?.label}
                 placeholder="Rechercher un domaine d'activité.."
-              />
+              /> */}
+              <ListWish data={[1, 2, 3]} />
 
               <Button type='button' experience='true' onClick={handlePopup}>
                 + Ajouter une offre d'apprentissage

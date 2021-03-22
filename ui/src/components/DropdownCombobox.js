@@ -40,7 +40,7 @@ export default (props) => {
   })
 
   return (
-    <div className='pb-3 mb-5'>
+    <div className=''>
       <div {...getComboboxProps()}>
         <CustomizedInput placeholder={props.placeholder || 'sélectionner un métier'} {...getInputProps()} />
       </div>

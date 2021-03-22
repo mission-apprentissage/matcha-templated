@@ -9,18 +9,9 @@ import { _get, _post } from '../../common/httpClient'
 import color from '../../components/helper/color'
 
 import ModalAddWish from './ModalAddWish'
-
-import {
-  Input,
-  Button,
-  StepTitle,
-  ChatBubble,
-  InputTitle,
-  NextButton,
-  QuestionTitle,
-  DropdownCombobox,
-} from '../../components'
-import { ListWish } from '../../components/ListWish'
+import { Input, Button, StepTitle, ChatBubble, InputTitle, NextButton } from '../../components'
+import { ListWish } from './ListWish'
+import { useDisclosure, Box } from '@chakra-ui/react'
 
 const schema = Yup.object().shape({
   raison_social: Yup.string().required('champs obligatoire').min(1),
@@ -33,7 +24,6 @@ const schema = Yup.object().shape({
   prenom: Yup.string().required('champ obligatoire'),
   telephone: Yup.string().required('champ obligatoire'),
   email: Yup.string().required('champ obligatoire'),
-  // offres: Yup.array(),
 })
 
 const ErrorMessage = styled.div`
@@ -58,9 +48,8 @@ const MyInput = (props) => {
 
 const Formulaire = (props) => {
   const [initialFormState, setInitialFormState] = React.useState({})
-  const [inputJobItems, setInputJobItems] = React.useState([])
-  const [searchItems, setSearchItems] = React.useState([{}])
-  const [open, setOpen] = React.useState(false)
+  const [currentOffer, setCurrentOffer] = React.useState({})
+  const popupState = useDisclosure()
   const { params } = props.match
   // const history = useHistory()
 
@@ -83,51 +72,42 @@ const Formulaire = (props) => {
     }, [])
   */
 
-  const handleJobSearch = async (search) => {
-    if (search) {
-      try {
-        const result = await fetch(
-          `https://labonnealternance.apprentissage.beta.gouv.fr/api/romelabels?title=${search}`
-        )
-        const data = await result.json()
-        console.log(data)
-        return data.labelsAndRomes
-      } catch (error) {
-        throw new Error(error)
-      }
+  const editOffer = (item, index) => {
+    setCurrentOffer({ ...item, index })
+    popupState.onOpen()
+  }
+
+  const saveOffer = (values, index) => {
+    console.log('SAVEOFFER', values, index)
+    const copy = { ...initialFormState }
+
+    if (index !== undefined) {
+      console.log('coucou', copy.offres)
+      console.log('coucou index', copy.offres[index])
+      copy.offres[index] = values
+      setInitialFormState(copy)
+      return
     }
-    return inputJobItems
-  }
 
-  const handleValues = (name, value) => {
-    const copy = [...searchItems]
-    copy[`${name}`] = value
-    if (copy[`${name}`] === '') {
-      copy[`${name}`] = undefined
+    console.log(copy.offres)
+    if (copy.offres === undefined) {
+      copy.offres = []
     }
-    setSearchItems(copy)
+    copy.offres.push(values)
+    setInitialFormState(copy)
   }
 
-  const handleRemoveTag = (tagIndex) => {
-    const copy = [...inputJobItems]
-    copy.splice(tagIndex, 1)
-    if (copy.length === 0) {
-      copy = []
-    }
-    setInputJobItems(copy)
+  const removeOffer = (index) => {
+    const copy = { ...initialFormState }
+    copy.offres.splice(index, 1)
+    setInitialFormState(copy)
   }
 
-  const addItem = (state, fn) => {
-    const copy = [...state]
-    copy.push({})
-    fn(copy)
-  }
-
-  const handlePopup = () => setOpen(!open)
+  console.log('STATE', initialFormState)
 
   return (
     <Col>
-      <ModalAddWish open={open} handlePopup={handlePopup} />
+      <ModalAddWish {...popupState} {...currentOffer} handleSave={saveOffer} />
       <Formik
         enableReinitialize={true}
         initialValues={{
@@ -138,7 +118,6 @@ const Formulaire = (props) => {
           prenom: initialFormState.prenom ?? '',
           telephone: initialFormState.telephone ?? '',
           email: initialFormState.email ?? '',
-          // offres: inputJobItems || [],
         }}
         validationSchema={schema}
         onSubmit={async (values, { setSubmitting }) => {
@@ -150,7 +129,7 @@ const Formulaire = (props) => {
         }}
       >
         {({ values, isValid, dirty, isSubmitting, errors }) => {
-          console.log({ ctr: !(isValid && dirty), isValid, dirty })
+          // console.log({ ctr: !(isValid && dirty), isValid, dirty })
           return (
             <Form>
               <StepTitle>Renseignements sur votre entreprise</StepTitle>
@@ -184,20 +163,11 @@ const Formulaire = (props) => {
                 possibes
               </ChatBubble>
 
-              {/* <QuestionTitle title="Domaine d'activité" />
-              <DropdownCombobox
-                handleSearch={handleJobSearch}
-                inputItems={inputJobItems}
-                setInputItems={setInputJobItems}
-                saveSelectedItem={handleValues}
-                valueName='offres'
-                name='offres'
-                value={values.offres?.label}
-                placeholder="Rechercher un domaine d'activité.."
-              /> */}
-              <ListWish data={[1, 2, 3]} />
+              <Box mt={4} mb={8}>
+                <ListWish data={initialFormState.offres} removeOffer={removeOffer} editOffer={editOffer} />
+              </Box>
 
-              <Button type='button' experience='true' onClick={handlePopup}>
+              <Button type='button' experience='true' onClick={popupState.onOpen}>
                 + Ajouter une offre d'apprentissage
               </Button>
 

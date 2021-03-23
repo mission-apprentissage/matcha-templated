@@ -1,52 +1,48 @@
 const express = require("express");
-const logger = require("../../common/logger");
 const { Formulaire } = require("../../common/model");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 
 module.exports = () => {
   const router = express.Router();
 
-  // GET FORM
+  /**
+   * Get FORM
+   */
   router.get(
     "/:_id",
     tryCatch(async (req, res) => {
-      // await Formulaire.create({ nom: "BARNOIN", prenom: "KEVIN" });
-      console.log(req.params);
-      let { _id } = req.params;
-      let result = await Formulaire.findById(_id).lean();
-      res.json(result);
+      let { formId } = req.params;
+      let result = await Formulaire.findOne({ id_form: formId }).lean();
+
+      return res.json(result);
     })
   );
 
-  // SAVE FORM
+  /**
+   * Post FORM
+   */
   router.post(
     "/:_id",
     tryCatch(async (req, res) => {
       const form = req.body;
-      const { _id } = req.params;
+      const { formId } = req.params;
 
-      console.log(form, _id);
+      console.log(form, formId);
 
-      try {
-        // const { features } = await axios.get(`https://api-adresse.data.gouv.fr/search/?q=${form.adresse}`);
+      // const { features } = await axios.get(`https://api-adresse.data.gouv.fr/search/?q=${form.adresse}`);
 
-        // let geopoints = features.geometry.coordinates.split(",");
-        // let coords = `${geopoints[0]},${geopoints[1]}`;
+      // let geopoints = features.geometry.coordinates.split(",");
+      // let coords = `${geopoints[0]},${geopoints[1]}`;
 
-        // form.coordonnees_geo = coords;
+      // form.coordonnees_geo = coords;
 
-        await Formulaire.findByIdAndUpdate({ _id }, form);
+      await Formulaire.findOneAndUpdate({ id_form: formId }, form, { new: true });
 
-        return res.sendStatus(200);
-      } catch (error) {
-        logger.error(error);
+      //TODO : send thank you mail
 
-        return res.status(400).json({ message: error });
-      }
+      return res.sendStatus(200);
     })
   );
-
-  // SEND MAIL
 
   return router;
 };

@@ -46,10 +46,13 @@
     "moment": "2.26.0",
     "mongoose": "5.10.2",
     "multipipe": "4.0.0",
+    "nanoid": "3.1.22",
+    "node-cron": "3.0.0",
     "passport": "0.4.1",
     "passport-http": "0.3.0",
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",
+    "requestretry": "5.0.0",
     "sha512crypt-node": "0.1.0",
     "xlsx": "0.16.1"
   },

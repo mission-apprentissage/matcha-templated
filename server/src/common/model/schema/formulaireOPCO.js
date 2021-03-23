@@ -1,7 +1,12 @@
 const { Schema } = require("mongoose");
+const { nanoid } = require("nanoid");
 
 module.exports = new Schema(
   {
+    form_id: {
+      type: String,
+      default: () => nanoid(),
+    },
     raison_social: {
       type: String,
       default: null,

@@ -8,7 +8,9 @@
   "elasticSearch": {
     "node": "MATCHA_ELASTICSEARCH_NODE"
   },
-  "apiKey": "MATCHA_API_KEY",
+  "sendinblue": {
+    "apikey": "MATCHA_SD_API_KEY"
+  },
   "auth": {
     "passwordHashRounds": "MATCHA_AUTH_PASSWORD_HASH_ROUNDS",
     "user": {

@@ -8,7 +8,9 @@
   "elasticSearch": {
     "node": "http://localhost:9200"
   },
-  "apiKey": "12345",
+  "sendinblue": {
+    "apikey": "MATCHA_SD_API_KEY"
+  },
   "auth": {
     "passwordHashRounds": 1001,
     "user": {

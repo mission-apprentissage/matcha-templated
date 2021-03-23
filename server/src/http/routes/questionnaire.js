@@ -85,7 +85,7 @@ module.exports = () => {
       const { questionnaireId } = req.params;
       const data = await Questionnaire.find({ questionnaire_id: questionnaireId });
       if (data) {
-        res.json(data);
+        return res.json(data);
       } else {
         throw boom.badRequest("Identifiant invalide");
       }
@@ -128,7 +128,7 @@ module.exports = () => {
       });
 
       await toAdd.save();
-      res.json(toAdd);
+      return res.json(toAdd);
     })
   );
 
@@ -163,7 +163,7 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const data = await Questionnaire.find();
       const filtered = data.filter((data) => data && data.questionnaire_id !== "null" && data.candidat.prenom !== null);
-      res.json(filtered);
+      return res.json(filtered);
     })
   );
 
@@ -216,7 +216,7 @@ module.exports = () => {
       console.log(filtered.length);
 
       // res.json(response.body.hits);
-      res.json(filtered);
+      return res.json(filtered);
     })
   );
 

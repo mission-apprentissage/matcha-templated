@@ -77,14 +77,16 @@ const Formulaire = (props) => {
     popupState.onOpen()
   }
 
-  const saveOffer = (values, index) => {
-    console.log('SAVEOFFER', values, index)
+  const addOffer = () => {
+    setCurrentOffer({})
+    popupState.onOpen()
+  }
+
+  const saveOffer = (values) => {
     const copy = { ...initialFormState }
 
-    if (index !== undefined) {
-      console.log('coucou', copy.offres)
-      console.log('coucou index', copy.offres[index])
-      copy.offres[index] = values
+    if (values.index !== undefined) {
+      copy.offres[values.index] = values
       setInitialFormState(copy)
       return
     }
@@ -122,14 +124,18 @@ const Formulaire = (props) => {
         validationSchema={schema}
         onSubmit={async (values, { setSubmitting }) => {
           // TODO : Save in DB
-          console.log(values)
-          await _post(`api/formulaire/${params._id}`, values)
+          const payload = {
+            ...values,
+            offres: initialFormState.offres ?? [],
+          }
+          console.log('payload', payload)
+          await _post(`api/formulaire/${params._id}`, payload)
           setSubmitting(false)
           // history.push('/merci')
         }}
       >
         {({ values, isValid, dirty, isSubmitting, errors }) => {
-          // console.log({ ctr: !(isValid && dirty), isValid, dirty })
+          console.log({ ctr: !(isValid && (dirty || initialFormState)), isValid, dirty })
           return (
             <Form>
               <StepTitle>Renseignements sur votre entreprise</StepTitle>
@@ -167,16 +173,12 @@ const Formulaire = (props) => {
                 <ListWish data={initialFormState.offres} removeOffer={removeOffer} editOffer={editOffer} />
               </Box>
 
-              <Button type='button' experience='true' onClick={popupState.onOpen}>
+              <Button type='button' experience='true' onClick={addOffer}>
                 + Ajouter une offre d'apprentissage
               </Button>
 
               <div className='d-flex justify-content-end mb-5'>
-                <NextButton
-                  name='Envoyer mon besoin'
-                  type='submit'
-                  disabled={!(isValid && (dirty || initialFormState)) || isSubmitting}
-                />
+                <NextButton name='Envoyer mon besoin' type='submit' disabled={!(isValid && dirty) || isSubmitting} />
               </div>
             </Form>
           )

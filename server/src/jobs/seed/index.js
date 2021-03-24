@@ -1,10 +1,6 @@
 const { runScript } = require("../scriptWrapper");
-const seedQuestionnaire = require("./seed");
-const createUsers = require("./createUsers");
-const removeUser = require("./removeUser");
+const createFormulaire = require("./createFormulaire");
 
-runScript(async ({ users, db }) => {
-  // await seedQuestionnaire(db, users);
-  // await createUsers(users);
-  await removeUser();
+runScript(async ({ formulaire }) => {
+  await createFormulaire(formulaire);
 });

@@ -9,10 +9,10 @@ module.exports = () => {
    * Get FORM
    */
   router.get(
-    "/:_id",
+    "/:id_form",
     tryCatch(async (req, res) => {
-      let { formId } = req.params;
-      let result = await Formulaire.findOne({ id_form: formId }).lean();
+      let { id_form } = req.params;
+      let result = await Formulaire.findOne({ id_form }).lean();
 
       return res.json(result);
     })
@@ -22,21 +22,12 @@ module.exports = () => {
    * Post FORM
    */
   router.post(
-    "/:_id",
+    "/:id_form",
     tryCatch(async (req, res) => {
       const form = req.body;
-      const { formId } = req.params;
+      const { id_form } = req.params;
 
-      console.log(form, formId);
-
-      // const { features } = await axios.get(`https://api-adresse.data.gouv.fr/search/?q=${form.adresse}`);
-
-      // let geopoints = features.geometry.coordinates.split(",");
-      // let coords = `${geopoints[0]},${geopoints[1]}`;
-
-      // form.coordonnees_geo = coords;
-
-      await Formulaire.findOneAndUpdate({ id_form: formId }, form, { new: true });
+      await Formulaire.findOneAndUpdate({ id_form }, form, { new: true });
 
       //TODO : send thank you mail
 

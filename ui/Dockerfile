@@ -1,13 +1,16 @@
-FROM node:14.15.1-stretch as build
-WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
-COPY . ./
-RUN yarn build
+FROM node:14.16-alpine
 
-FROM node:14.15.1-alpine
-COPY --from=build /app/build ./build
-COPY --from=build /app/package.json ./
-RUN yarn global add local-web-server
+WORKDIR /app
+
+# Install dependencies
+COPY package.json yarn.lock /app/
+RUN yarn install --production --frozen-lockfile && \
+    yarn global add local-web-server
+
+# Build site
+COPY . ./
+RUN yarn build && \
+    mv /app/build /site
+
 EXPOSE 3000
-CMD yarn serve
+CMD ws --port 3000 -d /site --log.format dev --spa index.html

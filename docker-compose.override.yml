@@ -12,7 +12,6 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./ui:/app #Allows source folders to be watched
-      - /app/node_modules
 
   server:
     command: ["yarn", "debug"]

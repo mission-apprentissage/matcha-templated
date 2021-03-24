@@ -20,7 +20,7 @@ services:
     container_name: matcha_ui
     build:
       context: ui
-    mem_limit: 256m
+    mem_limit: 512m
     networks:
       - matcha_network
     depends_on:
@@ -41,7 +41,7 @@ services:
       - MATCHA_MONGODB_URI=mongodb://mongodb:27017/matcha?retryWrites=true&w=majority
 
   mongodb:
-    image: mongo:4.2.6-bionic
+    image: mongo:4.2.13-bionic
     container_name: matcha_mongodb
     mem_limit: 1g
     restart: unless-stopped
@@ -49,7 +49,7 @@ services:
       - matcha_network
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.1.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.2
     container_name: matcha_elasticsearch
     environment:
       - ES_JAVA_OPTS=-Xmx512m -Xms512m

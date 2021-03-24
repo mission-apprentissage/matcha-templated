@@ -12,10 +12,22 @@ const colors = {
   white: '#FFFFFF',
 }
 
-const Input = {
+const config = {
+  initialColorMode: 'light',
+  useSystemColorMode: false,
+}
+
+const Select = {
   // style object for base or default style
+  parts: ['field'],
   baseStyle: {
-    border: '1px solid',
+    field: {
+      border: '1px solid red',
+      color: 'bleu.500',
+      _focus: {
+        borderColor: 'red',
+      },
+    },
   },
   // styles for different sizes ("sm", "md", "lg")
   sizes: {},
@@ -30,7 +42,8 @@ const Input = {
 
 const theme = {
   colors: { ...colors },
-  components: { Input },
+  config,
+  components: { Select },
 }
 
 export default extendTheme(theme)

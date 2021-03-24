@@ -16,7 +16,7 @@ export const ListWish = (props) => {
             </Circle>
           </Box>
           <Box>
-            <Text>{item.metier?.label}</Text>
+            <Text>{item.libelle}</Text>
             <Text fontSize='xs'>niveau : {item.niveau}</Text>
           </Box>
           <Spacer />

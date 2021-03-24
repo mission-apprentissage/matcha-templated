@@ -1,17 +1,18 @@
 import React from 'react'
 import * as Yup from 'yup'
+import Axios from 'axios'
+import { useQuery } from 'react-query'
 import { Col } from 'react-bootstrap'
 import styled from 'styled-components/macro'
-// import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { Formik, Form, useField } from 'formik'
+import { useDisclosure, Box } from '@chakra-ui/react'
 
-import { _get, _post } from '../../common/httpClient'
 import color from '../../components/helper/color'
-
 import ModalAddWish from './ModalAddWish'
 import { Input, Button, StepTitle, ChatBubble, InputTitle, NextButton } from '../../components'
 import { ListWish } from './ListWish'
-import { useDisclosure, Box } from '@chakra-ui/react'
+import Autocomplete from './AdresseAutocomplete'
 
 const schema = Yup.object().shape({
   raison_social: Yup.string().required('champs obligatoire').min(1),
@@ -51,11 +52,19 @@ const Formulaire = (props) => {
   const [currentOffer, setCurrentOffer] = React.useState({})
   const popupState = useDisclosure()
   const { params } = props.match
-  // const history = useHistory()
+  const history = useHistory()
 
-  React.useEffect(() => {
-    // _get(`api/formulaire/${params._id}`).then((result) => setInitialFormState(result))
-  }, [])
+  const { isLoading } = useQuery(
+    ['formulaire', { id: params.id }],
+    ({ queryKey }) => Axios.get(`api/formulaire/${queryKey[1].id}`),
+    {
+      onSuccess: ({ data }) => {
+        console.log(data)
+        setInitialFormState(data)
+      },
+      refetchOnWindowFocus: false,
+    }
+  )
 
   /**
    *
@@ -91,7 +100,6 @@ const Formulaire = (props) => {
       return
     }
 
-    console.log(copy.offres)
     if (copy.offres === undefined) {
       copy.offres = []
     }
@@ -105,7 +113,27 @@ const Formulaire = (props) => {
     setInitialFormState(copy)
   }
 
-  console.log('STATE', initialFormState)
+  const submitFormulaire = async (values, { setSubmitting }) => {
+    const payload = {
+      ...values,
+      offres: initialFormState.offres ?? [],
+    }
+
+    const res = await Axios.post(`api/formulaire/${params.id}`, payload)
+    setSubmitting(false)
+
+    if (res.status === 200) {
+      history.push('/merci')
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <Col>
+        <StepTitle>Chargement en cours...</StepTitle>
+      </Col>
+    )
+  }
 
   return (
     <Col>
@@ -113,29 +141,20 @@ const Formulaire = (props) => {
       <Formik
         enableReinitialize={true}
         initialValues={{
-          raison_social: initialFormState.raison_social ?? '',
-          siret: initialFormState.siret ?? '',
-          adresse: initialFormState.adresse ?? '',
-          nom: initialFormState.nom ?? '',
-          prenom: initialFormState.prenom ?? '',
-          telephone: initialFormState.telephone ?? '',
-          email: initialFormState.email ?? '',
+          raison_social: initialFormState?.raison_social ?? '',
+          siret: initialFormState?.siret ?? '',
+          adresse: initialFormState?.adresse ?? '',
+          coordonnees_geo_latitude: initialFormState?.coordonnees_geo_latitude ?? '',
+          coordonnees_geo_longitude: initialFormState?.coordonnees_geo_longitude ?? '',
+          nom: initialFormState?.nom ?? '',
+          prenom: initialFormState?.prenom ?? '',
+          telephone: initialFormState?.telephone ?? '',
+          email: initialFormState?.email ?? '',
         }}
         validationSchema={schema}
-        onSubmit={async (values, { setSubmitting }) => {
-          // TODO : Save in DB
-          const payload = {
-            ...values,
-            offres: initialFormState.offres ?? [],
-          }
-          console.log('payload', payload)
-          await _post(`api/formulaire/${params._id}`, payload)
-          setSubmitting(false)
-          // history.push('/merci')
-        }}
+        onSubmit={submitFormulaire}
       >
-        {({ values, isValid, dirty, isSubmitting, errors }) => {
-          console.log({ ctr: !(isValid && (dirty || initialFormState)), isValid, dirty })
+        {({ values, isValid, dirty, isSubmitting, setFieldValue }) => {
           return (
             <Form>
               <StepTitle>Renseignements sur votre entreprise</StepTitle>
@@ -147,7 +166,17 @@ const Formulaire = (props) => {
               <MyInput name='siret' type='text' value={values.siret} maxLength='14' />
 
               <InputTitle mandatory={true}>Adresse</InputTitle>
-              <MyInput name='adresse' type='text' value={values.adresse} hide={true} />
+              <Autocomplete
+                placeholder='Tapez votre adresse complète'
+                handleValues={(value) => {
+                  setFieldValue('adresse', value.name)
+                  setFieldValue('coordonnees_geo_longitude', value.coordonnees_geo_longitude)
+                  setFieldValue('coordonnees_geo_latitude', value.coordonnees_geo_latitude)
+                }}
+                context={initialFormState?.adresse || ''}
+              />
+
+              {/* <MyInput name='adresse' type='text' value={values.adresse} hide={true} /> */}
 
               <StepTitle>Information sur le contact privilégié</StepTitle>
 
@@ -170,7 +199,7 @@ const Formulaire = (props) => {
               </ChatBubble>
 
               <Box mt={4} mb={8}>
-                <ListWish data={initialFormState.offres} removeOffer={removeOffer} editOffer={editOffer} />
+                <ListWish data={initialFormState?.offres} removeOffer={removeOffer} editOffer={editOffer} />
               </Box>
 
               <Button type='button' experience='true' onClick={addOffer}>
@@ -178,7 +207,11 @@ const Formulaire = (props) => {
               </Button>
 
               <div className='d-flex justify-content-end mb-5'>
-                <NextButton name='Envoyer mon besoin' type='submit' disabled={!(isValid && dirty) || isSubmitting} />
+                <NextButton
+                  name='Envoyer mon besoin'
+                  type='submit'
+                  disabled={!(isValid && (dirty || initialFormState)) || isSubmitting}
+                />
               </div>
             </Form>
           )

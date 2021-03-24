@@ -28,7 +28,7 @@ const CustomizedInput = styled(Input)`
 export default (props) => {
   const itemToString = (item) => (item ? item.label : '')
   // const onSelectedItemChange = ({ selectedItem }) => props.saveSelectedItem(props.valueName, selectedItem, props.index)
-  const onSelectedItemChange = ({ selectedItem }) => props.saveSelectedItem(props.valueName, selectedItem) // remove index for OPCO ATLAS FORM
+  const onSelectedItemChange = ({ selectedItem }) => props.saveSelectedItem(selectedItem) // remove index for OPCO ATLAS FORM
   const onInputValueChange = async ({ inputValue }) => props.setInputItems(await props.handleSearch(inputValue))
 
   const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({

@@ -21,7 +21,7 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 
 const schema = Yup.object().shape({
-  metier: Yup.object().required('Champ obligatoire'),
+  libelle: Yup.string().required('Champ obligatoire'),
   niveau: Yup.string().required('Champ obligatoire'),
   description: Yup.string(),
 })
@@ -52,7 +52,8 @@ export default (props) => {
       enableReinitialize={true}
       initialValues={{
         index: props.index ?? undefined,
-        metier: props.metier ?? {},
+        libelle: props.libelle ?? '',
+        romes: props.romes ?? [],
         niveau: props.niveau ?? '',
         description: props.description ?? '',
       }}
@@ -88,9 +89,13 @@ export default (props) => {
                     handleSearch={handleJobSearch}
                     inputItems={inputJobItems}
                     setInputItems={setInputJobItems}
-                    saveSelectedItem={setFieldValue}
+                    // saveSelectedItem={setFieldValue}
+                    saveSelectedItem={(values) => {
+                      setFieldValue('libelle', values.label)
+                      setFieldValue('romes', values.romes)
+                    }}
                     valueName='metier'
-                    value={values.metier.label}
+                    value={values.libelle}
                     placeholder="Rechercher un domaine d'activité.."
                     ref={initialRef}
                   />

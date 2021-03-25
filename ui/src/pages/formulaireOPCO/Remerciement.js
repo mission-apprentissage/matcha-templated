@@ -5,9 +5,9 @@ export default () => {
   return (
     <Flex justify='center' mt='6'>
       <Box>
-        <Text>Merci d'avoir rempli le formulaire, nous reviendrons vers vous rapidement. </Text>
+        <Text align='center'>Nous avons bien reçu votre besoin !</Text>
         <Text align='center' pt='4'>
-          l'équipe Matcha
+          Nous revenons vers vous très vite dès que nous aurons identifié les profils correspondant à votre demande.
         </Text>
       </Box>
     </Flex>

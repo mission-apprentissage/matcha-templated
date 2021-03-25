@@ -10,6 +10,7 @@ RUN yarn build
 FROM node:14.16-alpine
 COPY --from=build /app/build ./build
 COPY --from=build /app/package.json ./
+RUN yarn global add local-web-server
 
 EXPOSE 3000
 CMD yarn serve

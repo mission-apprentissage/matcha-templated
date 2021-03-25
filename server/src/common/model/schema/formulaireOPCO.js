@@ -1,5 +1,6 @@
 const { Schema } = require("mongoose");
 const { nanoid } = require("nanoid");
+const { transactionalSchema } = require("./transactional");
 
 module.exports = new Schema(
   {
@@ -58,6 +59,13 @@ module.exports = new Schema(
       default: [],
       description: "Liste des métiers sur lesquels l'entreprise recherche des apprentis",
     },
+    mailing: [
+      {
+        type: transactionalSchema,
+        default: {},
+        description: "Liste des évènements MAIL",
+      },
+    ],
   },
   {
     timestamps: true,

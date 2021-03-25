@@ -17,6 +17,7 @@
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
     "lbb:create-form": "node src/jobs/seed/index.js",
     "lbb:import": "node src/jobs/lbb/import.js",
+    "lbb:launch": "node src/jobs/lbb/campaign.js",
     "clear": "node src/jobs/clear/index.js"
   },
   "dependencies": {

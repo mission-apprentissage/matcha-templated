@@ -2,42 +2,25 @@ const { Schema } = require("mongoose");
 
 const transactionalSchema = new Schema(
   {
-    type: {
-      type: String,
-      enum: ["TRANSAC", "CAMPAGNE"],
-      default: "TRANSAC",
-      decription: "Type de mail",
-    },
-    origin: {
+    campagne: {
       type: String,
       default: null,
-      description: "Nom de la collection d'origin de l'object",
+      description: "Identifiant de campagne",
     },
-    id: {
+    messageId: {
       type: String,
       default: null,
-      description: "id de l'object",
+      description: "Identifiant sendinblue",
     },
-    message_id: {
+    code: {
       type: String,
       default: null,
-      description: "ID mail renvoyé par sendinblue",
+      description: "Code erreur sendinblue",
     },
-    error: {
-      type: Object,
-      default: null,
-      description: "Code et message renvoyé par sendinblue",
-    },
-    status: {
+    message: {
       type: String,
-      enum: ["SENT", "PENDING"],
       default: null,
-      description: "Statut de l'email",
-    },
-    sent_at: {
-      type: Date,
-      default: null,
-      description: "Date d'envoie de l'email",
+      description: "Message erreur sendinblue",
     },
   },
   {

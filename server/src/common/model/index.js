@@ -15,7 +15,6 @@ const createModel = (modelName, descriptor, options = {}) => {
 };
 
 module.exports = {
-  Transactional: createModel("transactionals", schema.transactionalSchema),
   Formulaire: createModel("formulaires", schema.formulaireOPCOSchema, {
     esIndexName: "formulaires",
   }),

@@ -15,11 +15,9 @@
     "docker:start": "docker-compose up -d --build --force-recreate",
     "docker:stop": "docker-compose down",
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
-    "seed": "node src/jobs/seed/index.js",
-    "clear": "node src/jobs/clear/index.js",
-    "import:psup": "node src/jobs/import-psup/index.js",
-    "import:profiles": "node src/jobs/import-profiles/index.js",
-    "stats": "node src/jobs/stats/index.js"
+    "lbb:create-form": "node src/jobs/seed/index.js",
+    "lbb:import": "node src/jobs/lbb/import.js",
+    "clear": "node src/jobs/clear/index.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.9.1",
@@ -32,7 +30,6 @@
     "bunyan-slack": "0.0.10",
     "compose-middleware": "5.0.1",
     "config": "3.3.1",
-    "convert-csv-to-json": "0.0.15",
     "elasticsearch-scroll-stream": "1.3.2",
     "env-var": "6.1.1",
     "express": "4.17.1",

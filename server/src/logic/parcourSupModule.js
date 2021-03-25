@@ -1,4 +1,4 @@
-const csvToJson = require("convert-csv-to-json");
+const { getJsonFromXlsxFile } = require("../common/utils/fileUtils");
 const logger = require("../common/logger");
 const path = require("path");
 
@@ -15,7 +15,7 @@ class ParcoursupModule {
       if (this.data) {
         return this.data;
       } else {
-        return csvToJson.getJsonFromCsv(filePath);
+        return getJsonFromXlsxFile(filePath);
       }
     } catch (err) {
       logger.error(`getPsupData Error ${err}`);

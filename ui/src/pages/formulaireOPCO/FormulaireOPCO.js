@@ -24,7 +24,7 @@ const schema = Yup.object().shape({
   nom: Yup.string().required('champ obligatoire'),
   prenom: Yup.string().required('champ obligatoire'),
   telephone: Yup.string().required('champ obligatoire'),
-  email: Yup.string().required('champ obligatoire'),
+  email: Yup.string().email('Insérer un email valide').required('champ obligatoire'),
 })
 
 const ErrorMessage = styled.div`
@@ -156,7 +156,7 @@ const Formulaire = (props) => {
       >
         {({ values, isValid, dirty, isSubmitting, setFieldValue }) => {
           return (
-            <Form>
+            <Form autoComplete='off'>
               <StepTitle>Renseignements sur votre entreprise</StepTitle>
 
               <InputTitle mandatory={true}>Nom de l'enseigne</InputTitle>
@@ -187,7 +187,7 @@ const Formulaire = (props) => {
               <MyInput name='prenom' type='test' value={values.prenom} />
 
               <InputTitle mandatory={true}>Téléphone</InputTitle>
-              <MyInput name='telephone' type='tel' value={values.telephone} />
+              <MyInput name='telephone' type='tel' pattern='[0-9]{10}' value={values.telephone} />
 
               <InputTitle mandatory={true}>Email</InputTitle>
               <MyInput name='email' type='email' value={values.email} />

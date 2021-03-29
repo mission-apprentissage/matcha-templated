@@ -20,7 +20,7 @@ services:
     container_name: matcha_ui
     build:
       context: ui
-    mem_limit: 512m
+    mem_limit: 1g
     networks:
       - matcha_network
     depends_on:
@@ -39,11 +39,12 @@ services:
       - mongodb
     environment:
       - MATCHA_MONGODB_URI=mongodb://mongodb:27017/matcha?retryWrites=true&w=majority
+      - MATCHA_SD_API_KEY=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
+      - MATCHA_ELASTICSEARCH_NODE=http://elasticsearch:9200
 
   mongodb:
     image: mongo:4.2.13-bionic
     container_name: matcha_mongodb
-    mem_limit: 1g
     restart: unless-stopped
     networks:
       - matcha_network

@@ -29,7 +29,7 @@ const launch = async (mail) => {
         name: "Charlotte Lecuit",
         email: "charlotte.lecuit@beta.gouv.fr",
       },
-      subject: `${raison_social}, le Ministère du Travail, de l'Emploi et de l'Insertion vous aide à exprimer vos besoins de recrutements`,
+      subject: `${raison_social}, le gouvernement vous aide à exprimer vos besoins de recrutements`,
       templateId: 168,
       tags: [campagne],
       params: params,

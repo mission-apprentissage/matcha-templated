@@ -59,6 +59,16 @@ services:
     networks:
       - matcha_network
 
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:7.10.2
+    container_name: matcha_kibana
+    depends_on:
+      - elasticsearch
+    networks:
+      - matcha_network
+    environment:
+      - MATCHA_ELASTICSEARCH_NODE=http://elasticsearch:9200
+
 networks:
   matcha_network:
     name: matcha_network

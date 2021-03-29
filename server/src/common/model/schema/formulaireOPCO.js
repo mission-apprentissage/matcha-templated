@@ -24,15 +24,10 @@ module.exports = new Schema(
       default: null,
       description: "Adresse de l'entreprise",
     },
-    coordonnees_geo_latitude: {
+    geo_coordonnees: {
       type: String,
       default: null,
-      description: "Latitude de l'adresse de l'entreprise",
-    },
-    coordonnees_geo_longitude: {
-      type: String,
-      default: null,
-      description: "Longitude de l'adresse de l'entreprise",
+      description: "Longitude/Latitude de l'adresse de l'entreprise ",
     },
     nom: {
       type: String,

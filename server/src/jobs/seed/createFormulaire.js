@@ -8,6 +8,7 @@ module.exports = async (formulaire) => {
     email: "adresse@mail.com",
     raison_social: "Ma société",
     siret: "12345678901234",
+    geo_coordonnees: "2.385633,48.868565",
     adresse: "3 rue george duhamel, 75012, Paris",
   };
 

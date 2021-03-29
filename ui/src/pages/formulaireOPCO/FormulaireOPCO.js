@@ -118,7 +118,6 @@ const Formulaire = (props) => {
       ...values,
       offres: initialFormState.offres ?? [],
     }
-
     const res = await Axios.post(`api/formulaire/${params.id}`, payload)
     setSubmitting(false)
 
@@ -144,8 +143,7 @@ const Formulaire = (props) => {
           raison_social: initialFormState?.raison_social ?? '',
           siret: initialFormState?.siret ?? '',
           adresse: initialFormState?.adresse ?? '',
-          coordonnees_geo_latitude: initialFormState?.coordonnees_geo_latitude ?? '',
-          coordonnees_geo_longitude: initialFormState?.coordonnees_geo_longitude ?? '',
+          geo_coordonnees: initialFormState?.geo_coordonnees ?? '',
           nom: initialFormState?.nom ?? '',
           prenom: initialFormState?.prenom ?? '',
           telephone: initialFormState?.telephone ?? '',
@@ -170,8 +168,7 @@ const Formulaire = (props) => {
                 placeholder='Tapez votre adresse complète'
                 handleValues={(value) => {
                   setFieldValue('adresse', value.name)
-                  setFieldValue('coordonnees_geo_longitude', value.coordonnees_geo_longitude)
-                  setFieldValue('coordonnees_geo_latitude', value.coordonnees_geo_latitude)
+                  setFieldValue('geo_coordonnees', value.geo_coordonnees)
                 }}
                 context={initialFormState?.adresse || ''}
               />

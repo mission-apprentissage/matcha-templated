@@ -18,6 +18,7 @@
     "lbb:create-form": "node src/jobs/seed/index.js",
     "lbb:import": "node src/jobs/lbb/import.js",
     "lbb:launch": "node src/jobs/lbb/campaign.js",
+    "formulaire:index": "node srv/jobs/formulaire/generateEsIndex.js",
     "clear": "node src/jobs/clear/index.js"
   },
   "dependencies": {

@@ -15,6 +15,7 @@ import {
   Textarea,
   Center,
   FormErrorMessage,
+  useStyleConfig,
 } from '@chakra-ui/react'
 import { DropdownCombobox } from '../../components'
 import { Formik } from 'formik'
@@ -27,6 +28,11 @@ const schema = Yup.object().shape({
 })
 
 export default (props) => {
+  const selectStyle = useStyleConfig('Select')
+  const textareaStyle = useStyleConfig('Textarea')
+
+  console.log({ textareaStyle })
+
   let { isOpen, onClose, handleSave } = props
   const [inputJobItems, setInputJobItems] = React.useState([])
   const initialRef = React.useRef()
@@ -105,7 +111,7 @@ export default (props) => {
 
                 <FormControl mt={4} isRequired>
                   <FormLabel>Formation minimum attendue</FormLabel>
-                  <Select name='niveau' defaultValue={values.niveau} onChange={handleChange}>
+                  <Select sx={selectStyle} name='niveau' defaultValue={values.niveau} onChange={handleChange}>
                     <option value='' disabled hidden>
                       Choisissez un niveau
                     </option>
@@ -122,7 +128,13 @@ export default (props) => {
 
                 <FormControl mt={4}>
                   <FormLabel>Description</FormLabel>
-                  <Textarea rows='6' name='description' defaultValue={values.description} onChange={handleChange} />
+                  <Textarea
+                    sx={textareaStyle}
+                    rows='6'
+                    name='description'
+                    defaultValue={values.description}
+                    onChange={handleChange}
+                  />
                 </FormControl>
               </ModalBody>
 

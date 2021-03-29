@@ -39,7 +39,6 @@ services:
       - mongodb
     environment:
       - MATCHA_MONGODB_URI=mongodb://mongodb:27017/matcha?retryWrites=true&w=majority
-      - MATCHA_SD_API_KEY=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
       - MATCHA_ELASTICSEARCH_NODE=http://elasticsearch:9200
 
   mongodb:

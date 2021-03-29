@@ -6,7 +6,7 @@ const logger = require("../../common/logger");
 
 const launch = async (mail) => {
   const forms = await Formulaire.find({}).lean();
-  const campagne = "TEST";
+  const campagne = "matcha-lbb-20210331";
 
   await asyncForEach(forms, async (form) => {
     const { raison_social, email, id_form, _id } = form;
@@ -16,14 +16,13 @@ const launch = async (mail) => {
     };
     const body = {
       sender: {
-        name: "Ministère du Travail de l'Emploi et de l'Insertion",
+        name: "Mission interministérielle pour l'apprentissage",
         email: "charlotte.lecuit@beta.gouv.fr",
       },
       to: [
         {
           name: `${raison_social}`,
-          // email: `${email}`,
-          email: "k.barnoin@gmail.com",
+          email: `${email}`,
         },
       ],
       replyTo: {
@@ -31,7 +30,7 @@ const launch = async (mail) => {
         email: "charlotte.lecuit@beta.gouv.fr",
       },
       subject: `${raison_social}, le Ministère du Travail, de l'Emploi et de l'Insertion vous aide à exprimer vos besoins de recrutements`,
-      templateId: 159,
+      templateId: 168,
       tags: [campagne],
       params: params,
     };
@@ -47,7 +46,7 @@ const launch = async (mail) => {
     if (result.messageId) {
       logger.info(`email sent ${email}`);
     } else {
-      logger.info(`error : ${code} —— ${message}`);
+      logger.info(`error : ${message.code} —— ${message.message}`);
     }
 
     await Formulaire.findByIdAndUpdate(_id, { $push: { mailing: message } });

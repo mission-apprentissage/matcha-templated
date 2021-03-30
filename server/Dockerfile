@@ -1,6 +1,5 @@
 FROM node:14.16-alpine
 
-RUN apt-get install tzdata
 ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 

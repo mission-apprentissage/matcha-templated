@@ -21,7 +21,7 @@ const importer = async (formulaire) => {
         siret,
         email,
         telephone: tel,
-        raison_social: raisonsociale,
+        raison_sociale: raisonsociale,
       };
 
       await formulaire.createForm(payload);

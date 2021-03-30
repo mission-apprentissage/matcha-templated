@@ -9,7 +9,7 @@ const launch = async (mail) => {
   const campagne = "matcha-lbb-20210331";
 
   await asyncForEach(forms, async (form) => {
-    const { raison_social, email, id_form, _id } = form;
+    const { raison_sociale, email, id_form, _id } = form;
     const params = {
       RAISON_SOCIALE: raison_sociale,
       URL: `https://matcha.apprentissage.beta.gouv.fr/${id_form}`,
@@ -29,7 +29,7 @@ const launch = async (mail) => {
         name: "Charlotte Lecuit",
         email: "charlotte.lecuit@beta.gouv.fr",
       },
-      subject: `${raison_social}, le gouvernement vous aide à exprimer vos besoins de recrutements`,
+      subject: `Le gouvernement vous aide à recruter un apprenti`,
       templateId: 168,
       tags: [campagne],
       params: params,

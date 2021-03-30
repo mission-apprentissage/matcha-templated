@@ -30,7 +30,7 @@ module.exports = () => {
       const { distance, lat, lon, romes } = req.body;
 
       if (!distance || !lat || !lon || !romes) {
-        return res.status(400).json({ error: "Arguments is missing (distance, lat, lon, romes)" });
+        return res.status(400).json({ error: "Argument is missing (distance, lat, lon, romes)" });
       }
 
       const body = {

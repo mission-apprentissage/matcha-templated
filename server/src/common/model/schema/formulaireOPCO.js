@@ -9,7 +9,7 @@ module.exports = new Schema(
       default: () => nanoid(),
       description: "Identifiant de formulaire unique",
     },
-    raison_social: {
+    raison_sociale: {
       type: String,
       default: null,
       description: "Raison social de",

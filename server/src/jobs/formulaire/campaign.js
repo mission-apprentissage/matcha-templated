@@ -11,7 +11,7 @@ const launch = async (mail) => {
   await asyncForEach(forms, async (form) => {
     const { raison_social, email, id_form, _id } = form;
     const params = {
-      RAISON_SOCIAL: raison_social,
+      RAISON_SOCIALE: raison_sociale,
       URL: `https://matcha.apprentissage.beta.gouv.fr/${id_form}`,
     };
     const body = {

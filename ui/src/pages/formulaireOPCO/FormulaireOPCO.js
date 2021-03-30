@@ -15,7 +15,7 @@ import { ListWish } from './ListWish'
 import Autocomplete from './AdresseAutocomplete'
 
 const schema = Yup.object().shape({
-  raison_social: Yup.string().required('champs obligatoire').min(1),
+  raison_sociale: Yup.string().required('champs obligatoire').min(1),
   siret: Yup.string()
     .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
     .required('champs obligatoire')
@@ -140,7 +140,7 @@ const Formulaire = (props) => {
       <Formik
         enableReinitialize={true}
         initialValues={{
-          raison_social: initialFormState?.raison_social ?? '',
+          raison_sociale: initialFormState?.raison_sociale ?? '',
           siret: initialFormState?.siret ?? '',
           adresse: initialFormState?.adresse ?? '',
           geo_coordonnees: initialFormState?.geo_coordonnees ?? '',
@@ -158,7 +158,7 @@ const Formulaire = (props) => {
               <StepTitle>Renseignements sur votre entreprise</StepTitle>
 
               <InputTitle mandatory={true}>Nom de l'enseigne</InputTitle>
-              <MyInput name='raison_social' type='text' value={values.raison_social} />
+              <MyInput name='raison_sociale' type='text' value={values.raison_sociale} />
 
               <InputTitle mandatory={true}>SIRET</InputTitle>
               <MyInput name='siret' type='text' value={values.siret} maxLength='14' />

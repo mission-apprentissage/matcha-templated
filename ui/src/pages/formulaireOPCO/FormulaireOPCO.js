@@ -59,7 +59,6 @@ const Formulaire = (props) => {
     ({ queryKey }) => Axios.get(`api/formulaire/${queryKey[1].id}`),
     {
       onSuccess: ({ data }) => {
-        console.log(data)
         setInitialFormState(data)
       },
       refetchOnWindowFocus: false,

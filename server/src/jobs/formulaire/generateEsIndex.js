@@ -7,7 +7,7 @@ async function clearIndex() {
   try {
     let client = getElasticInstance();
     await client.indices.delete({ index: "formulaires" });
-    logger.info("Index Formulaire cleared");
+    logger.info("Index Formulaire CLEARED !");
   } catch (error) {
     logger.error(`Could not reset the index`, error);
   }
@@ -16,6 +16,7 @@ async function clearIndex() {
 async function createIndex() {
   let requireAsciiFolding = true;
   await Formulaire.createMapping(requireAsciiFolding);
+  logger.info("Index Formulaire CREATED !");
 }
 
 runScript(async () => {

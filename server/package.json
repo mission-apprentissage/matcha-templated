@@ -15,10 +15,10 @@
     "docker:start": "docker-compose up -d --build --force-recreate",
     "docker:stop": "docker-compose down",
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
-    "lbb:create-form": "node src/jobs/seed/index.js",
-    "lbb:import": "node src/jobs/lbb/import.js",
-    "lbb:launch": "node src/jobs/lbb/campaign.js",
-    "formulaire:index": "node srv/jobs/formulaire/generateEsIndex.js",
+    "form:seed": "node src/jobs/seed/index.js",
+    "form:import": "node src/jobs/formulaire/import.js",
+    "form:campagne": "node src/jobs/formulaire/campaign.js",
+    "formulaire:index": "node src/jobs/formulaire/generateEsIndex.js",
     "clear": "node src/jobs/clear/index.js"
   },
   "dependencies": {

@@ -55,6 +55,7 @@ services:
       - ES_JAVA_OPTS=-Xmx512m -Xms512m
       - cluster.name=docker-cluster
       - discovery.type=single-node
+      - network.host=0.0.0.0
     mem_limit: 1g
     networks:
       - matcha_network

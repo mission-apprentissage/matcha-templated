@@ -82,11 +82,13 @@ module.exports = () => {
 
       const filtered = result.body.hits.hits.map((x) => {
         let offres = [];
-        x._source.offres.forEach((o) => {
-          let romesString = o.romes.join(" ");
-          let requestRomesString = romes.join(" ");
 
-          if (requestRomesString.includes(romesString)) {
+        if (x._source.offres.length === 0) {
+          return;
+        }
+
+        x._source.offres.forEach((o) => {
+          if (romes.some((item) => o.romes.includes(item))) {
             offres.push(o);
           }
         });

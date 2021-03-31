@@ -61,6 +61,11 @@ module.exports = new Schema(
         description: "Liste des évènements MAIL",
       },
     ],
+    events: {
+      type: Array,
+      default: null,
+      description: "Liste des évènements sendinblue",
+    },
   },
   {
     timestamps: true,

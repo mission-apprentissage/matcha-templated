@@ -117,5 +117,23 @@ module.exports = async () => {
         throw new Error("RequestMail ERROR", error);
       }
     },
+    getEventsFromId: async (options) => {
+      let { limit, messageId } = { limit: 50, messageId, ...options };
+      let params = { limit, messageId };
+
+      const body = {
+        method: "GET",
+        url: "https://api.sendinblue.com/v3/smtp/statistics/events",
+        headers: { Accept: "application/json" },
+        qs: params,
+      };
+
+      try {
+        const result = await request(body);
+        return result;
+      } catch (error) {
+        throw new Error("getEventsFromId ERROR", error);
+      }
+    },
   };
 };

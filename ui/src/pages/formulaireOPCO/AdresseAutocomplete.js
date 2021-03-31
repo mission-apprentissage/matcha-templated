@@ -76,7 +76,7 @@ export default (props) => {
     const data = await getAddress(value)
     data.features.forEach((feat) => {
       const name = `${feat.properties.label}`
-      const coordinates = feat.geometry.coordinates.join(',')
+      const coordinates = feat.geometry.coordinates.reverse().join(',')
       adresse.push({ name: name, geo_coordonnees: coordinates })
     })
     setOption(adresse)

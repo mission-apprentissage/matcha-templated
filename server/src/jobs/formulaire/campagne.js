@@ -21,7 +21,7 @@ const launch = async (mail) => {
       },
       to: [
         {
-          name: `${raison_social}`,
+          name: `${raison_sociale}`,
           email: `${email}`,
         },
       ],

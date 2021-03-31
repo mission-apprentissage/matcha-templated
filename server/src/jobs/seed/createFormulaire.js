@@ -8,8 +8,8 @@ module.exports = async (formulaire) => {
     email: "adresse@mail.com",
     raison_sociale: "Ma société",
     siret: "12345678901234",
-    geo_coordonnees: "2.385633,48.868565",
-    adresse: "3 rue george duhamel, 75012, Paris",
+    geo_coordonnees: "42.6170836,3.0011665",
+    adresse: "3 Rue Georges Duhamel, 66750 Saint-Cyprien, France",
     offres: [
       {
         niveau: "CAP, BEP",

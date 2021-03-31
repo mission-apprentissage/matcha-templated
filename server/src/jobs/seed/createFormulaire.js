@@ -17,6 +17,12 @@ module.exports = async (formulaire) => {
         libelle: "Paysagisme, entretien des jardins",
         description: "Détail",
       },
+      {
+        niveau: "BAC",
+        romes: ["A3465", "A9876"],
+        libelle: "Informatique",
+        description: "Détail",
+      },
     ],
   };
 

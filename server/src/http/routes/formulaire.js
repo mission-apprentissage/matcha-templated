@@ -80,7 +80,21 @@ module.exports = () => {
 
       const result = await esClient.search({ index: "formulaires", body });
 
-      return res.json(result.body.hits.hits);
+      const filtered = result.body.hits.hits.map((x) => {
+        let offres = [];
+        x._source.offres.forEach((o) => {
+          let romesString = o.romes.join(" ");
+          let requestRomesString = romes.join(" ");
+
+          if (requestRomesString.includes(romesString)) {
+            offres.push(o);
+          }
+        });
+        x._source.offres = offres;
+        return x;
+      });
+
+      return res.json(filtered);
     })
   );
 

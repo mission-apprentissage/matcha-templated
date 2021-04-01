@@ -1,0 +1,9 @@
+module.exports.OPENED = "Opened";
+module.exports.FIRST = "First opening";
+module.exports.CLICKED = "Clicked";
+module.exports.SOFT = "Soft bounce";
+module.exports.DELIVERED = "Delivered";
+module.exports.HARD = "Hard bounce";
+module.exports.DEFERRED = "Deferred";
+module.exports.SENT = "Sent";
+module.exports.BLOCKED = "Blocked";

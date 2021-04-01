@@ -1,17 +1,20 @@
-const { connectToMongo } = require("../mongodb");
-const createUsers = require("./users");
 const createMail = require("./mail");
+const createUsers = require("./users");
+const createStats = require("./statistique");
+const { connectToMongo } = require("../mongodb");
 const createFormulaire = require("./formulaire");
 
 module.exports = async (options = {}) => {
-  const users = options.users || (await createUsers());
   const mail = options.mail || (await createMail());
+  const users = options.users || (await createUsers());
+  const stats = options.stats || (await createStats());
   const formulaire = options.formulaire || (await createFormulaire());
 
   return {
-    formulaire,
     mail,
+    stats,
     users,
+    formulaire,
     db: options.db || (await connectToMongo()).db,
   };
 };

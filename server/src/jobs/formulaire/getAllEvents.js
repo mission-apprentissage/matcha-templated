@@ -7,14 +7,16 @@ async function getAllEvents(mail) {
   const data = await Formulaire.find({ $nor: [{ mailing: { $exists: false } }, { mailing: { $size: 0 } }] });
 
   await asyncForEach(data, async (item) => {
-    let { messageId } = item.offres[0];
+    let { messageId } = item.mailing[0];
 
     if (!messageId) return;
 
-    const { events } = mail.getEventsFromId({ messageId });
+    const { body } = await mail.getEventsFromId({ messageId });
+
+    let { events } = JSON.parse(body);
 
     item.events = events;
-    item.save();
+    await item.save();
   });
 }
 

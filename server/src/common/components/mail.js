@@ -1,6 +1,7 @@
 const request = require("requestretry");
 const config = require("config");
 const { Transactional } = require("../model");
+const mailRules = require("./mail.rules");
 
 module.exports = async () => {
   return {
@@ -118,13 +119,13 @@ module.exports = async () => {
       }
     },
     getEventsFromId: async (options) => {
-      let { limit, messageId } = { limit: 50, messageId, ...options };
+      let { limit, messageId } = { limit: 50, ...options };
       let params = { limit, messageId };
 
       const body = {
         method: "GET",
         url: "https://api.sendinblue.com/v3/smtp/statistics/events",
-        headers: { Accept: "application/json" },
+        headers: { Accept: "application/json", "api-key": config.sendinblue.apikey },
         qs: params,
       };
 
@@ -135,5 +136,6 @@ module.exports = async () => {
         throw new Error("getEventsFromId ERROR", error);
       }
     },
+    getRulesFromEvent: (event) => mailRules.find((rule) => rule.event === event),
   };
 };

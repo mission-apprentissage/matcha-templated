@@ -15,7 +15,7 @@
     "docker:start": "docker-compose up -d --build --force-recreate",
     "docker:stop": "docker-compose down",
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
-    "form:seed": "node src/jobs/seed/index.js",
+    "form:dummy": "node src/jobs/seed/createFormulaire.js",
     "form:import": "node src/jobs/formulaire/import.js",
     "form:campagne": "node src/jobs/formulaire/campagne.js",
     "form:index": "node src/jobs/formulaire/generateEsIndex.js",

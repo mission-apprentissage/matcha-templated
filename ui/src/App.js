@@ -28,7 +28,7 @@ function PrivateRoute({ children, ...rest }) {
 
 const App = () => {
   let [auth] = useAuth()
-  console.log({ auth })
+
   return (
     <QueryClientProvider client={client}>
       <ChakraProvider theme={theme}>

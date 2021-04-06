@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row } from 'react-bootstrap'
+import { Box, Container } from '@chakra-ui/react'
 import { useLocation } from 'react-router-dom'
-import styled from 'styled-components'
-import Navbar from './Navbar'
 
-const StyledContainer = styled(Container)`
-  height: 100vh;
-`
+import Navbar from './Navbar'
 
 const paths = ['step', 'admin', 'merci']
 
-export default ({ children }) => {
+export default ({ children, rest }) => {
   const { pathname } = useLocation()
   const [bkg, setBkg] = useState(false)
 
@@ -23,13 +19,11 @@ export default ({ children }) => {
   }, [pathname])
 
   return (
-    <>
+    <Container maxW='full' p='0' {...rest}>
       <Navbar />
-      <StyledContainer fluid>
-        <Row className={`h-100 justify-content-center ${bkg && 'backgrd'} `} sm={1} md={2} lg={2}>
-          {children}
-        </Row>
-      </StyledContainer>
-    </>
+      <Box bg={bkg && 'lightGrey'} h='100vh'>
+        <Container>{children}</Container>
+      </Box>
+    </Container>
   )
 }

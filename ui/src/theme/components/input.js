@@ -24,6 +24,9 @@ export default {
           border: `1px solid ${colors.lightGrey}`,
           background: colors.lightGrey,
         },
+        _hover: {
+          border: `1px solid ${colors.grey}`,
+        },
       },
       addon: {
         borderBottom: '2px solid',

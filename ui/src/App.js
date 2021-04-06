@@ -4,7 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import { ChakraProvider } from '@chakra-ui/react'
 import { Formulaire, NotFound, Remerciement } from './pages'
 import { Login } from './pages/admin-dashboard'
-import Dashboard from './pages/formulaire-entreprise/dashboard/Dashboard'
+// import Dashboard from './pages/formulaire-entreprise/dashboard/Dashboard'
 import useAuth from './common/hooks/useAuth'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import theme from './theme'
@@ -33,7 +33,7 @@ const App = () => {
     <QueryClientProvider client={client}>
       <ChakraProvider theme={theme}>
         <Switch>
-          {auth && auth.permissions.isAdmin && <PrivateRoute exact path='/admin' component={Dashboard} />}
+          {/* {auth && auth.permissions.isAdmin && <PrivateRoute exact path='/admin' component={Dashboard} />} */}
           <Route exact path='/merci' component={Remerciement} />
           <Route exact path='/login' component={Login} />
           <Route exact path='/:id' component={Formulaire} />

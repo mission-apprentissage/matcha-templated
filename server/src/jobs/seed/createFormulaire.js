@@ -1,6 +1,7 @@
 const logger = require("../../common/logger");
+const { runScript } = require("../scriptWrapper");
 
-module.exports = async (formulaire) => {
+const createFormulaire = async (formulaire) => {
   const payload = {
     prenom: "Formulaire",
     nom: "Test",
@@ -30,3 +31,7 @@ module.exports = async (formulaire) => {
 
   logger.info(`User ${user.prenom} created ! form_id : ${user.id_form}`);
 };
+
+runScript(async ({ formulaire }) => {
+  await createFormulaire(formulaire);
+});

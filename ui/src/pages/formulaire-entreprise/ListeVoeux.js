@@ -1,7 +1,7 @@
 import { Circle, Box, Text, Flex, Spacer, Icon } from '@chakra-ui/react'
 import { MdEdit, MdDelete } from 'react-icons/md'
 
-export const ListWish = (props) => {
+export default (props) => {
   if (!props.data) {
     return <div />
   }

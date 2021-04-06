@@ -1,9 +1,10 @@
-const passwordGenerator = require("generate-password");
-const logger = require("../../common/logger");
-const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { writeFile } = require("fs").promises;
 const path = require("path");
 const config = require("config");
+const { writeFile } = require("fs").promises;
+const logger = require("../../common/logger");
+const { runScript } = require("../scriptWrapper");
+const passwordGenerator = require("generate-password");
+const { asyncForEach } = require("../../common/utils/asyncUtils");
 
 const outputDir = config.outputDir;
 
@@ -28,7 +29,7 @@ const buildAdminsUsers = async (exportJsonFile = true) => {
   return mnaUsers;
 };
 
-module.exports = async (users) => {
+const createUser = async (users) => {
   logger.info(`-- START - Seed Default Users --`);
 
   const defaultUsersToCreate = await buildAdminsUsers();
@@ -45,3 +46,7 @@ module.exports = async (users) => {
 
   logger.info("-- END - Seed Default Users --");
 };
+
+runScript(async ({ users }) => {
+  await createUser(users);
+});

@@ -17,9 +17,7 @@ export default () => {
     profile: { candidat },
   } = React.useContext(Context)
   let history = useHistory()
-  const [, setAuth] = useAuth()
-
-  const isAdmin = history.location.pathname === '/admin' ? true : false
+  const [auth, setAuth] = useAuth()
 
   return (
     <Navbar className='backgrd'>
@@ -40,8 +38,14 @@ export default () => {
             </Dropdown> */}
           </Navbar.Text>
         )}
-        {isAdmin && (
-          <Button onClick={() => setAuth('')} variant='outline-dark'>
+        {auth.permissions.isAdmin && (
+          <Button
+            onClick={() => {
+              setAuth('')
+              history.push('/login')
+            }}
+            variant='outline-dark'
+          >
             Se deconnecter
           </Button>
         )}

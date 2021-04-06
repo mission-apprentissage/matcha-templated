@@ -17,6 +17,7 @@ import Autocomplete from './Autocomplete'
 import ExternalLink from './ExternalLink'
 import DropdownCombobox from './DropdownCombobox'
 import RemoveLink from './RemoveLink'
+import Stat from './Stat'
 
 export {
   Button,
@@ -38,4 +39,5 @@ export {
   ExternalLink,
   DropdownCombobox,
   RemoveLink,
+  Stat,
 }

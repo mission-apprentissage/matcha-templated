@@ -1,47 +1,29 @@
+import {
+  Box,
+  Button,
+  Center,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  HStack,
+  Input,
+  Link,
+  Text,
+} from '@chakra-ui/react'
+import { Field, Form, Formik } from 'formik'
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import * as Yup from 'yup'
-import { Button } from 'react-bootstrap'
-import { Formik, Form, useField } from 'formik'
-import styled from 'styled-components/macro'
 
-import { Input, InputTitle } from '../../components'
-import color from '../../components/helper/color'
 import useAuth from '../../common/hooks/useAuth'
 import { _post } from '../../common/httpClient'
 
-const schema = Yup.object().shape({
-  username: Yup.string().required('champ obligatoire*').min(1),
-  password: Yup.string().required('champ obligatoire*'),
-})
-
-const ErrorMessage = styled.div`
-  font-family: Inter;
-  font-size: 0.75rem;
-  color: ${color.red};
-`
-
-const MyInput = (props) => {
-  const [field, meta] = useField(props)
-  return (
-    <div className='mb-3'>
-      <Input
-        css={`
-          margin-bottom: 0.2rem;
-        `}
-        {...props}
-        {...field}
-      />
-      {meta.touched && meta.error ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
-    </div>
-  )
-}
-
-export default () => {
+const LoginPage = () => {
   const [, setAuth] = useAuth()
-  let history = useHistory()
+  const history = useHistory()
 
-  let login = async (values, { setStatus }) => {
+  const login = async (values, { setStatus }) => {
     try {
       let { token } = await _post('/api/login', values)
       setAuth(token)
@@ -53,29 +35,66 @@ export default () => {
   }
 
   return (
-    <Formik
-      initialValues={{
-        username: '',
-        password: '',
-      }}
-      validationSchema={schema}
-      onSubmit={login}
-    >
-      {({ values, isSubmitting, isValid, dirty }) => {
-        return (
-          <Form>
-            <InputTitle>Utilisateur</InputTitle>
-            <MyInput name='username' type='text' value={values.username} />
-            <InputTitle>Mot de passe</InputTitle>
-            <MyInput name='password' type='password' value={values.password} />
-            <div className='d-flex justify-content-end mb-5'>
-              <Button type='submit' disabled={!(isValid && dirty) || isSubmitting}>
-                Connexion
-              </Button>
-            </div>
-          </Form>
-        )
-      }}
-    </Formik>
+    <Center height='100vh' verticalAlign='center'>
+      <Box width={['auto', '28rem']}>
+        <Heading fontWeight='700' marginBottom='2w'>
+          Connexion
+        </Heading>
+        <Box>
+          <Formik
+            initialValues={{ username: '', password: '' }}
+            validationSchema={Yup.object().shape({
+              username: Yup.string().required('Requis'),
+              password: Yup.string().required('Requis'),
+            })}
+            onSubmit={login}
+          >
+            {({ status = {} }) => {
+              return (
+                <Form>
+                  <Box mb='2w'>
+                    <Field name='username'>
+                      {({ field, meta }) => (
+                        <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom='2w'>
+                          <FormLabel>Identifiant</FormLabel>
+                          <Input {...field} id={field.name} placeholder='Votre identifiant...' />
+                          <FormErrorMessage>{meta.error}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name='password'>
+                      {({ field, meta }) => {
+                        return (
+                          <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom='2w'>
+                            <FormLabel>Mot de passe</FormLabel>
+                            <Input {...field} id={field.name} type='password' placeholder='Votre mot de passe...' />
+                            <FormErrorMessage>{meta.error}</FormErrorMessage>
+                          </FormControl>
+                        )
+                      }}
+                    </Field>
+                  </Box>
+                  <HStack spacing='4w' justify='flex-end'>
+                    <Button colorScheme='blue' type='submit'>
+                      Connexion
+                    </Button>
+                    {/* <Link to='/forgotten-password' as={NavLink} color='grey.500'>
+                      Mot de passe oublié
+                    </Link> */}
+                  </HStack>
+                  {status.error && (
+                    <Text color='red' mt={2}>
+                      {status.error}
+                    </Text>
+                  )}
+                </Form>
+              )
+            }}
+          </Formik>
+        </Box>
+      </Box>
+    </Center>
   )
 }
+
+export default LoginPage

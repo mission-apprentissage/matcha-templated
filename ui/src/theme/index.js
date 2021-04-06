@@ -1,5 +1,5 @@
 import { extendTheme } from '@chakra-ui/react'
-
+import { space } from './theme-beta'
 const colors = {
   green: '#00FFB0',
   black: '#161717',
@@ -44,6 +44,7 @@ const theme = {
   colors: { ...colors },
   config,
   components: { Select },
+  space,
 }
 
 export default extendTheme(theme)

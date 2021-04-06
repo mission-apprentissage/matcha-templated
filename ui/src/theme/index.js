@@ -1,5 +1,5 @@
 import { extendTheme } from '@chakra-ui/react'
-import { Select, Input, Button, Textarea } from './components'
+import { Select, Input, Button, Textarea, FormLabel, Form } from './components'
 import colors from './colors'
 import { space } from './theme-beta'
 
@@ -11,7 +11,7 @@ const config = {
 const theme = {
   colors: { ...colors },
   config,
-  components: { Select, Input, Textarea },
+  components: { Select, Input, Textarea, FormLabel, Form },
   space,
 }
 

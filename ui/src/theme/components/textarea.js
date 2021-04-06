@@ -1,23 +1,15 @@
 import colors from '../colors'
 
+import Input from './input'
+
 export default {
   baseStyle: {
-    borderColor: colors.middleGrey,
-    color: colors.middleGrey,
-    _focus: {
-      borderColor: 'AC1242',
-      // borderColor: colors.red,
-      color: colors.middleGrey,
-    },
-    _hover: {
-      borderColor: '#084355',
-      // borderColor: colors.grey,
-      color: colors.middleGrey,
-    },
-    _disable: {
-      borderColor: colors.middleGrey,
-      backgroundColor: colors.lightGrey,
-      color: colors.middleGrey,
-    },
+    ...Input.variants.matcha.field,
+    paddingY: '8px',
+    minHeight: '80px',
+    lineHeight: 'short',
+  },
+  defaultProps: {
+    variant: 'matcha',
   },
 }

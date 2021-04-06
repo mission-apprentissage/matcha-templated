@@ -1,32 +1,36 @@
 import colors from '../colors'
 
 export default {
-  // style object for base or default style
-  parts: ['field'],
-  baseStyle: {
-    borderColor: colors.middleGrey,
-    color: colors.middleGrey,
-    _focus: {
-      borderColor: colors.red,
-      color: colors.middleGrey,
-    },
-    _hover: {
-      borderColor: colors.grey,
-      color: colors.middleGrey,
-    },
-    _disable: {
-      borderColor: colors.middleGrey,
-      backgroundColor: colors.lightGrey,
-      color: colors.middleGrey,
+  variants: {
+    matcha: {
+      field: {
+        border: '1px solid',
+        borderColor: colors.middleGrey,
+        bg: 'transparent',
+        _readOnly: {
+          boxShadow: 'none !important',
+          userSelect: 'all',
+        },
+        _invalid: {
+          borderColor: colors.red,
+          color: colors.red,
+        },
+        _focus: {
+          borderColor: colors.red,
+          color: colors.black,
+        },
+        _disabled: {
+          border: `1px solid ${colors.lightGrey}`,
+          background: colors.lightGrey,
+        },
+
+        appearance: 'none',
+        paddingBottom: '1px',
+        lineHeight: 'normal',
+      },
     },
   },
-  // styles for different sizes ("sm", "md", "lg")
-  sizes: {},
-  // styles for different visual variants ("outline", "solid")
-  variants: {},
-  // default values for `size` and `variant`
-  // defaultProps: {
-  //   size: '',
-  //   variant: '',
-  // },
+  defaultProps: {
+    variant: 'matcha',
+  },
 }

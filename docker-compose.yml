@@ -55,9 +55,20 @@ services:
       - ES_JAVA_OPTS=-Xmx512m -Xms512m
       - cluster.name=docker-cluster
       - discovery.type=single-node
+      #- network.host=0.0.0.0
     mem_limit: 1g
     networks:
       - matcha_network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:7.10.2
+    container_name: matcha_kibana
+    depends_on:
+      - elasticsearch
+    networks:
+      - matcha_network
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
 
 networks:
   matcha_network:

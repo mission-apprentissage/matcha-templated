@@ -9,7 +9,7 @@ module.exports = new Schema(
       default: () => nanoid(),
       description: "Identifiant de formulaire unique",
     },
-    raison_social: {
+    raison_sociale: {
       type: String,
       default: null,
       description: "Raison social de",
@@ -61,6 +61,11 @@ module.exports = new Schema(
         description: "Liste des évènements MAIL",
       },
     ],
+    events: {
+      type: Array,
+      default: null,
+      description: "Liste des évènements sendinblue",
+    },
   },
   {
     timestamps: true,

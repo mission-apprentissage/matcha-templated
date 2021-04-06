@@ -1,15 +1,16 @@
 const express = require("express");
-const { SampleEntity } = require("../../common/model");
+const tryCatch = require("../middlewares/tryCatchMiddleware");
 
-module.exports = () => {
+module.exports = ({ stats }) => {
   const router = express.Router();
-  router.get("/", async (req, res) => {
-    res.json({
-      stats: {
-        nbItems: await SampleEntity.countDocuments(),
-      },
-    });
-  });
+
+  router.get(
+    "/",
+    tryCatch(async (req, res) => {
+      const result = await stats.getAllStatistiques();
+      return res.json(result);
+    })
+  );
 
   return router;
 };

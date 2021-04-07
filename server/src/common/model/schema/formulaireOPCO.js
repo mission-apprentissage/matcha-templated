@@ -2,6 +2,25 @@ const { Schema } = require("mongoose");
 const { nanoid } = require("nanoid");
 const { transactionalSchema } = require("./transactional");
 
+const offresSchema = new Schema({
+  libelle: { type: String, default: null, description: "Libellé du métier concerné" },
+  niveau: {
+    type: String,
+    default: null,
+    description: "Niveau de formation requis",
+  },
+  description: {
+    type: String,
+    default: null,
+    description: "Description de l'offre d'apprentissage",
+  },
+  romes: {
+    type: Array,
+    default: null,
+    description: "Liste des romes lié au métier",
+  },
+});
+
 module.exports = new Schema(
   {
     id_form: {
@@ -49,18 +68,8 @@ module.exports = new Schema(
       default: null,
       description: "Email du contact",
     },
-    offres: {
-      type: Array,
-      default: [],
-      description: "Liste des métiers sur lesquels l'entreprise recherche des apprentis",
-    },
-    mailing: [
-      {
-        type: transactionalSchema,
-        default: {},
-        description: "Liste des évènements MAIL",
-      },
-    ],
+    offres: [{ type: offresSchema, default: {}, description: "Liste des offres d'apprentissage" }],
+    mailing: [{ type: transactionalSchema, default: {}, description: "Liste des évènements MAIL" }],
     events: {
       type: Array,
       default: null,

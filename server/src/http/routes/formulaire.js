@@ -14,8 +14,23 @@ module.exports = () => {
   router.get(
     "/:id_form",
     tryCatch(async (req, res) => {
-      let { id_form } = req.params;
+      const { id_form } = req.params;
       let result = await Formulaire.findOne({ id_form }).lean();
+
+      return res.json(result);
+    })
+  );
+
+  router.get(
+    "/offre/:id_offre",
+    tryCatch(async (req, res) => {
+      const { id_offre } = req.params;
+      let result = await Formulaire.findOne({ "offres._id": id_offre });
+
+      result.offres = result.offres.filter((x) => x._id == id_offre);
+
+      result.events = undefined;
+      result.mailing = undefined;
 
       return res.json(result);
     })

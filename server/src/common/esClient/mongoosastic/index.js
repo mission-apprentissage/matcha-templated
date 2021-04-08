@@ -82,9 +82,6 @@ function getMapping(schema, requireAsciiFolding = false) {
         properties[key] = { type: "nested", properties: {} };
         for (let i = 0; i < Object.keys(schema.paths[key].caster.schema.paths).length; i++) {
           const subDocumentKey = Object.keys(schema.paths[key].caster.schema.paths)[i];
-          if (exclude.includes(subDocumentKey)) {
-            continue;
-          }
           let { instance, caster } = schema.paths[key].caster.schema.paths[subDocumentKey];
 
           properties[key].properties[subDocumentKey] = getProperties(instance, caster?.instance, requireAsciiFolding);

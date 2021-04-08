@@ -15,8 +15,8 @@ const offresSchema = new Schema({
     description: "Description de l'offre d'apprentissage",
   },
   romes: {
-    type: Array,
-    default: null,
+    type: [String],
+    default: [],
     description: "Liste des romes lié au métier",
   },
 });

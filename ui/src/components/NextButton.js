@@ -11,11 +11,6 @@ const Button = styled.button`
   margin-top: 1rem;
   color: white;
   border: none;
-  :after {
-    padding-left: 1rem;
-    content: url(${arrow});
-    color: white;
-  }
   :hover {
     background: ${color.red};
   }
@@ -29,8 +24,22 @@ const Button = styled.button`
       content: none;
     }
   }
+  ${(props) =>
+    props.withIcon
+      ? `
+      :after {
+    padding-left: 1rem;
+    content: url(${arrow});
+    color: white;
+  }
+  `
+      : ``}
 `
 
 export default (props) => {
-  return <Button {...props}>{props.name || 'Suivant'}</Button>
+  return (
+    <Button {...props} withIcon={props.withIcon ?? true}>
+      {props.name || 'Suivant'}
+    </Button>
+  )
 }

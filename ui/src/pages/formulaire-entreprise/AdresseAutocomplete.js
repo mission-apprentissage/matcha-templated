@@ -59,7 +59,7 @@ export default (props) => {
     onInputChange,
     onChange: (_, value) => props.handleValues(value),
     options: option ? option : [],
-    defaultValue: props.context && { name: props.context },
+    defaultValue: props.context ? { name: props.context } : option?.name,
     getOptionLabel: (option) => option.name || '',
     getOptionSelected: (option, value) => option.name === value.name,
   })

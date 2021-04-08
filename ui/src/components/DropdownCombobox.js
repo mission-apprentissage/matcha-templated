@@ -26,27 +26,29 @@ const CustomizedInput = styled(Input)`
 `
 
 export default (props) => {
+  let { saveSelectedItem, setInputItems, handleSearch, value, placeholder, inputItems, name } = props
+
   const itemToString = (item) => (item ? item.label : '')
   // const onSelectedItemChange = ({ selectedItem }) => props.saveSelectedItem(props.valueName, selectedItem, props.index)
-  const onSelectedItemChange = ({ selectedItem }) => props.saveSelectedItem(selectedItem) // remove index for OPCO ATLAS FORM
-  const onInputValueChange = async ({ inputValue }) => props.setInputItems(await props.handleSearch(inputValue))
+  const onSelectedItemChange = ({ selectedItem }) => saveSelectedItem(selectedItem) // remove index for OPCO ATLAS FORM
+  const onInputValueChange = async ({ inputValue }) => setInputItems(await handleSearch(inputValue))
 
   const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({
     itemToString,
     onInputValueChange,
     onSelectedItemChange,
-    items: props.inputItems,
-    initialInputValue: props.value ? props.value : '',
+    items: inputItems,
+    initialInputValue: value ?? '',
   })
 
   return (
     <div className=''>
       <div {...getComboboxProps()}>
-        <CustomizedInput placeholder={props.placeholder || 'sélectionner un métier'} {...getInputProps()} />
+        <CustomizedInput name={name} placeholder={placeholder || 'sélectionner un métier'} {...getInputProps()} />
       </div>
       <Wrapper {...getMenuProps()}>
         {isOpen &&
-          props.inputItems.map((item, index) => (
+          inputItems.map((item, index) => (
             <li
               style={highlightedIndex === index ? { backgroundColor: color.lightGrey } : {}}
               key={`${item}${index}`}

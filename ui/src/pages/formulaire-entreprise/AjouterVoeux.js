@@ -45,7 +45,7 @@ export default (props) => {
       enableReinitialize={true}
       initialValues={{
         index: props.index ?? undefined,
-        libelle: props.libelle ?? '',
+        libelle: props.libelle ?? null,
         romes: props.romes ?? [],
         niveau: props.niveau ?? '',
         description: props.description ?? '',
@@ -90,12 +90,12 @@ export default (props) => {
                       setFieldValue('libelle', values.label)
                       setFieldValue('romes', values.romes)
                     }}
-                    valueName='metier'
+                    name='libelle'
                     value={values.libelle}
                     placeholder="Rechercher un domaine d'activité.."
                     ref={initialRef}
                   />
-                  {errors.metier && touched.metier && <FormErrorMessage>{errors.metier}</FormErrorMessage>}
+                  {errors.libelle && touched.libelle && <FormErrorMessage>{errors.libelle}</FormErrorMessage>}
                 </FormControl>
 
                 <FormControl mt={4} isRequired>

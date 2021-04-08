@@ -1,14 +1,24 @@
-import React from 'react'
 import * as Yup from 'yup'
 import Axios from 'axios'
+import { useState, useEffect } from 'react'
+import { MdAdd } from 'react-icons/md'
 import { useQuery } from 'react-query'
-import { Col } from 'react-bootstrap'
-
 import { useHistory } from 'react-router-dom'
 import { Formik, Form, useField } from 'formik'
-import { useDisclosure, Box, Input, FormLabel, FormControl, FormErrorMessage } from '@chakra-ui/react'
+import {
+  Button,
+  useDisclosure,
+  Box,
+  Input,
+  FormLabel,
+  FormControl,
+  FormErrorMessage,
+  Flex,
+  Text,
+  Stack,
+} from '@chakra-ui/react'
 
-import { Button, StepTitle, ChatBubble, NextButton, Layout } from '../../components'
+import { StepTitle, ChatBubble, Layout } from '../../components'
 import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
 import Autocomplete from './AdresseAutocomplete'
@@ -27,8 +37,8 @@ const CustomInput = (props) => {
 }
 
 const Formulaire = (props) => {
-  const [initialFormState, setInitialFormState] = React.useState({})
-  const [currentOffer, setCurrentOffer] = React.useState({})
+  const [initialFormState, setInitialFormState] = useState({})
+  const [currentOffer, setCurrentOffer] = useState({})
   const popupState = useDisclosure()
   const { params } = props.match
   const history = useHistory()
@@ -44,11 +54,19 @@ const Formulaire = (props) => {
     }
   )
 
+  useEffect(() => {
+    history.listen((_, action) => {
+      if (action === 'POP') {
+        window.location.reload()
+      }
+    })
+  }, [initialFormState])
+
   /**
    *
    * user params comes from the URL (OPCO ATLAS)
    *
-    React.useEffect(() => {
+    useEffect(() => {
       const params = new URLSearchParams(window.location.search)
       let user = {}
       for (let i of params) {
@@ -106,16 +124,16 @@ const Formulaire = (props) => {
 
   if (isLoading) {
     return (
-      <Col>
+      <Layout>
         <StepTitle>Chargement en cours...</StepTitle>
-      </Col>
+      </Layout>
     )
   }
 
   return (
     <Layout>
-      <Col>
-        <AjouterVoeux {...popupState} {...currentOffer} handleSave={saveOffer} />
+      <AjouterVoeux {...popupState} {...currentOffer} handleSave={saveOffer} />
+      <Box pb='3'>
         <Formik
           enableReinitialize={true}
           initialValues={{
@@ -127,6 +145,7 @@ const Formulaire = (props) => {
             prenom: initialFormState?.prenom ?? '',
             telephone: initialFormState?.telephone ?? '',
             email: initialFormState?.email ?? '',
+            offres: initialFormState?.offres,
           }}
           validationSchema={Yup.object().shape({
             raison_sociale: Yup.string().required('champs obligatoire').min(1),
@@ -143,6 +162,8 @@ const Formulaire = (props) => {
           onSubmit={submitFormulaire}
         >
           {({ values, isValid, dirty, isSubmitting, setFieldValue }) => {
+            const hasOffer = values.offres?.length > 0
+
             return (
               <Form autoComplete='off'>
                 <StepTitle>Renseignements sur votre entreprise</StepTitle>
@@ -163,7 +184,7 @@ const Formulaire = (props) => {
                       setFieldValue('adresse', value.name)
                       setFieldValue('geo_coordonnees', value.geo_coordonnees)
                     }}
-                    context={initialFormState?.adresse || ''}
+                    context={values.adresse || ''}
                   />
                 </FormControl>
 
@@ -180,32 +201,56 @@ const Formulaire = (props) => {
                 />
                 <CustomInput name='email' label='Email' type='email' value={values.email} />
 
-                <StepTitle>Votre besoin de recrutement</StepTitle>
-                <ChatBubble>
-                  Recherchez le domain d'activité se rapprochant le plus de votre offre d'apprentissage. Plusieurs
-                  offres possibes
-                </ChatBubble>
+                <Box bg='lightGrey' py='10' px='5' width='100%' borderRadius='2'>
+                  <StepTitle>Votre besoin de recrutement</StepTitle>
+                  <ChatBubble margin='0'>
+                    Recherchez le domain d'activité se rapprochant le plus de votre offre d'apprentissage. Plusieurs
+                    offres possibes
+                  </ChatBubble>
 
-                <Box mt={4} mb={8}>
-                  <ListeVoeux data={initialFormState?.offres} removeOffer={removeOffer} editOffer={editOffer} />
+                  <Box mt={4} mb={8}>
+                    <ListeVoeux data={initialFormState?.offres} removeOffer={removeOffer} editOffer={editOffer} />
+                  </Box>
+
+                  <Stack align='center' spacing='2'>
+                    <Button
+                      leftIcon={<MdAdd />}
+                      rounded='50px'
+                      onClick={addOffer}
+                      p='5'
+                      py='6'
+                      bg='grey'
+                      color='green'
+                      w='70%'
+                    >
+                      Ajouter une offre d'apprentissage
+                    </Button>
+                    {!hasOffer && (
+                      <Box>
+                        <Text fontSize='sm'>minimum une offre</Text>
+                      </Box>
+                    )}
+                  </Stack>
                 </Box>
 
-                <Button type='button' experience='true' onClick={addOffer}>
-                  + Ajouter une offre d'apprentissage
-                </Button>
-
-                <div className='d-flex justify-content-end mb-5'>
-                  <NextButton
-                    name='Envoyer mon besoin'
+                <Flex justify='center' align='center' my='50'>
+                  <Button
                     type='submit'
-                    disabled={!(isValid && (dirty || initialFormState)) || isSubmitting}
-                  />
-                </div>
+                    rounded='10px'
+                    color='red'
+                    p='4'
+                    py='5'
+                    isActive={(isValid && (dirty || hasOffer)) || isSubmitting}
+                    disabled={!(isValid && (dirty || hasOffer)) || isSubmitting}
+                  >
+                    Enregistrer mes offres
+                  </Button>
+                </Flex>
               </Form>
             )
           }}
         </Formik>
-      </Col>
+      </Box>
     </Layout>
   )
 }

@@ -3,34 +3,26 @@ import * as Yup from 'yup'
 import Axios from 'axios'
 import { useQuery } from 'react-query'
 import { Col } from 'react-bootstrap'
-import styled from 'styled-components/macro'
+
 import { useHistory } from 'react-router-dom'
 import { Formik, Form, useField } from 'formik'
-import { useDisclosure, Box } from '@chakra-ui/react'
+import { useDisclosure, Box, Input, FormLabel, FormControl, FormErrorMessage } from '@chakra-ui/react'
 
-import color from '../../components/helper/color'
-import { Input, Button, StepTitle, ChatBubble, InputTitle, NextButton, Layout } from '../../components'
+import { Button, StepTitle, ChatBubble, NextButton, Layout } from '../../components'
 import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
 import Autocomplete from './AdresseAutocomplete'
 
-const ErrorMessage = styled.div`
-  font-family: Inter;
-  font-size: 0.75rem;
-  color: ${color.red};
-`
-
-const Wrapper = styled.div`
-  margin-bottom: 2rem;
-`
-
-const MyInput = (props) => {
+const CustomInput = (props) => {
   const [field, meta] = useField(props)
   return (
-    <Wrapper>
-      <Input suggestion={true} {...props} {...field} />
-      {meta.touched && meta.error ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
-    </Wrapper>
+    <Box pb='5'>
+      <FormControl isInvalid={meta.error && meta.touched} isRequired>
+        <FormLabel>{props.label}</FormLabel>
+        <Input {...field} {...props} />
+        <FormErrorMessage>{meta.error}</FormErrorMessage>
+      </FormControl>
+    </Box>
   )
 }
 
@@ -155,37 +147,38 @@ const Formulaire = (props) => {
               <Form autoComplete='off'>
                 <StepTitle>Renseignements sur votre entreprise</StepTitle>
 
-                <InputTitle mandatory={true}>Nom de l'enseigne</InputTitle>
-                <MyInput name='raison_sociale' type='text' value={values.raison_sociale} />
-
-                <InputTitle mandatory={true}>SIRET</InputTitle>
-                <MyInput name='siret' type='text' value={values.siret} maxLength='14' />
-
-                <InputTitle mandatory={true}>Adresse</InputTitle>
-                <Autocomplete
-                  placeholder='Tapez votre adresse complète'
-                  handleValues={(value) => {
-                    setFieldValue('adresse', value.name)
-                    setFieldValue('geo_coordonnees', value.geo_coordonnees)
-                  }}
-                  context={initialFormState?.adresse || ''}
+                <CustomInput
+                  name='raison_sociale'
+                  label="Nom de l'engeigne"
+                  type='text'
+                  value={values.raison_sociale}
                 />
+                <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
 
-                {/* <MyInput name='adresse' type='text' value={values.adresse} hide={true} /> */}
+                <FormControl isRequired>
+                  <FormLabel>Adresse</FormLabel>
+                  <Autocomplete
+                    placeholder='Tapez votre adresse complète'
+                    handleValues={(value) => {
+                      setFieldValue('adresse', value.name)
+                      setFieldValue('geo_coordonnees', value.geo_coordonnees)
+                    }}
+                    context={initialFormState?.adresse || ''}
+                  />
+                </FormControl>
 
                 <StepTitle>Information sur le contact privilégié</StepTitle>
 
-                <InputTitle mandatory={true}>Nom</InputTitle>
-                <MyInput name='nom' type='text' value={values.nom} />
-
-                <InputTitle mandatory={true}>Prénom</InputTitle>
-                <MyInput name='prenom' type='test' value={values.prenom} />
-
-                <InputTitle mandatory={true}>Téléphone</InputTitle>
-                <MyInput name='telephone' type='tel' pattern='[0-9]{10}' value={values.telephone} />
-
-                <InputTitle mandatory={true}>Email</InputTitle>
-                <MyInput name='email' type='email' value={values.email} />
+                <CustomInput name='nom' label='Nom' type='text' value={values.nom} />
+                <CustomInput name='prenom' label='Prénom' type='test' value={values.prenom} />
+                <CustomInput
+                  name='telephone'
+                  label='Téléphone'
+                  type='tel'
+                  pattern='[0-9]{10}'
+                  value={values.telephone}
+                />
+                <CustomInput name='email' label='Email' type='email' value={values.email} />
 
                 <StepTitle>Votre besoin de recrutement</StepTitle>
                 <ChatBubble>

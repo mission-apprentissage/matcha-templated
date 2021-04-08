@@ -2,14 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import useAutocomplete from '@material-ui/lab/useAutocomplete'
 
-import { InputTitle } from '../../components'
 import color from '../../components/helper/color'
+import { FormLabel, Input, Box, List, ListItem } from '@chakra-ui/react'
 
-const Container = styled.div`
-  margin-bottom: 2rem;
-`
 const Wrapper = styled.ul`
-  width: 95%;
+  width: 100%;
   margin: 0;
   padding: 0;
   z-index: 1;
@@ -24,39 +21,6 @@ const Wrapper = styled.ul`
     padding: 0.5rem;
   }
   li[data-focus='true'] {
-    background: ${color.lightGrey};
-  }
-`
-const Input = styled.input`
-  border: 1px solid ${color.grey};
-  box-sizing: border-box;
-  border-radius: 4px;
-  font-family: Inter;
-  font-size: 1rem;
-  padding-left: 10px;
-  padding-top: 0.625rem;
-  padding-bottom: 0.625rem;
-  margin-bottom: 1.5rem;
-  width: 100%;
-  outline: none;
-  border: 1px solid ${color.middleGrey};
-  ${(props) =>
-    props.value &&
-    `
-    border: 1px solid ${color.black};
-  `}
-  ::placeholder {
-    color: #98b0b7;
-  }
-  :hover {
-    border: 1px solid ${color.red};
-  }
-  :focus {
-    border: 1px solid ${color.red};
-    background: ${color.white} !important;
-  }
-  :disabled {
-    border: 1px solid ${color.lightGrey};
     background: ${color.lightGrey};
   }
 `
@@ -101,9 +65,9 @@ export default (props) => {
   })
 
   return (
-    <Container>
+    <Box pb='5'>
       <div {...getRootProps()}>
-        <InputTitle {...getInputLabelProps()}>{props.title}</InputTitle>
+        {props.title && <FormLabel {...getInputLabelProps()}>{props.title}</FormLabel>}
         <Input {...getInputProps()} placeholder={props.placeholder} required type='text' className='mb-0' />
       </div>
       {groupedOptions.length > 0 ? (
@@ -112,7 +76,40 @@ export default (props) => {
             <li {...getOptionProps({ option: option.name, index })}>{option.name}</li>
           ))}
         </Wrapper>
-      ) : null}
-    </Container>
+      ) : // <List
+      //   spacing='3'
+      //   maxW='100%'
+      //   listStyleType='none'
+      //   boxShadow='0px 1px 8px rgba(8, 67, 85, 0.24)'
+      //   borderRadius='4'
+      //   {...getListboxProps()}
+      // >
+      //   {groupedOptions.map((option, index) => (
+      //     <ListItem
+      //       width='100%'
+      //       sx={{
+      //         "& [data-focus='true']": {
+      //           background: color.lightGrey,
+      //         },
+      //       }}
+      //       {...getOptionProps({ option: option.name, index })}
+      //     >
+      //       {option.name}
+      //     </ListItem>
+      //   ))}
+      // </List>
+      // <Box
+      //   maxW='100%'
+      //   listStyleType='none'
+      //   boxShadow='0px 1px 8px rgba(8, 67, 85, 0.24)'
+      //   borderRadius='4'
+      //   {...getListboxProps()}
+      // >
+      //   {groupedOptions.map((option, index) => (
+      //     <li {...getOptionProps({ option: option.name, index })}>{option.name}</li>
+      //   ))}
+      // </Box>
+      null}
+    </Box>
   )
 }

@@ -10,7 +10,6 @@ import {
   ModalCloseButton,
   FormControl,
   FormLabel,
-  Input,
   Select,
   Textarea,
   Center,
@@ -19,12 +18,6 @@ import {
 import { DropdownCombobox } from '../../components'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-
-const schema = Yup.object().shape({
-  libelle: Yup.string().required('Champ obligatoire'),
-  niveau: Yup.string().required('Champ obligatoire'),
-  description: Yup.string(),
-})
 
 export default (props) => {
   let { isOpen, onClose, handleSave } = props
@@ -57,7 +50,11 @@ export default (props) => {
         niveau: props.niveau ?? '',
         description: props.description ?? '',
       }}
-      validationSchema={schema}
+      validationSchema={Yup.object().shape({
+        libelle: Yup.string().required('Champ obligatoire'),
+        niveau: Yup.string().required('Champ obligatoire'),
+        description: Yup.string(),
+      })}
       onSubmit={async (values, { resetForm }) => {
         // console.log('form values', values)
         await handleSave(values)
@@ -89,7 +86,6 @@ export default (props) => {
                     handleSearch={handleJobSearch}
                     inputItems={inputJobItems}
                     setInputItems={setInputJobItems}
-                    // saveSelectedItem={setFieldValue}
                     saveSelectedItem={(values) => {
                       setFieldValue('libelle', values.label)
                       setFieldValue('romes', values.romes)
@@ -100,12 +96,11 @@ export default (props) => {
                     ref={initialRef}
                   />
                   {errors.metier && touched.metier && <FormErrorMessage>{errors.metier}</FormErrorMessage>}
-                  {/* <Input focusBorderColor='red' ref={initialRef} placeholder="Saisissez l'intituler d'un métier" /> */}
                 </FormControl>
 
                 <FormControl mt={4} isRequired>
                   <FormLabel>Formation minimum attendue</FormLabel>
-                  <Select name='niveau' defaultValue={values.niveau} onChange={handleChange}>
+                  <Select size='lg' name='niveau' defaultValue={values.niveau} onChange={handleChange}>
                     <option value='' disabled hidden>
                       Choisissez un niveau
                     </option>

@@ -102,6 +102,9 @@ module.exports = () => {
           return;
         }
 
+        x._source.mailing = undefined;
+        x._source.events = undefined;
+
         x._source.offres.forEach((o) => {
           if (romes.some((item) => o.romes.includes(item))) {
             offres.push(o);

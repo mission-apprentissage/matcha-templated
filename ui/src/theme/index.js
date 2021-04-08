@@ -8,7 +8,12 @@ const config = {
   useSystemColorMode: false,
 }
 
+const fonts = {
+  body: 'Marianne',
+}
+
 const theme = {
+  fonts,
   colors: { ...colors },
   config,
   components: { Button, Select, Input, Textarea, FormLabel, Form, FormError },

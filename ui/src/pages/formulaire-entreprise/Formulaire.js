@@ -1,7 +1,7 @@
 import * as Yup from 'yup'
 import Axios from 'axios'
 import { useState, useEffect } from 'react'
-import { MdAdd } from 'react-icons/md'
+import { IoIosAddCircleOutline } from 'react-icons/io'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 import { Formik, Form, useField } from 'formik'
@@ -18,7 +18,7 @@ import {
   Stack,
 } from '@chakra-ui/react'
 
-import { StepTitle, ChatBubble, Layout } from '../../components'
+import { ChatBubble, Layout } from '../../components'
 import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
 import Autocomplete from './AdresseAutocomplete'
@@ -125,7 +125,7 @@ const Formulaire = (props) => {
   if (isLoading) {
     return (
       <Layout>
-        <StepTitle>Chargement en cours...</StepTitle>
+        <Text>Chargement en cours...</Text>
       </Layout>
     )
   }
@@ -166,7 +166,11 @@ const Formulaire = (props) => {
 
             return (
               <Form autoComplete='off'>
-                <StepTitle>Renseignements sur votre entreprise</StepTitle>
+                <Box my='3'>
+                  <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
+                    Renseignements sur votre entreprise
+                  </Text>
+                </Box>
 
                 <CustomInput
                   name='raison_sociale'
@@ -188,7 +192,11 @@ const Formulaire = (props) => {
                   />
                 </FormControl>
 
-                <StepTitle>Information sur le contact privilégié</StepTitle>
+                <Box mb='3'>
+                  <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
+                    Information sur le contact privilégié
+                  </Text>
+                </Box>
 
                 <CustomInput name='nom' label='Nom' type='text' value={values.nom} />
                 <CustomInput name='prenom' label='Prénom' type='test' value={values.prenom} />
@@ -201,8 +209,12 @@ const Formulaire = (props) => {
                 />
                 <CustomInput name='email' label='Email' type='email' value={values.email} />
 
-                <Box bg='lightGrey' py='10' px='5' width='100%' borderRadius='2'>
-                  <StepTitle>Votre besoin de recrutement</StepTitle>
+                <Box bg='lightGrey' py='5' px='5' width='100%' borderRadius='2'>
+                  <Box pb='6'>
+                    <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
+                      Votre besoin de recrutement
+                    </Text>
+                  </Box>
                   <ChatBubble margin='0'>
                     Recherchez le domain d'activité se rapprochant le plus de votre offre d'apprentissage. Plusieurs
                     offres possibes
@@ -214,20 +226,18 @@ const Formulaire = (props) => {
 
                   <Stack align='center' spacing='2'>
                     <Button
-                      leftIcon={<MdAdd />}
+                      leftIcon={<IoIosAddCircleOutline />}
                       rounded='50px'
                       onClick={addOffer}
-                      p='5'
-                      py='6'
                       bg='grey'
                       color='green'
-                      w='70%'
+                      size='lg'
                     >
                       Ajouter une offre d'apprentissage
                     </Button>
                     {!hasOffer && (
                       <Box>
-                        <Text fontSize='sm'>minimum une offre</Text>
+                        <Text fontSize='sm'>*minimum une offre </Text>
                       </Box>
                     )}
                   </Stack>
@@ -238,8 +248,7 @@ const Formulaire = (props) => {
                     type='submit'
                     rounded='10px'
                     color='red'
-                    p='4'
-                    py='5'
+                    size='lg'
                     isActive={(isValid && (dirty || hasOffer)) || isSubmitting}
                     disabled={!(isValid && (dirty || hasOffer)) || isSubmitting}
                   >

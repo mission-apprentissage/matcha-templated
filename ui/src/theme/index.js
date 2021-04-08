@@ -11,7 +11,7 @@ const config = {
 const theme = {
   colors: { ...colors },
   config,
-  components: { Select, Input, Textarea, FormLabel, Form, FormError },
+  components: { Button, Select, Input, Textarea, FormLabel, Form, FormError },
   space,
 }
 

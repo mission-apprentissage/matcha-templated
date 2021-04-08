@@ -57,7 +57,7 @@ export default (props) => {
   } = useAutocomplete({
     autoSelect: true,
     onInputChange,
-    onChange: (_, value) => props.handleValues(value),
+    onChange: (_, value) => (value ? props.handleValues(value) : ''),
     options: option ? option : [],
     defaultValue: props.context ? { name: props.context } : option?.name,
     getOptionLabel: (option) => option.name || '',

@@ -188,7 +188,7 @@ const Formulaire = (props) => {
                       setFieldValue('adresse', value.name)
                       setFieldValue('geo_coordonnees', value.geo_coordonnees)
                     }}
-                    context={values.adresse || ''}
+                    context={values.adresse}
                   />
                 </FormControl>
 

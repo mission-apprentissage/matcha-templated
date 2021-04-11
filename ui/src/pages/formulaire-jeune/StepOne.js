@@ -1,9 +1,8 @@
 import React from 'react'
-import { Col } from 'react-bootstrap'
-import { useHistory } from 'react-router-dom'
 import * as Yup from 'yup'
-import { Formik, Form, useField } from 'formik'
 import styled from 'styled-components/macro'
+import { useHistory } from 'react-router-dom'
+import { Formik, Form, useField } from 'formik'
 
 import { Input, InputTitle, StepTitle, ChatBubble, NextButton } from '../../components'
 import color from '../../components/helper/color'
@@ -93,10 +92,10 @@ export default () => {
     window.scrollTo(0, 0)
   }, [])
   return (
-    <Col>
+    <>
       <StepTitle>Etape 1/6 - Vos coordonnées</StepTitle>
       <ChatBubble>Pour vous faciliter la tâche, j’ai récupéré vos coordonnées dans votre dossier parcoursup</ChatBubble>
       <Formulaire />
-    </Col>
+    </>
   )
 }

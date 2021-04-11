@@ -1,5 +1,4 @@
 import React from 'react'
-import { Col } from 'react-bootstrap'
 import { useHistory, Link } from 'react-router-dom'
 import { StepTitle, ChatBubble, NextButton, PreviousButton, VoeuTitle, RadioButton } from '../../components'
 import { Context } from '../../context'
@@ -35,7 +34,7 @@ export default () => {
   }
 
   return (
-    <Col>
+    <>
       <StepTitle>Etape 2/6 - Vos voeux</StepTitle>
       <ChatBubble>J'ai récupéré votre liste de voeux</ChatBubble>
       <p>Pour quels voeux voulez-vous transmettre votre profil à des employeurs ?</p>
@@ -65,6 +64,6 @@ export default () => {
           className='gtm-nextbutton-steptwo'
         />
       </div>
-    </Col>
+    </>
   )
 }

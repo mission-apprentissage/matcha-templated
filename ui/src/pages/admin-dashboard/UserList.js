@@ -1,6 +1,6 @@
 import React from 'react'
 import { useFetch } from '../../common/hooks/useFetch'
-import { Container, Table } from 'react-bootstrap'
+import { Table } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
 
@@ -10,7 +10,7 @@ export default function List() {
   return (
     <>
       {loading && <div>Chargement des données....</div>}
-      <Table striped responsive='lg'>
+      <Table>
         <thead>
           <th>Nom</th>
           <th>Prénom</th>

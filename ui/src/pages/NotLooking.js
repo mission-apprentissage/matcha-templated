@@ -1,25 +1,21 @@
 import React from 'react'
-import { Col } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
-import { Title, ExternalLink, RadioButton } from '../components'
-import styled from 'styled-components'
+import { Flex, Text } from '@chakra-ui/react'
 
-const StyledStrong = styled.strong`
-  font-family: marianne-bold;
-`
+import { Title, ExternalLink, RadioButton } from '../components'
 
 export default () => {
   let history = useHistory()
   return (
-    <Col className='d-flex justify-content-start flex-column mt-5'>
+    <Flex justify='flex-start' mt='5' flexDir='column'>
       <Title>
         Vous êtes à la recherche
-        <br /> d'un <StyledStrong>Stage</StyledStrong> ou d'un{' '}
-        <StyledStrong>
+        <br /> d'un<Text fontFamily='marianne-bold'>Stage</Text> ou d'un{' '}
+        <Text fontFamily='marianne-bold'>
           contrat de
           <br />
           professionnalisation ?
-        </StyledStrong>
+        </Text>
       </Title>
       <Title>Découvrez les entreprises qui recrutent régulièrement :</Title>
       <ExternalLink
@@ -31,6 +27,6 @@ export default () => {
       <RadioButton onClick={() => history.push('/au-revoir')} className='gtm-nextbutton-notlooking'>
         Peut être une autre fois
       </RadioButton>
-    </Col>
+    </Flex>
   )
 }

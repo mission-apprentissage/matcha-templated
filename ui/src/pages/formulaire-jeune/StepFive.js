@@ -1,5 +1,4 @@
 import React from 'react'
-import { Col, Row } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
 import { useCombobox, useMultipleSelection } from 'downshift'
 import styled from 'styled-components'
@@ -19,6 +18,7 @@ import {
   RemoveLink,
   RadioButton,
 } from '../../components'
+import { Box } from '@chakra-ui/layout'
 
 const criteres = [
   'Pratiquer une activité sportive',
@@ -169,7 +169,7 @@ const MultiSelect = ({ handleChange, handleRemoveTag, state, index }) => {
 const Step = (props) => {
   const { index, periodicite, nom, criteres, handleChange, handleRemoveTag, handleRemoveActivity } = props
   return (
-    <Col className='mt-3 mb-3'>
+    <Box className='mt-3 mb-3'>
       {index > 0 && (
         <div className='d-flex justify-content-between'>
           <InputTitle bold={true}>Activité {index + 1}</InputTitle>
@@ -188,7 +188,7 @@ const Step = (props) => {
         onChange={(event) => handleChange('nom', event.target.value, index)}
       />
       <QuestionTitle title='A quelle fréquence pratiquez-vous cette activité' />
-      <Row style={{ marginBottom: '2rem' }}>
+      <Box mb='2rem'>
         {['Tous les jours', 'Plusieurs fois par semaine', 'Plusieurs fois par mois', "Moins d'une fois par mois"].map(
           (x, i) => {
             return (
@@ -202,7 +202,7 @@ const Step = (props) => {
             )
           }
         )}
-      </Row>
+      </Box>
       <QuestionTitle title="Qu'est ce qui vous plait le plus dans cette activité (3 critères maximum) ?" />
       <div className='pb-1'>
         {criteres &&
@@ -213,7 +213,7 @@ const Step = (props) => {
           ))}
       </div>
       <MultiSelect handleChange={handleChange} index={index} handleRemoveTag={handleRemoveTag} state={criteres} />
-    </Col>
+    </Box>
   )
 }
 
@@ -263,7 +263,7 @@ export default () => {
   }
 
   return (
-    <Col>
+    <>
       <StepTitle>Etape 5/6 - Vos activités </StepTitle>
       {stepState.map((item, key) => (
         <Step
@@ -288,6 +288,6 @@ export default () => {
           className='gtm-nextbutton-stepfive'
         />
       </div>
-    </Col>
+    </>
   )
 }

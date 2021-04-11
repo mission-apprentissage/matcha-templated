@@ -1,5 +1,5 @@
 import React from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Box } from '@chakra-ui/react'
 import { Link, useHistory } from 'react-router-dom'
 
 import {
@@ -39,7 +39,7 @@ export default () => {
   }
 
   return (
-    <Col>
+    <>
       <StepTitle>Etape 3/6 - Votre Mobilité</StepTitle>
       <Autocomplete
         title='Dans quelle commune habitez-vous ?'
@@ -60,7 +60,7 @@ export default () => {
         </RadioButton>
       </div>
       <QuestionTitle title="Jusqu'à quelle distance êtes-vous prêt.e à vous déplacer ?" />
-      <Row>
+      <Box>
         {distance.map((dist, i) => (
           <RadioButton
             key={i}
@@ -70,7 +70,7 @@ export default () => {
             {dist.label}
           </RadioButton>
         ))}
-      </Row>
+      </Box>
       <div className='mt-4'>
         <ChatBubble>
           Attention de bien disposer d’un moyen de déplacement ou d’une possibilité de logement pour vous rendre à
@@ -89,6 +89,6 @@ export default () => {
           />
         </Link>
       </div>
-    </Col>
+    </>
   )
 }

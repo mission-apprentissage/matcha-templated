@@ -1,6 +1,6 @@
 import React from 'react'
 import { useFetch } from '../../common/hooks/useFetch'
-import { Button } from 'react-bootstrap'
+import { Button } from '@chakra-ui/react'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 

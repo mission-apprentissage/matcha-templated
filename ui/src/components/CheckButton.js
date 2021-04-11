@@ -1,6 +1,4 @@
-import React from 'react'
 import styled from 'styled-components'
-import { Col } from 'react-bootstrap'
 
 import color from './helper/color'
 
@@ -31,9 +29,5 @@ const Button = styled.button`
 `
 
 export default ({ btn, ...props }) => {
-  return (
-    <Col md={12} lg={6} className='d-flex align-items-stretch'>
-      <Button {...props}>{btn}</Button>
-    </Col>
-  )
+  return <Button {...props}>{btn}</Button>
 }

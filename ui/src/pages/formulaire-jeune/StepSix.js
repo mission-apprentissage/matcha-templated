@@ -1,5 +1,4 @@
 import React from 'react'
-import { Col } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
 
 import {
@@ -17,7 +16,7 @@ import { Context } from '../../context'
 const Formulaire = (props) => {
   const { prenom, nom, role, telephone, email, handleChange, handleRemoveContact, index } = props
   return (
-    <Col>
+    <>
       {index > 0 && (
         <div className='d-flex justify-content-between'>
           <InputTitle bold={true}>Contact {index + 1}</InputTitle>
@@ -34,7 +33,7 @@ const Formulaire = (props) => {
       <Input type='tel' value={telephone} onChange={(event) => handleChange('telephone', event.target.value, index)} />
       <InputTitle>Courriel</InputTitle>
       <Input type='email' value={email} onChange={(event) => handleChange('email', event.target.value, index)} />
-    </Col>
+    </>
   )
 }
 
@@ -61,7 +60,7 @@ export default () => {
     setContactState(copy)
   }
   return (
-    <Col>
+    <>
       <StepTitle>Etape 6/6 - Recommandations</StepTitle>
       <ChatBubble>
         Pour terminer, les employeurs sont sensibles aux recommandations, avez-vous des contacts d'anciens employeurs ou
@@ -88,6 +87,6 @@ export default () => {
           className='gtm-nextbutton-stepsix'
         />
       </div>
-    </Col>
+    </>
   )
 }

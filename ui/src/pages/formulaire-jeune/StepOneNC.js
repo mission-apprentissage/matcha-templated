@@ -1,12 +1,12 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
-import { DropdownCombobox, Input } from '../../components'
-import { Col } from 'react-bootstrap'
-import { StepTitle, ChatBubble, QuestionTitle, NextButton, Button, InputTitle, RemoveLink } from '../../components'
-import { Context } from '../../context'
 import { v4 as uuid } from 'uuid'
-import color from '../../components/helper/color'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
+
+import { Context } from '../../context'
+import color from '../../components/helper/color'
+import { DropdownCombobox, Input } from '../../components'
+import { StepTitle, ChatBubble, QuestionTitle, NextButton, Button, InputTitle, RemoveLink } from '../../components'
 
 const FormWrapper = styled.select`
   background: ${color.white};
@@ -102,7 +102,7 @@ export default () => {
   const [submit, setSubmit] = React.useState(false)
 
   const history = useHistory()
-  const questionnaireId = profile.questionnaire_id ? profile.questionnaire_id : uuid()
+  const questionnaireId = profile.questionnaire_id ?? uuid()
 
   React.useEffect(() => {
     window.scrollTo(0, 0)
@@ -141,7 +141,7 @@ export default () => {
   }
 
   return (
-    <Col>
+    <>
       <StepTitle>Etape 1/6 - Votre recherche </StepTitle>
       <ChatBubble>Quel est votre projet ? Je chercherai des entreprises qui y correspondent !</ChatBubble>
       {stepState.map((item, index) => (
@@ -166,6 +166,6 @@ export default () => {
           className='gtm-nextbutton-stepone-nc'
         />
       </div>
-    </Col>
+    </>
   )
 }

@@ -1,12 +1,12 @@
 import React from 'react'
-import { Col } from 'react-bootstrap'
+import { Flex } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 
 import { Button, Title, ChatBubble } from '../components'
 
 export default () => {
   return (
-    <Col className='mt-5 mb-5 d-flex flex-column justify-content-start flex-column p-0 p-sm-3'>
+    <Flex my='5' flexDir='column' justify='flex-start' p={[3, 0]}>
       <Title>
         J'ai dans mon carnet d'adresse des employeurs qui recrutent en apprentissage à qui transmettre votre profil.
       </Title>
@@ -23,6 +23,6 @@ export default () => {
       <Link to='/'>
         <Button className='gtm-previousbutton-firstpage'>Peut-être une autre fois</Button>
       </Link>
-    </Col>
+    </Flex>
   )
 }

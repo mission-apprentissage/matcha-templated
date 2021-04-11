@@ -1,5 +1,4 @@
 import React from 'react'
-import { Row, Col } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
 import color from '../../components/helper/color'
 import MomentUtils from '@date-io/moment'
@@ -23,6 +22,7 @@ import {
 } from '../../components'
 import { Context } from '../../context'
 import styled from 'styled-components'
+import { Box, HStack } from '@chakra-ui/react'
 
 const datePickerTheme = createMuiTheme({
   palette: {
@@ -217,44 +217,46 @@ const Step = (props) => {
       <QuestionTitle title='Sur quelle période ?' />
       <MuiPickersUtilsProvider utils={MomentUtils} locale='fr'>
         <ThemeProvider theme={datePickerTheme}>
-          <Row className='p-0 mb-4'>
-            <Col lg={6}>
-              <InputTitle>Date de début</InputTitle>
-              <DatePicker
-                format='dddd DD MMMM yyyy'
-                placeholder='selectionner une date'
-                openTo='year'
-                views={['year', 'month', 'date']}
-                value={dateDebut ? dateDebut : null}
-                onChange={(date) => {
-                  handleChange('dateDebut', moment(date).format(), index)
-                  setMinDate(date)
-                }}
-                autoOk={true}
-                InputProps={{ disableUnderline: true }}
-                cancelLabel='Annuler'
-              />
-            </Col>
-            <Col>
-              <InputTitle>Date de fin</InputTitle>
-              <DatePicker
-                format='dddd DD MMMM yyyy'
-                placeholder='selectionner une date'
-                value={dateFin ? (dateFin > minDate ? dateFin : minDate) : null}
-                onChange={(date) => {
-                  console.log(date)
-                  setMinDate('')
-                  handleChange('dateFin', moment(date).format(), index)
-                }}
-                autoOk={true}
-                cancelLabel='Annuler'
-                initialFocusedDate={minDate}
-                minDate={dateDebut && dateDebut}
-                InputProps={{ disableUnderline: true }}
-                invalidDateMessage={false}
-              />
-            </Col>
-          </Row>
+          <Box p='0' mb='4'>
+            <HStack spacing='3'>
+              <Box>
+                <InputTitle>Date de début</InputTitle>
+                <DatePicker
+                  format='dddd DD MMMM yyyy'
+                  placeholder='selectionner une date'
+                  openTo='year'
+                  views={['year', 'month', 'date']}
+                  value={dateDebut ? dateDebut : null}
+                  onChange={(date) => {
+                    handleChange('dateDebut', moment(date).format(), index)
+                    setMinDate(date)
+                  }}
+                  autoOk={true}
+                  InputProps={{ disableUnderline: true }}
+                  cancelLabel='Annuler'
+                />
+              </Box>
+              <Box>
+                <InputTitle>Date de fin</InputTitle>
+                <DatePicker
+                  format='dddd DD MMMM yyyy'
+                  placeholder='selectionner une date'
+                  value={dateFin ? (dateFin > minDate ? dateFin : minDate) : null}
+                  onChange={(date) => {
+                    console.log(date)
+                    setMinDate('')
+                    handleChange('dateFin', moment(date).format(), index)
+                  }}
+                  autoOk={true}
+                  cancelLabel='Annuler'
+                  initialFocusedDate={minDate}
+                  minDate={dateDebut && dateDebut}
+                  InputProps={{ disableUnderline: true }}
+                  invalidDateMessage={false}
+                />
+              </Box>
+            </HStack>
+          </Box>
         </ThemeProvider>
       </MuiPickersUtilsProvider>
     </>
@@ -307,7 +309,7 @@ export default () => {
   }
 
   return (
-    <Col>
+    <>
       <StepTitle>Etape 4/6 - Vos expériences</StepTitle>
       {stepState.map((item, key) => (
         <Step
@@ -330,6 +332,6 @@ export default () => {
           <NextButton onClick={() => saveContext(history, 'experiences', stepState, '/step-five')} disabled={!submit} />
         </Link>
       </div>
-    </Col>
+    </>
   )
 }

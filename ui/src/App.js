@@ -1,12 +1,11 @@
 import React from 'react'
-
-import { Switch, Route, Redirect } from 'react-router-dom'
 import { ChakraProvider } from '@chakra-ui/react'
-import { Formulaire, NotFound, Remerciement } from './pages'
-import { Login } from './pages/admin-dashboard'
-// import Dashboard from './pages/formulaire-entreprise/dashboard/Dashboard'
-import useAuth from './common/hooks/useAuth'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
+
+import { Formulaire, NotFound, Remerciement } from './pages'
+import { Login, UserList } from './pages/admin-dashboard'
+import useAuth from './common/hooks/useAuth'
 import theme from './theme'
 
 import './App.css'
@@ -27,13 +26,13 @@ function PrivateRoute({ children, ...rest }) {
 }
 
 const App = () => {
-  let [auth] = useAuth()
-
   return (
     <QueryClientProvider client={client}>
       <ChakraProvider theme={theme}>
         <Switch>
-          {/* {auth && auth.permissions.isAdmin && <PrivateRoute exact path='/admin' component={Dashboard} />} */}
+          <PrivateRoute exact path='/admin'>
+            <UserList />
+          </PrivateRoute>
           <Route exact path='/merci' component={Remerciement} />
           <Route exact path='/login' component={Login} />
           <Route exact path='/:id' component={Formulaire} />

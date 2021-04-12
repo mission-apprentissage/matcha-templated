@@ -1,9 +1,12 @@
+const logger = require("../../common/logger");
 const { Formulaire } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 
 async function getAllEvents(mail) {
   // select all formulaire with at least one entry in the mailing array
   const data = await Formulaire.find({ $nor: [{ mailing: { $exists: false } }, { mailing: { $size: 0 } }] });
+
+  logger.info(`Fetching events for ${data.length} forms`);
 
   await Promise.all(
     data.map(async (item) => {
@@ -19,6 +22,8 @@ async function getAllEvents(mail) {
       await item.save();
     })
   );
+
+  logger.info(`Done!`);
 }
 
 module.exports = { getAllEvents };

@@ -45,18 +45,17 @@ export default (props) => {
       enableReinitialize={true}
       initialValues={{
         index: props.index ?? undefined,
-        libelle: props.libelle ?? null,
+        libelle: props.libelle ?? '',
         romes: props.romes ?? [],
         niveau: props.niveau ?? '',
         description: props.description ?? '',
       }}
       validationSchema={Yup.object().shape({
         libelle: Yup.string().required('Champ obligatoire'),
-        niveau: Yup.string().required('Champ obligatoire'),
+        niveau: Yup.string(),
         description: Yup.string(),
       })}
       onSubmit={async (values, { resetForm }) => {
-        // console.log('form values', values)
         await handleSave(values)
         resetForm({})
         onClose()
@@ -87,8 +86,13 @@ export default (props) => {
                     inputItems={inputJobItems}
                     setInputItems={setInputJobItems}
                     saveSelectedItem={(values) => {
-                      setFieldValue('libelle', values.label)
-                      setFieldValue('romes', values.romes)
+                      /**
+                       * validator broken when using setFieldValue : https://github.com/formium/formik/issues/2266
+                       */
+                      setTimeout(() => {
+                        setFieldValue('libelle', values.label)
+                        setFieldValue('romes', values.romes)
+                      }, 0)
                     }}
                     name='libelle'
                     value={values.libelle}
@@ -98,10 +102,10 @@ export default (props) => {
                   {errors.libelle && touched.libelle && <FormErrorMessage>{errors.libelle}</FormErrorMessage>}
                 </FormControl>
 
-                <FormControl mt={4} isRequired>
+                <FormControl mt={4}>
                   <FormLabel>Formation minimum attendue</FormLabel>
                   <Select size='lg' name='niveau' defaultValue={values.niveau} onChange={handleChange}>
-                    <option value='' disabled hidden>
+                    <option value='' hidden>
                       Choisissez un niveau
                     </option>
                     <option value='CAP, BEP'>CAP, BEP</option>

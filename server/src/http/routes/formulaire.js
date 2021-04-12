@@ -1,12 +1,34 @@
 const express = require("express");
-const { getElasticInstance } = require("../../common/esClient");
 const { Formulaire } = require("../../common/model");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
+const { getElasticInstance } = require("../../common/esClient");
 
 const esClient = getElasticInstance();
 
 module.exports = () => {
   const router = express.Router();
+
+  router.get(
+    "/",
+    tryCatch(async (req, res) => {
+      let qs = req.query;
+      const query = qs && qs.query ? JSON.parse(qs.query) : {};
+      const page = qs && qs.page ? qs.page : 1;
+      const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 100;
+
+      const result = await Formulaire.paginate(query, { page, limit, lean: true });
+
+      return res.json({
+        data: result.docs,
+        pagination: {
+          page: result.page,
+          result_per_page: limit,
+          number_of_page: result.pages,
+          total: result.total,
+        },
+      });
+    })
+  );
 
   /**
    * Get FORM

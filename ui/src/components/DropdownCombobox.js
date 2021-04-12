@@ -2,10 +2,9 @@ import React from 'react'
 import { useCombobox } from 'downshift'
 import styled from 'styled-components'
 import color from './helper/color'
-import { Input } from './index'
+import { Input } from '@chakra-ui/react'
 
 const Wrapper = styled.ul`
-  width: 95%;
   margin: 0;
   padding: 0;
   z-index: 1;
@@ -19,10 +18,6 @@ const Wrapper = styled.ul`
     width: 100%;
     padding: 0.5rem;
   }
-`
-
-const CustomizedInput = styled(Input)`
-  margin-bottom: 0;
 `
 
 export default (props) => {
@@ -44,7 +39,7 @@ export default (props) => {
   return (
     <div className=''>
       <div {...getComboboxProps()}>
-        <CustomizedInput name={name} placeholder={placeholder || 'sélectionner un métier'} {...getInputProps()} />
+        <Input mb='0' name={name} placeholder={placeholder || 'sélectionner un métier'} {...getInputProps()} />
       </div>
       <Wrapper {...getMenuProps()}>
         {isOpen &&

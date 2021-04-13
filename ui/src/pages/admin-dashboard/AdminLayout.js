@@ -19,11 +19,9 @@ export default ({ children, rest }) => {
   }, [pathname])
 
   return (
-    <Container maxW='full' p='0' {...rest}>
+    <Container maxW='full' p='0' {...rest} h='100vh'>
       <Navbar />
-      <Box bg={bkg && 'lightGrey'} h='100vh'>
-        {children}
-      </Box>
+      <Box bg={bkg && 'lightGrey'}>{children}</Box>
     </Container>
   )
 }

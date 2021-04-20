@@ -3,10 +3,14 @@ const { Formulaire } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const logger = require("../../common/logger");
+const { CLICKED } = require("../../common/components/mail.constant");
 
 const launch = async (mail) => {
-  const forms = await Formulaire.find({ $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }] }).lean();
-  const campagne = "matcha-lbb-20210415-avis";
+  const forms = await Formulaire.find({
+    "events.event": CLICKED,
+    $or: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
+  }).lean();
+  const campagne = "matcha-lbb-20210420-avis-click-sans-offre";
 
   // const campagne = "test";
 
@@ -35,7 +39,7 @@ const launch = async (mail) => {
         email: "charlotte.lecuit@beta.gouv.fr",
       },
       // subject: `Relance: le gouvernement vous aide à recruter un apprenti`,
-      templateId: 173,
+      templateId: 174,
       tags: [campagne],
       params: params,
     };

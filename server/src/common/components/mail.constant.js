@@ -1,6 +1,6 @@
 module.exports.OPENED = "Opened";
 module.exports.FIRST = "First opening";
-module.exports.CLICKED = "Clicked";
+module.exports.CLICKED = "clicks";
 module.exports.SOFT = "Soft bounce";
 module.exports.DELIVERED = "Delivered";
 module.exports.HARD = "Hard bounce";

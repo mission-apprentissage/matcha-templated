@@ -1,5 +1,6 @@
 const logger = require("../../common/logger");
 const { Formulaire } = require("../../common/model");
+const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { runScript } = require("../scriptWrapper");
 
 async function getAllEvents(mail) {
@@ -8,20 +9,20 @@ async function getAllEvents(mail) {
 
   logger.info(`Fetching events for ${data.length} forms`);
 
-  await Promise.all(
-    data.map(async (item) => {
-      let { messageId } = item.mailing[0];
-
+  await asyncForEach(data, async (item) => {
+    if (!item.mailing || item.mailing.length === 0) return;
+    await asyncForEach(item.mailing, async ({ messageId }) => {
       if (!messageId) return;
-
       const { body } = await mail.getEventsFromId({ messageId });
 
       let { events } = JSON.parse(body);
 
-      item.events = events;
+      logger.info(`${events.length} events recovered`);
+
+      item.events = item.events.concat(events);
       await item.save();
-    })
-  );
+    });
+  });
 
   logger.info(`Done!`);
 }

@@ -75,6 +75,11 @@ module.exports = new Schema(
       default: null,
       description: "Liste des évènements sendinblue",
     },
+    origine: {
+      type: String,
+      default: null,
+      description: "Origine/organisme lié au formulaire",
+    },
   },
   {
     timestamps: true,

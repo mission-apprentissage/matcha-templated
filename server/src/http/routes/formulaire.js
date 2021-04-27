@@ -39,6 +39,8 @@ module.exports = () => {
       const { id_form } = req.params;
       let result = await Formulaire.findOne({ id_form }).lean();
 
+      if (!result) res.sendStatus(401);
+
       return res.json(result);
     })
   );
@@ -149,7 +151,12 @@ module.exports = () => {
       const form = req.body;
       const { id_form } = req.params;
 
-      await Formulaire.findOneAndUpdate({ id_form }, form, { new: true });
+      if (id_form == "undefined") {
+        const result = await Formulaire.create(form);
+        return res.json(result);
+      }
+
+      await Formulaire.findOneAndUpdate({ id_form }, form);
 
       //TODO : send thank you mail
 

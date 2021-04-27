@@ -1,9 +1,8 @@
-import * as Yup from 'yup'
 import Axios from 'axios'
+import * as Yup from 'yup'
 import { useState, useEffect } from 'react'
 import { IoIosAddCircleOutline } from 'react-icons/io'
-import { useQuery } from 'react-query'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Formik, Form, useField } from 'formik'
 import {
   Button,
@@ -16,8 +15,12 @@ import {
   Flex,
   Text,
   Stack,
+  useBoolean,
+  Center,
+  Link,
 } from '@chakra-ui/react'
 
+import { getFormulaire, saveFormulaire } from '../../api'
 import { ChatBubble, Layout } from '../../components'
 import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
@@ -37,45 +40,41 @@ const CustomInput = (props) => {
 }
 
 const Formulaire = (props) => {
+  console.log(props)
   const [initialFormState, setInitialFormState] = useState({})
   const [currentOffer, setCurrentOffer] = useState({})
+  const [loading, setLoading] = useBoolean()
+  const [error, setError] = useBoolean()
   const popupState = useDisclosure()
-  const { params } = props.match
   const history = useHistory()
+  const { id, origine } = useParams()
 
-  const { isLoading } = useQuery(
-    ['formulaire', { id: params.id }],
-    ({ queryKey }) => Axios.get(`api/formulaire/${queryKey[1].id}`),
-    {
-      onSuccess: ({ data }) => {
-        setInitialFormState(data)
-      },
-      refetchOnWindowFocus: false,
-    }
-  )
+  console.log(initialFormState)
 
   useEffect(() => {
-    history.listen((_, action) => {
-      if (action === 'POP') {
-        window.location.reload()
-      }
-    })
-  }, [initialFormState])
+    setLoading.toggle(true)
 
-  /**
-   *
-   * user params comes from the URL (OPCO ATLAS)
-   *
-    useEffect(() => {
+    if (props?.byId) {
+      getFormulaire(id)
+        .then((result) => {
+          setInitialFormState(result.data)
+        })
+        .catch(() => {
+          setError.toggle(true)
+        })
+        .finally(() => setLoading.toggle(false))
+    } else {
       const params = new URLSearchParams(window.location.search)
       let user = {}
+      user.origine = origine ?? null
       for (let i of params) {
         let [key, value] = i
         user[key] = value
       }
-      setInitialFormState(result)
-    }, [])
-  */
+      setInitialFormState(user)
+      setLoading.toggle(false)
+    }
+  }, [])
 
   const editOffer = (item, index) => {
     setCurrentOffer({ ...item, index })
@@ -113,19 +112,44 @@ const Formulaire = (props) => {
     const payload = {
       ...values,
       offres: initialFormState.offres ?? [],
+      origine: initialFormState.origine,
     }
-    const res = await Axios.post(`api/formulaire/${params.id}`, payload)
+    const res = await saveFormulaire(id, payload)
+    console.log(res)
     setSubmitting(false)
 
     if (res.status === 200) {
-      history.push('/merci')
+      history.push('/merci', { isNew: !id ? true : false })
     }
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <Layout>
-        <Text>Chargement en cours...</Text>
+        <Center p={5}>
+          <Text>Chargement en cours...</Text>
+        </Center>
+      </Layout>
+    )
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <Center p={5}>
+          <Box>
+            <Text align='center'>Une erreur est survenu lors du chargement du formulaire.</Text>
+            <Text align='center' pt={3}>
+              Merci de prendre contact directement avec un administrateur en cliquant sur le lien suivant :&nbsp;
+              <Link
+                href="mailto:matcha@apprentissage.beta.gouv.fr?subject=Problème d'accès au formulaire"
+                target='_blank'
+              >
+                contact
+              </Link>
+            </Text>
+          </Box>
+        </Center>
       </Layout>
     )
   }

@@ -8,12 +8,11 @@ import {
   Heading,
   HStack,
   Input,
-  Link,
   Text,
 } from '@chakra-ui/react'
 import { Field, Form, Formik } from 'formik'
 import React from 'react'
-import { NavLink, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import * as Yup from 'yup'
 
 import useAuth from '../../common/hooks/useAuth'

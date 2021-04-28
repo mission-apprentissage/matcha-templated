@@ -1,10 +1,11 @@
-import Axios from 'axios'
 import * as Yup from 'yup'
 import { useState, useEffect } from 'react'
 import { IoIosAddCircleOutline } from 'react-icons/io'
 import { useHistory, useParams } from 'react-router-dom'
 import { Formik, Form, useField } from 'formik'
 import {
+  Alert,
+  AlertIcon,
   Button,
   useDisclosure,
   Box,
@@ -40,16 +41,13 @@ const CustomInput = (props) => {
 }
 
 const Formulaire = (props) => {
-  console.log(props)
   const [initialFormState, setInitialFormState] = useState({})
   const [currentOffer, setCurrentOffer] = useState({})
   const [loading, setLoading] = useBoolean()
   const [error, setError] = useBoolean()
-  const popupState = useDisclosure()
+  const ajouterVoeuxPopup = useDisclosure()
   const history = useHistory()
   const { id, origine } = useParams()
-
-  console.log(initialFormState)
 
   useEffect(() => {
     setLoading.toggle(true)
@@ -78,12 +76,12 @@ const Formulaire = (props) => {
 
   const editOffer = (item, index) => {
     setCurrentOffer({ ...item, index })
-    popupState.onOpen()
+    ajouterVoeuxPopup.onOpen()
   }
 
   const addOffer = () => {
     setCurrentOffer({})
-    popupState.onOpen()
+    ajouterVoeuxPopup.onOpen()
   }
 
   const saveOffer = (values) => {
@@ -115,7 +113,6 @@ const Formulaire = (props) => {
       origine: initialFormState.origine,
     }
     const res = await saveFormulaire(id, payload)
-    console.log(res)
     setSubmitting(false)
 
     if (res.status === 200) {
@@ -156,9 +153,10 @@ const Formulaire = (props) => {
 
   return (
     <Layout>
-      <AjouterVoeux {...popupState} {...currentOffer} handleSave={saveOffer} />
+      <AjouterVoeux {...ajouterVoeuxPopup} {...currentOffer} handleSave={saveOffer} />
       <Box pb='3'>
         <Formik
+          validateOnMount={true}
           enableReinitialize={true}
           initialValues={{
             raison_sociale: initialFormState?.raison_sociale ?? '',
@@ -185,9 +183,8 @@ const Formulaire = (props) => {
           })}
           onSubmit={submitFormulaire}
         >
-          {({ values, isValid, dirty, isSubmitting, setFieldValue }) => {
+          {({ values, isValid, isSubmitting, setFieldValue }) => {
             const hasOffer = values.offres?.length > 0
-
             return (
               <Form autoComplete='off'>
                 <Box my='3'>
@@ -229,6 +226,7 @@ const Formulaire = (props) => {
                   label='Téléphone'
                   type='tel'
                   pattern='[0-9]{10}'
+                  maxLength='10'
                   value={values.telephone}
                 />
                 <CustomInput name='email' label='Email' type='email' value={values.email} />
@@ -243,6 +241,15 @@ const Formulaire = (props) => {
                     Recherchez le domain d'activité se rapprochant le plus de votre offre d'apprentissage. Plusieurs
                     offres possibes
                   </ChatBubble>
+
+                  {!hasOffer && (
+                    <Center pt={3}>
+                      <Alert status='warning'>
+                        <AlertIcon />
+                        Vous n'avez ajoutez aucune offre
+                      </Alert>
+                    </Center>
+                  )}
 
                   <Box mt={4} mb={8}>
                     <ListeVoeux data={initialFormState?.offres} removeOffer={removeOffer} editOffer={editOffer} />
@@ -259,11 +266,6 @@ const Formulaire = (props) => {
                     >
                       Ajouter une offre d'apprentissage
                     </Button>
-                    {!hasOffer && (
-                      <Box>
-                        <Text fontSize='sm'>*minimum une offre </Text>
-                      </Box>
-                    )}
                   </Stack>
                 </Box>
 
@@ -273,8 +275,8 @@ const Formulaire = (props) => {
                     rounded='10px'
                     color='red'
                     size='lg'
-                    isActive={(isValid && (dirty || hasOffer)) || isSubmitting}
-                    disabled={!(isValid && (dirty || hasOffer)) || isSubmitting}
+                    isActive={isValid}
+                    disabled={!isValid || isSubmitting}
                   >
                     Enregistrer mes offres
                   </Button>

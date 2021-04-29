@@ -88,6 +88,7 @@ export default (props) => {
                     saveSelectedItem={(values) => {
                       /**
                        * validator broken when using setFieldValue : https://github.com/formium/formik/issues/2266
+                       * work around until v3 : setTimeout
                        */
                       setTimeout(() => {
                         setFieldValue('libelle', values.label)

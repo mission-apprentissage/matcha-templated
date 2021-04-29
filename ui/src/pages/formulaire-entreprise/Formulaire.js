@@ -2,7 +2,7 @@ import * as Yup from 'yup'
 import { useState, useEffect } from 'react'
 import { IoIosAddCircleOutline } from 'react-icons/io'
 import { useHistory, useParams } from 'react-router-dom'
-import { Formik, Form, useField } from 'formik'
+import { Formik, Form, useField, Field } from 'formik'
 import {
   Alert,
   AlertIcon,
@@ -69,7 +69,9 @@ const Formulaire = (props) => {
         let [key, value] = i
         user[key] = value
       }
+      user.adresse = undefined
       setInitialFormState(user)
+
       setLoading.toggle(false)
     }
   }, [])
@@ -185,6 +187,7 @@ const Formulaire = (props) => {
         >
           {({ values, isValid, isSubmitting, setFieldValue }) => {
             const hasOffer = values.offres?.length > 0
+
             return (
               <Form autoComplete='off'>
                 <Box my='3'>
@@ -201,17 +204,30 @@ const Formulaire = (props) => {
                 />
                 <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
 
-                <FormControl isRequired>
-                  <FormLabel>Adresse</FormLabel>
-                  <Autocomplete
-                    placeholder='Tapez votre adresse complète'
-                    handleValues={(value) => {
-                      setFieldValue('adresse', value.name)
-                      setFieldValue('geo_coordonnees', value.geo_coordonnees)
-                    }}
-                    context={values.adresse}
-                  />
-                </FormControl>
+                <Field name='adresse'>
+                  {({ meta, form }) => {
+                    return (
+                      <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
+                        <FormLabel>Adresse</FormLabel>
+                        <Autocomplete
+                          handleValues={(value) => {
+                            /**
+                             * validator broken when using setFieldValue : https://github.com/formium/formik/issues/2266
+                             * work around until v3 : setTimeout
+                             */
+                            setTimeout(() => {
+                              setFieldValue('adresse', value.name)
+                              setFieldValue('geo_coordonnees', value.geo_coordonnees)
+                            })
+                          }}
+                          defaultValue={values.adresse}
+                          setFieldTouched={form.setFieldTouched}
+                        />
+                        <FormErrorMessage>{meta.error}</FormErrorMessage>
+                      </FormControl>
+                    )
+                  }}
+                </Field>
 
                 <Box mb='3'>
                   <Text as='strong' fontSize='md' fontFamily='Inter-bold'>

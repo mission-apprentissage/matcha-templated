@@ -33,6 +33,7 @@ const App = () => {
           <PrivateRoute exact path='/admin'>
             <UserList />
           </PrivateRoute>
+          <Route exact path='/' component={Homepage} />
           <Route exact path='/merci' component={Remerciement} />
           <Route exact path='/login' component={Login} />
           <Route exact path='/formulaire/:id' render={(props) => <Formulaire {...props} byId={true} />} />

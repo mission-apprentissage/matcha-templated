@@ -8,4 +8,5 @@ export default {
   lightGrey: '#F2F2F7',
   middleGrey: '#98B0B7',
   white: '#FFFFFF',
+  emphase: '#6A6A6A',
 }

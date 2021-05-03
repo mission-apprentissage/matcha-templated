@@ -46,15 +46,22 @@ export default (props) => {
   }
 
   const itemToString = (item) => (item ? item.name : '')
-  const onSelectedItemChange = ({ selectedItem }) => props.handleValues(selectedItem)
-  const onInputValueChange = async ({ inputValue }) => setItems(await handleSearch(inputValue))
+  const onSelectedItemChange = ({ selectedItem }) => {
+    props.handleValues(selectedItem)
+  }
+  const onInputValueChange = async ({ inputValue }) => {
+    setItems(await handleSearch(inputValue))
+    if (inputValue === '') {
+      props.handleValues({ name: '', geo_coordonnees: '' })
+    }
+  }
 
   const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({
     itemToString,
     onInputValueChange,
     onSelectedItemChange,
     items,
-    initialInputValue: props.defaultValue ?? '',
+    initialInputValue: props.defaultValue,
   })
 
   return (

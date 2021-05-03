@@ -21,6 +21,7 @@ import { FiExternalLink } from 'react-icons/fi'
 
 import logoMinistere from '../assets/images/logo-ministere.svg'
 import illustrationHero from '../assets/images/Illustration-hero.svg'
+import { useHistory } from 'react-router'
 
 export default () => {
   return (
@@ -37,24 +38,36 @@ export default () => {
   )
 }
 
-const Hero = () => (
-  <Container maxW='container.xl'>
-    <Flex m={[5, 10]} justifyContent='space-between'>
-      <Box>
-        <Heading>Exprimer votre </Heading>
-        <Heading pb={5}>besoin d'alternant.e</Heading>
-        <Text pb={10} maxW={['100%', '80%']}>
-          Matcha vous permet en quelques secondes d'exprimer vos besoins de recrutement en alternance pour les afficher
-          sur le site <strong>La Bonne Alternance</strong>
-        </Text>
-        <Button color='white' bg='red' border='1px solid' rightIcon={<IoIosArrowForward />} borderRadius='50px' px={6}>
-          Je cherche un.e alternant.e
-        </Button>
-      </Box>
-      <Image src={illustrationHero} display={['none', 'flex']} />
-    </Flex>
-  </Container>
-)
+const Hero = () => {
+  const history = useHistory()
+
+  return (
+    <Container maxW='container.xl'>
+      <Flex m={[5, 10]} justifyContent='space-between'>
+        <Box>
+          <Heading>Exprimer votre </Heading>
+          <Heading pb={5}>besoin d'alternant.e</Heading>
+          <Text pb={10} maxW={['100%', '80%']}>
+            Matcha vous permet en quelques secondes d'exprimer vos besoins de recrutement en alternance pour les
+            afficher sur le site <strong>La Bonne Alternance</strong>
+          </Text>
+          <Button
+            color='white'
+            bg='red'
+            border='1px solid'
+            rightIcon={<IoIosArrowForward />}
+            borderRadius='50px'
+            px={6}
+            onClick={() => history.push('/matcha/')}
+          >
+            Je cherche un.e alternant.e
+          </Button>
+        </Box>
+        <Image src={illustrationHero} display={['none', 'flex']} />
+      </Flex>
+    </Container>
+  )
+}
 
 const Mission = () => (
   <Container maxW='container.xl'>

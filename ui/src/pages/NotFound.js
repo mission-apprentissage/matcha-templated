@@ -1,26 +1,23 @@
-import React from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import { Center, VStack, Image, Text, Button } from '@chakra-ui/react'
+import logo from '../assets/images/logo.svg'
 
 export default () => {
   const history = useHistory()
-  React.useEffect(() => {
+  useEffect(() => {
     setTimeout(() => {
       history.push('/')
     }, 3000)
   })
+
   return (
-    <div className='page not-found'>
-      <div id='oopss'>
-        <div id='error-text'>
-          <span>404</span>
-          <h1>PAGE INCONNUE</h1>
-          <p className='hmpg'>
-            <Link to='/' className='back'>
-              Retour à l'accueil
-            </Link>
-          </p>
-        </div>
-      </div>
-    </div>
+    <Center h='100vh'>
+      <VStack>
+        <Image src={logo} pb={5} />
+        <Text pb={5}>Page inconnue</Text>
+        <Button onClick={() => history.push('/')}>Retour à l'accueil</Button>
+      </VStack>
+    </Center>
   )
 }

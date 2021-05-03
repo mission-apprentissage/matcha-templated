@@ -1,4 +1,3 @@
-import React from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'

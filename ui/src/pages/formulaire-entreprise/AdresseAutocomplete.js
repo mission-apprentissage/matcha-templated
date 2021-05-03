@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 import { useCombobox } from 'downshift'
 
@@ -23,7 +23,7 @@ const Wrapper = styled.ul`
 `
 
 export default (props) => {
-  const [items, setItems] = React.useState([])
+  const [items, setItems] = useState([])
   const adresse = []
 
   const getAddress = async (value) => {

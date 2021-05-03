@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, useRef } from 'react'
 import {
   Button,
   Modal,
@@ -21,9 +21,9 @@ import * as Yup from 'yup'
 
 export default (props) => {
   let { isOpen, onClose, handleSave } = props
-  const [inputJobItems, setInputJobItems] = React.useState([])
-  const initialRef = React.useRef()
-  const finalRef = React.useRef()
+  const [inputJobItems, setInputJobItems] = useState([])
+  const initialRef = useRef()
+  const finalRef = useRef()
 
   const handleJobSearch = async (search) => {
     if (search) {

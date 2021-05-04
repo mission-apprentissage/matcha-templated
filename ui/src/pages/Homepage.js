@@ -46,7 +46,7 @@ const Hero = () => {
       <Flex m={[5, 10]} justifyContent='space-between'>
         <Box>
           <Heading>Exprimer votre </Heading>
-          <Heading pb={5}>besoin d'alternant.e</Heading>
+          <Heading pb={5}>besoin en alternance</Heading>
           <Text pb={10} maxW={['100%', '80%']}>
             Matcha vous permet en quelques secondes d'exprimer vos besoins de recrutement en alternance pour les
             afficher sur le site <strong>La Bonne Alternance</strong>

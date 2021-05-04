@@ -196,12 +196,7 @@ const Formulaire = (props) => {
                   </Text>
                 </Box>
 
-                <CustomInput
-                  name='raison_sociale'
-                  label="Nom de l'engeigne"
-                  type='text'
-                  value={values.raison_sociale}
-                />
+                <CustomInput name='raison_sociale' label='Engeigne' type='text' value={values.raison_sociale} />
                 <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
 
                 <Field name='adresse'>
@@ -231,7 +226,7 @@ const Formulaire = (props) => {
 
                 <Box mb='3'>
                   <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
-                    Information sur le contact privilégié
+                    Information
                   </Text>
                 </Box>
 
@@ -254,15 +249,15 @@ const Formulaire = (props) => {
                     </Text>
                   </Box>
                   <ChatBubble margin='0'>
-                    Recherchez le domain d'activité se rapprochant le plus de votre offre d'apprentissage. Plusieurs
-                    offres possibes
+                    Recherchez le domaine d'activité se rapprochant le plus de votre offre d'apprentissage. Plusieurs
+                    offres possibles
                   </ChatBubble>
 
                   {!hasOffer && (
                     <Center pt={3}>
                       <Alert status='warning'>
                         <AlertIcon />
-                        Vous n'avez ajoutez aucune offre
+                        Vous n'avez ajouté aucune offre
                       </Alert>
                     </Center>
                   )}

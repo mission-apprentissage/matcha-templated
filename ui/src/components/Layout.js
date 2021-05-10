@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom'
 
 import Navbar from './Navbar'
 
-const paths = ['step', 'admin', 'merci']
+const paths = ['step', 'admin']
 
 export default ({ children, rest }) => {
   const { pathname } = useLocation()

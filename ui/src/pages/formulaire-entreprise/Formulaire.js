@@ -196,7 +196,12 @@ const Formulaire = (props) => {
                   </Text>
                 </Box>
 
-                <CustomInput name='raison_sociale' label='Engeigne' type='text' value={values.raison_sociale} />
+                <CustomInput
+                  name='raison_sociale'
+                  label="Nom de l'enseigne"
+                  type='text'
+                  value={values.raison_sociale}
+                />
                 <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
 
                 <Field name='adresse'>
@@ -226,7 +231,7 @@ const Formulaire = (props) => {
 
                 <Box mb='3'>
                   <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
-                    Information
+                    Informations sur le contact privilégié
                   </Text>
                 </Box>
 

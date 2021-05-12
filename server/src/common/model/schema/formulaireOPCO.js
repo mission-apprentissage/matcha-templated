@@ -31,7 +31,7 @@ module.exports = new Schema(
     raison_sociale: {
       type: String,
       default: null,
-      description: "Raison social de",
+      description: "Raison social de l'entreprise",
     },
     siret: {
       type: String,

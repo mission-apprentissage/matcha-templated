@@ -9,6 +9,11 @@ const offresSchema = new Schema({
     default: null,
     description: "Niveau de formation requis",
   },
+  date: {
+    type: Date,
+    default: null,
+    description: "Date de début de l'apprentissage",
+  },
   description: {
     type: String,
     default: null,

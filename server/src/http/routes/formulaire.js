@@ -2,10 +2,12 @@ const express = require("express");
 const { Formulaire } = require("../../common/model");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { getElasticInstance } = require("../../common/esClient");
+const logger = require("../../common/logger");
+const config = require("config");
 
 const esClient = getElasticInstance();
 
-module.exports = () => {
+module.exports = ({ mail }) => {
   const router = express.Router();
 
   router.get(
@@ -31,7 +33,7 @@ module.exports = () => {
   );
 
   /**
-   * Get FORM
+   * Get single form
    */
   router.get(
     "/:id_form",
@@ -45,6 +47,9 @@ module.exports = () => {
     })
   );
 
+  /**
+   * LBA ENDPOINT
+   */
   router.get(
     "/offre/:id_offre",
     tryCatch(async (req, res) => {
@@ -151,14 +156,59 @@ module.exports = () => {
       const form = req.body;
       const { id_form } = req.params;
 
+      /**
+       * Create new formulaire and send email
+       */
       if (id_form == "undefined") {
-        const result = await Formulaire.create(form);
+        const newForm = await Formulaire.create(form);
+
+        let { _id, id_form, raison_sociale, email } = newForm;
+
+        const payload = {
+          sender: {
+            name: "Mission interministérielle pour l'apprentissage",
+            email: "charlotte.lecuit@beta.gouv.fr",
+          },
+          to: [
+            {
+              name: `${raison_sociale}`,
+              email: `${email}`,
+            },
+          ],
+          replyTo: {
+            name: "Charlotte Lecuit",
+            email: "charlotte.lecuit@beta.gouv.fr",
+          },
+          subject: `Accédez à vos offres déposées sur Matcha`,
+          templateId: 178,
+          tags: ["matcha-nouveau-formulaire"],
+          params: {
+            URL: `${config.publicUrl}/formulaire/${id_form}`,
+          },
+        };
+
+        const { body: result } = await mail.sendmail(payload);
+
+        const message = {
+          campagne: "matcha-nouveau-formulaire",
+          code: result.code ?? null,
+          message: result.message ?? null,
+          messageId: result.messageId ?? null,
+        };
+
+        if (!result.messageId) {
+          logger.info(`error : ${message.code} —— ${message.message} — ${email}`);
+        }
+
+        await Formulaire.findByIdAndUpdate(_id, { $push: { mailing: message } });
+
         return res.json(result);
       }
 
+      /**
+       * Update existing formulaire
+       */
       await Formulaire.findOneAndUpdate({ id_form }, form);
-
-      //TODO : send thank you mail
 
       return res.sendStatus(200);
     })

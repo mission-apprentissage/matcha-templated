@@ -1,19 +1,18 @@
 import { useEffect } from 'react'
-import { Flex, Box, Text } from '@chakra-ui/react'
+import { Box, Text, Heading } from '@chakra-ui/react'
 import { Layout } from '../../components'
 
 export default () => {
   useEffect(() => window.scrollTo(0, 0))
   return (
     <Layout>
-      <Flex justify='center'>
-        <Box>
-          <Text align='center'>Nous avons bien reçu votre besoin !</Text>
-          <Text align='center' pt='4'>
-            Nous revenons vers vous très vite dès que nous aurons identifié les profils correspondant à votre demande.
-          </Text>
-        </Box>
-      </Flex>
+      <Box py={10}>
+        <Heading align='center'>Votre formulaire a bien été enregistré !</Heading>
+        <Text align='center' pt='4'>
+          Un email vous a été envoyé avec un lien d'accès unique à vos offres vous permettant d'en ajouter, de les
+          modifier ou de les supprimer.
+        </Text>
+      </Box>
     </Layout>
   )
 }

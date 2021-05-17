@@ -2,7 +2,7 @@ import * as Yup from 'yup'
 import { useState, useEffect } from 'react'
 import { IoIosAddCircleOutline } from 'react-icons/io'
 import { useHistory, useParams } from 'react-router-dom'
-import { Formik, Form, useField, Field } from 'formik'
+import { Formik, Form, useField, Field, useFormikContext } from 'formik'
 import {
   Alert,
   AlertIcon,
@@ -27,6 +27,16 @@ import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
 import Autocomplete from './AdresseAutocomplete'
 
+const Autosave = ({ initialFormState, setInitialFormState }) => {
+  const { values } = useFormikContext()
+
+  useEffect(() => {
+    setInitialFormState({ ...initialFormState, ...values })
+  }, [values])
+
+  return null
+}
+
 const CustomInput = (props) => {
   const [field, meta] = useField(props)
   return (
@@ -49,6 +59,8 @@ const Formulaire = (props) => {
   const history = useHistory()
   const { id, origine } = useParams()
 
+  console.log(initialFormState)
+
   useEffect(() => {
     setLoading.toggle(true)
 
@@ -69,7 +81,7 @@ const Formulaire = (props) => {
         let [key, value] = i
         user[key] = value
       }
-      user.adresse = undefined
+      // user.adresse = undefined
       setInitialFormState(user)
 
       setLoading.toggle(false)
@@ -175,12 +187,15 @@ const Formulaire = (props) => {
             raison_sociale: Yup.string().required('champs obligatoire').min(1),
             siret: Yup.string()
               .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
-              .required('champs obligatoire')
-              .min(14, 'le siret est sur 14 chiffres'),
+              .min(14, 'le siret est sur 14 chiffres')
+              .required('champs obligatoire'),
             adresse: Yup.string().required('champ obligatoire'),
             nom: Yup.string().required('champ obligatoire'),
             prenom: Yup.string().required('champ obligatoire'),
-            telephone: Yup.string().required('champ obligatoire'),
+            telephone: Yup.string()
+              .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
+              .min(10, 'le téléphone est sur 10 chiffres')
+              .required('champ obligatoire'),
             email: Yup.string().email('Insérer un email valide').required('champ obligatoire'),
           })}
           onSubmit={submitFormulaire}
@@ -190,6 +205,7 @@ const Formulaire = (props) => {
 
             return (
               <Form autoComplete='off'>
+                <Autosave setInitialFormState={setInitialFormState} initialFormState={initialFormState} />
                 <Box my='3'>
                   <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
                     Renseignements sur votre entreprise
@@ -211,14 +227,8 @@ const Formulaire = (props) => {
                         <FormLabel>Adresse</FormLabel>
                         <Autocomplete
                           handleValues={(value) => {
-                            /**
-                             * validator broken when using setFieldValue : https://github.com/formium/formik/issues/2266
-                             * work around until v3 : setTimeout
-                             */
-                            setTimeout(() => {
-                              setFieldValue('adresse', value.name)
-                              setFieldValue('geo_coordonnees', value.geo_coordonnees)
-                            })
+                            setFieldValue('geo_coordonnees', value.geo_coordonnees)
+                            setFieldValue('adresse', value.name)
                           }}
                           defaultValue={values.adresse}
                           setFieldTouched={form.setFieldTouched}

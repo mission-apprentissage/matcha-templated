@@ -2,7 +2,7 @@
 const { Formulaire } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
-const { CLICKED } = require("../../common/components/mail.constant");
+// const { CLICKED } = require("../../common/components/mail.constant");
 const { paginator } = require("../../common/utils/paginator");
 
 const launch = async (mail) => {
@@ -11,13 +11,12 @@ const launch = async (mail) => {
     { $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }] },
     { lean: true },
     async (form) => {
-      // const campagne = "matcha-lbb-20210420-avis-click-sans-offre";
-      const campagne = "test";
+      const campagne = "matcha-lbb-20210517-relance";
+      // const campagne = "test";
 
       const { raison_sociale, email, id_form, _id } = form;
       const params = {
-        RAISON_SOCIALE: raison_sociale,
-        URL: `https://matcha.apprentissage.beta.gouv.fr/${id_form}`,
+        URL: `https://matcha.apprentissage.beta.gouv.fr/formulaire/${id_form}`,
       };
       const body = {
         sender: {
@@ -27,8 +26,8 @@ const launch = async (mail) => {
         to: [
           {
             name: `${raison_sociale}`,
-            email: "k.barnoin@gmail.com",
-            // email: `${email}`,
+            // email: "k.barnoin@gmail.com",
+            email: `${email}`,
           },
         ],
         replyTo: {

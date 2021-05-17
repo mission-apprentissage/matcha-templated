@@ -59,8 +59,6 @@ const Formulaire = (props) => {
   const history = useHistory()
   const { id, origine } = useParams()
 
-  console.log(initialFormState)
-
   useEffect(() => {
     setLoading.toggle(true)
 
@@ -81,7 +79,7 @@ const Formulaire = (props) => {
         let [key, value] = i
         user[key] = value
       }
-      // user.adresse = undefined
+      user.adresse = undefined
       setInitialFormState(user)
 
       setLoading.toggle(false)
@@ -188,6 +186,7 @@ const Formulaire = (props) => {
             siret: Yup.string()
               .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
               .min(14, 'le siret est sur 14 chiffres')
+              .max(14, 'le siret est sur 14 chiffres')
               .required('champs obligatoire'),
             adresse: Yup.string().required('champ obligatoire'),
             nom: Yup.string().required('champ obligatoire'),
@@ -195,6 +194,7 @@ const Formulaire = (props) => {
             telephone: Yup.string()
               .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
               .min(10, 'le téléphone est sur 10 chiffres')
+              .max(10, 'le téléphone est sur 10 chiffres')
               .required('champ obligatoire'),
             email: Yup.string().email('Insérer un email valide').required('champ obligatoire'),
           })}

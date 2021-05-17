@@ -8,10 +8,7 @@ const { paginator } = require("../../common/utils/paginator");
 const launch = async (mail) => {
   await paginator(
     Formulaire,
-    {
-      "events.event": CLICKED,
-      $or: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
-    },
+    { $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }] },
     { lean: true },
     async (form) => {
       // const campagne = "matcha-lbb-20210420-avis-click-sans-offre";
@@ -38,8 +35,8 @@ const launch = async (mail) => {
           name: "Charlotte Lecuit",
           email: "charlotte.lecuit@beta.gouv.fr",
         },
-        // subject: `Relance: le gouvernement vous aide à recruter un apprenti`,
-        templateId: 174,
+        subject: `Vos offres d'apprentissage sur la bonnes alternance`,
+        templateId: 179,
         tags: [campagne],
         params: params,
       };

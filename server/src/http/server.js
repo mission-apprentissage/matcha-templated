@@ -36,7 +36,7 @@ module.exports = async (components) => {
   app.use("/api/admin", checkJwtToken, adminOnly, admin());
   app.use("/api/password", password(components));
   app.use("/api/stats", checkJwtToken, adminOnly, stats(components));
-  app.use("/api/formulaire", formulaire());
+  app.use("/api/formulaire", formulaire(components));
 
   app.get(
     "/api",

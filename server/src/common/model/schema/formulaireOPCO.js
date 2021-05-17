@@ -9,6 +9,11 @@ const offresSchema = new Schema({
     default: null,
     description: "Niveau de formation requis",
   },
+  date: {
+    type: Date,
+    default: null,
+    description: "Date de début de l'apprentissage",
+  },
   description: {
     type: String,
     default: null,
@@ -31,7 +36,7 @@ module.exports = new Schema(
     raison_sociale: {
       type: String,
       default: null,
-      description: "Raison social de",
+      description: "Raison social de l'entreprise",
     },
     siret: {
       type: String,
@@ -74,6 +79,11 @@ module.exports = new Schema(
       type: Array,
       default: null,
       description: "Liste des évènements sendinblue",
+    },
+    origine: {
+      type: String,
+      default: null,
+      description: "Origine/organisme lié au formulaire",
     },
   },
   {

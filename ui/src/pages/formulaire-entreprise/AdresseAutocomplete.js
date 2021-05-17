@@ -1,9 +1,9 @@
-import React from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
-import useAutocomplete from '@material-ui/lab/useAutocomplete'
+import { useCombobox } from 'downshift'
 
 import color from '../../components/helper/color'
-import { FormLabel, Input, Box, List, ListItem } from '@chakra-ui/react'
+import { Input, Box } from '@chakra-ui/react'
 
 const Wrapper = styled.ul`
   width: 100%;
@@ -20,13 +20,10 @@ const Wrapper = styled.ul`
     width: 100%;
     padding: 0.5rem;
   }
-  li[data-focus='true'] {
-    background: ${color.lightGrey};
-  }
 `
 
 export default (props) => {
-  const [option, setOption] = React.useState()
+  const [items, setItems] = useState([])
   const adresse = []
 
   const getAddress = async (value) => {
@@ -35,81 +32,59 @@ export default (props) => {
     return data
   }
 
-  const onInputChange = async (event) => {
-    const value = event ? event.target.value : defaultValue
-    const data = await getAddress(value)
-    data.features.forEach((feat) => {
-      const name = `${feat.properties.label}`
-      const coordinates = feat.geometry.coordinates.reverse().join(',')
-      adresse.push({ name: name, geo_coordonnees: coordinates })
-    })
-    setOption(adresse)
+  const handleSearch = async (search) => {
+    if (search) {
+      const data = await getAddress(search)
+      data.features.forEach((feat) => {
+        const name = `${feat.properties.label}`
+        const coordinates = feat.geometry.coordinates.reverse().join(',')
+        adresse.push({ name: name, geo_coordonnees: coordinates })
+      })
+      return adresse
+    }
+    return items
   }
 
-  const {
-    getRootProps,
-    getInputLabelProps,
-    getInputProps,
-    getListboxProps,
-    getOptionProps,
-    groupedOptions,
-    defaultValue,
-  } = useAutocomplete({
-    autoSelect: true,
-    onInputChange,
-    onChange: (_, value) => (value ? props.handleValues(value) : ''),
-    options: option ? option : [],
-    defaultValue: props.context ? { name: props.context } : option?.name,
-    getOptionLabel: (option) => option.name || '',
-    getOptionSelected: (option, value) => option.name === value.name,
+  const itemToString = (item) => (item ? item.name : '')
+  const onSelectedItemChange = ({ selectedItem }) => {
+    props.handleValues(selectedItem)
+  }
+  const onInputValueChange = async ({ inputValue }) => {
+    setItems(await handleSearch(inputValue))
+    if (inputValue === '') {
+      props.handleValues({ name: '', geo_coordonnees: '' })
+    }
+  }
+
+  const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({
+    itemToString,
+    onInputValueChange,
+    onSelectedItemChange,
+    items,
+    initialInputValue: props.defaultValue,
   })
 
   return (
-    <Box pb='5'>
-      <div {...getRootProps()}>
-        {props.title && <FormLabel {...getInputLabelProps()}>{props.title}</FormLabel>}
-        <Input {...getInputProps()} placeholder={props.placeholder} required type='text' className='mb-0' />
+    <Box>
+      <div {...getComboboxProps()}>
+        <Input
+          onFocus={() => setTimeout(() => props.setFieldTouched('adresse', true), 100)}
+          placeholder='Taper votre adresse complète'
+          {...getInputProps()}
+        />
       </div>
-      {groupedOptions.length > 0 ? (
-        <Wrapper {...getListboxProps()}>
-          {groupedOptions.map((option, index) => (
-            <li {...getOptionProps({ option: option.name, index })}>{option.name}</li>
+      <Wrapper {...getMenuProps()}>
+        {isOpen &&
+          items.map((item, index) => (
+            <li
+              style={highlightedIndex === index ? { backgroundColor: color.lightGrey } : {}}
+              key={`${item}${index}`}
+              {...getItemProps({ item, index })}
+            >
+              {item.name}
+            </li>
           ))}
-        </Wrapper>
-      ) : // <List
-      //   spacing='3'
-      //   maxW='100%'
-      //   listStyleType='none'
-      //   boxShadow='0px 1px 8px rgba(8, 67, 85, 0.24)'
-      //   borderRadius='4'
-      //   {...getListboxProps()}
-      // >
-      //   {groupedOptions.map((option, index) => (
-      //     <ListItem
-      //       width='100%'
-      //       sx={{
-      //         "& [data-focus='true']": {
-      //           background: color.lightGrey,
-      //         },
-      //       }}
-      //       {...getOptionProps({ option: option.name, index })}
-      //     >
-      //       {option.name}
-      //     </ListItem>
-      //   ))}
-      // </List>
-      // <Box
-      //   maxW='100%'
-      //   listStyleType='none'
-      //   boxShadow='0px 1px 8px rgba(8, 67, 85, 0.24)'
-      //   borderRadius='4'
-      //   {...getListboxProps()}
-      // >
-      //   {groupedOptions.map((option, index) => (
-      //     <li {...getOptionProps({ option: option.name, index })}>{option.name}</li>
-      //   ))}
-      // </Box>
-      null}
+      </Wrapper>
     </Box>
   )
 }

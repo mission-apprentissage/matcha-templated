@@ -1,11 +1,11 @@
 import * as Yup from 'yup'
-import Axios from 'axios'
 import { useState, useEffect } from 'react'
 import { IoIosAddCircleOutline } from 'react-icons/io'
-import { useQuery } from 'react-query'
-import { useHistory } from 'react-router-dom'
-import { Formik, Form, useField } from 'formik'
+import { useHistory, useParams } from 'react-router-dom'
+import { Formik, Form, useField, Field, useFormikContext } from 'formik'
 import {
+  Alert,
+  AlertIcon,
   Button,
   useDisclosure,
   Box,
@@ -16,12 +16,26 @@ import {
   Flex,
   Text,
   Stack,
+  useBoolean,
+  Center,
+  Link,
 } from '@chakra-ui/react'
 
+import { getFormulaire, saveFormulaire } from '../../api'
 import { ChatBubble, Layout } from '../../components'
 import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
 import Autocomplete from './AdresseAutocomplete'
+
+const Autosave = ({ initialFormState, setInitialFormState }) => {
+  const { values } = useFormikContext()
+
+  useEffect(() => {
+    setInitialFormState({ ...initialFormState, ...values })
+  }, [values])
+
+  return null
+}
 
 const CustomInput = (props) => {
   const [field, meta] = useField(props)
@@ -39,52 +53,47 @@ const CustomInput = (props) => {
 const Formulaire = (props) => {
   const [initialFormState, setInitialFormState] = useState({})
   const [currentOffer, setCurrentOffer] = useState({})
-  const popupState = useDisclosure()
-  const { params } = props.match
+  const [loading, setLoading] = useBoolean()
+  const [error, setError] = useBoolean()
+  const ajouterVoeuxPopup = useDisclosure()
   const history = useHistory()
-
-  const { isLoading } = useQuery(
-    ['formulaire', { id: params.id }],
-    ({ queryKey }) => Axios.get(`api/formulaire/${queryKey[1].id}`),
-    {
-      onSuccess: ({ data }) => {
-        setInitialFormState(data)
-      },
-      refetchOnWindowFocus: false,
-    }
-  )
+  const { id, origine } = useParams()
 
   useEffect(() => {
-    history.listen((_, action) => {
-      if (action === 'POP') {
-        window.location.reload()
-      }
-    })
-  }, [initialFormState])
+    setLoading.toggle(true)
 
-  /**
-   *
-   * user params comes from the URL (OPCO ATLAS)
-   *
-    useEffect(() => {
+    if (props?.byId) {
+      getFormulaire(id)
+        .then((result) => {
+          setInitialFormState(result.data)
+        })
+        .catch(() => {
+          setError.toggle(true)
+        })
+        .finally(() => setLoading.toggle(false))
+    } else {
       const params = new URLSearchParams(window.location.search)
       let user = {}
+      user.origine = origine ?? null
       for (let i of params) {
         let [key, value] = i
         user[key] = value
       }
-      setInitialFormState(result)
-    }, [])
-  */
+      user.adresse = undefined
+      setInitialFormState(user)
+
+      setLoading.toggle(false)
+    }
+  }, [])
 
   const editOffer = (item, index) => {
     setCurrentOffer({ ...item, index })
-    popupState.onOpen()
+    ajouterVoeuxPopup.onOpen()
   }
 
   const addOffer = () => {
     setCurrentOffer({})
-    popupState.onOpen()
+    ajouterVoeuxPopup.onOpen()
   }
 
   const saveOffer = (values) => {
@@ -113,28 +122,53 @@ const Formulaire = (props) => {
     const payload = {
       ...values,
       offres: initialFormState.offres ?? [],
+      origine: initialFormState.origine,
     }
-    const res = await Axios.post(`api/formulaire/${params.id}`, payload)
+    const res = await saveFormulaire(id, payload)
     setSubmitting(false)
 
     if (res.status === 200) {
-      history.push('/merci')
+      history.push('/merci', { isNew: !id ? true : false })
     }
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <Layout>
-        <Text>Chargement en cours...</Text>
+        <Center p={5}>
+          <Text>Chargement en cours...</Text>
+        </Center>
+      </Layout>
+    )
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <Center p={5}>
+          <Box>
+            <Text align='center'>Une erreur est survenu lors du chargement du formulaire.</Text>
+            <Text align='center' pt={3}>
+              Merci de prendre contact directement avec un administrateur en cliquant sur le lien suivant :&nbsp;
+              <Link
+                href="mailto:matcha@apprentissage.beta.gouv.fr?subject=Problème d'accès au formulaire"
+                target='_blank'
+              >
+                contact
+              </Link>
+            </Text>
+          </Box>
+        </Center>
       </Layout>
     )
   }
 
   return (
     <Layout>
-      <AjouterVoeux {...popupState} {...currentOffer} handleSave={saveOffer} />
+      <AjouterVoeux {...ajouterVoeuxPopup} {...currentOffer} handleSave={saveOffer} />
       <Box pb='3'>
         <Formik
+          validateOnMount={true}
           enableReinitialize={true}
           initialValues={{
             raison_sociale: initialFormState?.raison_sociale ?? '',
@@ -151,21 +185,27 @@ const Formulaire = (props) => {
             raison_sociale: Yup.string().required('champs obligatoire').min(1),
             siret: Yup.string()
               .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
-              .required('champs obligatoire')
-              .min(14, 'le siret est sur 14 chiffres'),
+              .min(14, 'le siret est sur 14 chiffres')
+              .max(14, 'le siret est sur 14 chiffres')
+              .required('champs obligatoire'),
             adresse: Yup.string().required('champ obligatoire'),
             nom: Yup.string().required('champ obligatoire'),
             prenom: Yup.string().required('champ obligatoire'),
-            telephone: Yup.string().required('champ obligatoire'),
+            telephone: Yup.string()
+              .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
+              .min(10, 'le téléphone est sur 10 chiffres')
+              .max(10, 'le téléphone est sur 10 chiffres')
+              .required('champ obligatoire'),
             email: Yup.string().email('Insérer un email valide').required('champ obligatoire'),
           })}
           onSubmit={submitFormulaire}
         >
-          {({ values, isValid, dirty, isSubmitting, setFieldValue }) => {
+          {({ values, isValid, isSubmitting, setFieldValue }) => {
             const hasOffer = values.offres?.length > 0
 
             return (
               <Form autoComplete='off'>
+                <Autosave setInitialFormState={setInitialFormState} initialFormState={initialFormState} />
                 <Box my='3'>
                   <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
                     Renseignements sur votre entreprise
@@ -174,27 +214,34 @@ const Formulaire = (props) => {
 
                 <CustomInput
                   name='raison_sociale'
-                  label="Nom de l'engeigne"
+                  label="Nom de l'enseigne"
                   type='text'
                   value={values.raison_sociale}
                 />
                 <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
 
-                <FormControl isRequired>
-                  <FormLabel>Adresse</FormLabel>
-                  <Autocomplete
-                    placeholder='Tapez votre adresse complète'
-                    handleValues={(value) => {
-                      setFieldValue('adresse', value.name)
-                      setFieldValue('geo_coordonnees', value.geo_coordonnees)
-                    }}
-                    context={values.adresse}
-                  />
-                </FormControl>
+                <Field name='adresse'>
+                  {({ meta, form }) => {
+                    return (
+                      <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
+                        <FormLabel>Adresse</FormLabel>
+                        <Autocomplete
+                          handleValues={(value) => {
+                            setFieldValue('geo_coordonnees', value.geo_coordonnees)
+                            setFieldValue('adresse', value.name)
+                          }}
+                          defaultValue={values.adresse}
+                          setFieldTouched={form.setFieldTouched}
+                        />
+                        <FormErrorMessage>{meta.error}</FormErrorMessage>
+                      </FormControl>
+                    )
+                  }}
+                </Field>
 
                 <Box mb='3'>
                   <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
-                    Information sur le contact privilégié
+                    Informations sur le contact privilégié
                   </Text>
                 </Box>
 
@@ -205,6 +252,7 @@ const Formulaire = (props) => {
                   label='Téléphone'
                   type='tel'
                   pattern='[0-9]{10}'
+                  maxLength='10'
                   value={values.telephone}
                 />
                 <CustomInput name='email' label='Email' type='email' value={values.email} />
@@ -216,9 +264,18 @@ const Formulaire = (props) => {
                     </Text>
                   </Box>
                   <ChatBubble margin='0'>
-                    Recherchez le domain d'activité se rapprochant le plus de votre offre d'apprentissage. Plusieurs
-                    offres possibes
+                    Recherchez le domaine d'activité se rapprochant le plus de votre offre d'apprentissage. Plusieurs
+                    offres possibles
                   </ChatBubble>
+
+                  {!hasOffer && (
+                    <Center pt={3}>
+                      <Alert status='warning'>
+                        <AlertIcon />
+                        Vous n'avez ajouté aucune offre
+                      </Alert>
+                    </Center>
+                  )}
 
                   <Box mt={4} mb={8}>
                     <ListeVoeux data={initialFormState?.offres} removeOffer={removeOffer} editOffer={editOffer} />
@@ -235,11 +292,6 @@ const Formulaire = (props) => {
                     >
                       Ajouter une offre d'apprentissage
                     </Button>
-                    {!hasOffer && (
-                      <Box>
-                        <Text fontSize='sm'>*minimum une offre </Text>
-                      </Box>
-                    )}
                   </Stack>
                 </Box>
 
@@ -249,8 +301,8 @@ const Formulaire = (props) => {
                     rounded='10px'
                     color='red'
                     size='lg'
-                    isActive={(isValid && (dirty || hasOffer)) || isSubmitting}
-                    disabled={!(isValid && (dirty || hasOffer)) || isSubmitting}
+                    isActive={isValid}
+                    disabled={!isValid || isSubmitting}
                   >
                     Enregistrer mes offres
                   </Button>

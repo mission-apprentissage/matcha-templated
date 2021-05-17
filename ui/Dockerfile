@@ -2,6 +2,9 @@
 FROM node:14.16-stretch as build
 WORKDIR /app
 
+ARG REACT_APP_BASE_URL
+ENV REACT_APP_BASE_URL=$REACT_APP_BASE_URL
+
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 COPY . ./

@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, useRef } from 'react'
 import {
   Button,
   Modal,
@@ -14,16 +14,20 @@ import {
   Textarea,
   Center,
   FormErrorMessage,
+  Input,
 } from '@chakra-ui/react'
 import { DropdownCombobox } from '../../components'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
+import moment from 'moment'
 
 export default (props) => {
   let { isOpen, onClose, handleSave } = props
-  const [inputJobItems, setInputJobItems] = React.useState([])
-  const initialRef = React.useRef()
-  const finalRef = React.useRef()
+  const [inputJobItems, setInputJobItems] = useState([])
+  const initialRef = useRef()
+  const finalRef = useRef()
+  const date = props.date ? moment(props.date).format('YYYY-MM-DD') : ''
+  const minDate = moment().format('YYYY-MM-DD')
 
   const handleJobSearch = async (search) => {
     if (search) {
@@ -48,11 +52,13 @@ export default (props) => {
         libelle: props.libelle ?? '',
         romes: props.romes ?? [],
         niveau: props.niveau ?? '',
+        date: date,
         description: props.description ?? '',
       }}
       validationSchema={Yup.object().shape({
         libelle: Yup.string().required('Champ obligatoire'),
         niveau: Yup.string(),
+        date: Yup.date(),
         description: Yup.string(),
       })}
       onSubmit={async (values, { resetForm }) => {
@@ -88,6 +94,7 @@ export default (props) => {
                     saveSelectedItem={(values) => {
                       /**
                        * validator broken when using setFieldValue : https://github.com/formium/formik/issues/2266
+                       * work around until v3 : setTimeout
                        */
                       setTimeout(() => {
                         setFieldValue('libelle', values.label)
@@ -120,6 +127,11 @@ export default (props) => {
                 </FormControl>
 
                 <FormControl mt={4}>
+                  <FormLabel>Date de début</FormLabel>
+                  <Input type='date' name='date' min={minDate} defaultValue={values.date} onChange={handleChange} />
+                </FormControl>
+
+                <FormControl mt={4}>
                   <FormLabel>Description</FormLabel>
                   <Textarea rows='6' name='description' defaultValue={values.description} onChange={handleChange} />
                 </FormControl>
@@ -136,7 +148,7 @@ export default (props) => {
                   disabled={!(isValid && dirty) || isSubmitting}
                   onClick={submitForm}
                 >
-                  Ajouter l'offre
+                  Enregistrer
                 </Button>
               </ModalFooter>
             </ModalContent>

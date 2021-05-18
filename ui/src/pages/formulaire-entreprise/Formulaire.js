@@ -53,15 +53,13 @@ const CustomInput = (props) => {
 const Formulaire = (props) => {
   const [initialFormState, setInitialFormState] = useState({})
   const [currentOffer, setCurrentOffer] = useState({})
-  const [loading, setLoading] = useBoolean()
+  const [loading, setLoading] = useBoolean(true)
   const [error, setError] = useBoolean()
+  const { id, origine } = useParams()
   const ajouterVoeuxPopup = useDisclosure()
   const history = useHistory()
-  const { id, origine } = useParams()
 
   useEffect(() => {
-    setLoading.toggle(true)
-
     if (props?.byId) {
       getFormulaire(id)
         .then((result) => {
@@ -75,13 +73,14 @@ const Formulaire = (props) => {
       const params = new URLSearchParams(window.location.search)
       let user = {}
       user.origine = origine ?? null
+
       for (let i of params) {
         let [key, value] = i
         user[key] = value
       }
+
       user.adresse = undefined
       setInitialFormState(user)
-
       setLoading.toggle(false)
     }
   }, [])

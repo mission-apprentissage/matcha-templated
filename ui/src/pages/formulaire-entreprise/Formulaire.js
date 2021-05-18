@@ -12,6 +12,7 @@ import {
   Input,
   FormLabel,
   FormControl,
+  FormHelperText,
   FormErrorMessage,
   Flex,
   Text,
@@ -72,7 +73,7 @@ const Formulaire = (props) => {
     } else {
       const params = new URLSearchParams(window.location.search)
       let user = {}
-      user.origine = origine ?? null
+      user.origine = origine ? origine.toLowerCase().replace(/ /g, '-') : null
 
       for (let i of params) {
         let [key, value] = i
@@ -171,12 +172,12 @@ const Formulaire = (props) => {
           enableReinitialize={true}
           initialValues={{
             raison_sociale: initialFormState?.raison_sociale ?? '',
-            siret: initialFormState?.siret ?? '',
+            siret: initialFormState?.siret ? initialFormState?.siret.replace(/ /g, '') : '',
             adresse: initialFormState?.adresse ?? '',
             geo_coordonnees: initialFormState?.geo_coordonnees ?? '',
             nom: initialFormState?.nom ?? '',
             prenom: initialFormState?.prenom ?? '',
-            telephone: initialFormState?.telephone ?? '',
+            telephone: initialFormState?.telephone ? initialFormState?.telephone.replace(/ /g, '') : '',
             email: initialFormState?.email ?? '',
             offres: initialFormState?.offres,
           }}
@@ -232,6 +233,7 @@ const Formulaire = (props) => {
                           defaultValue={values.adresse}
                           setFieldTouched={form.setFieldTouched}
                         />
+                        <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
                         <FormErrorMessage>{meta.error}</FormErrorMessage>
                       </FormControl>
                     )

@@ -2,7 +2,6 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import { useCombobox } from 'downshift'
 
-import color from '../../components/helper/color'
 import { Input, Box } from '@chakra-ui/react'
 
 const Wrapper = styled.ul`
@@ -77,7 +76,7 @@ export default (props) => {
         {isOpen &&
           items.map((item, index) => (
             <li
-              style={highlightedIndex === index ? { backgroundColor: color.lightGrey } : {}}
+              style={highlightedIndex === index ? { backgroundColor: 'lightGrey' } : {}}
               key={`${item}${index}`}
               {...getItemProps({ item, index })}
             >

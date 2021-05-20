@@ -131,10 +131,12 @@ export default (props) => {
                   <Input type='date' name='date' min={minDate} defaultValue={values.date} onChange={handleChange} />
                 </FormControl>
 
-                <FormControl mt={4}>
-                  <FormLabel>Description</FormLabel>
-                  <Textarea rows='6' name='description' defaultValue={values.description} onChange={handleChange} />
-                </FormControl>
+                {values.description && (
+                  <FormControl mt={4}>
+                    <FormLabel>Description</FormLabel>
+                    <Textarea rows='6' name='description' defaultValue={values.description} onChange={handleChange} />
+                  </FormControl>
+                )}
               </ModalBody>
 
               <ModalFooter>

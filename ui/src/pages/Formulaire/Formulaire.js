@@ -24,10 +24,9 @@ import {
 } from '@chakra-ui/react'
 
 import { getFormulaire, saveFormulaire } from '../../api'
-import { ChatBubble, Layout } from '../../components'
+import { ChatBubble, Layout, AdresseAutocomplete } from '../../components'
 import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
-import Autocomplete from './AdresseAutocomplete'
 
 const Autosave = ({ initialFormState, setInitialFormState }) => {
   const { values } = useFormikContext()
@@ -227,7 +226,7 @@ const Formulaire = (props) => {
                       return (
                         <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
                           <FormLabel>Adresse</FormLabel>
-                          <Autocomplete
+                          <AdresseAutocomplete
                             handleValues={(value) => {
                               setFieldValue('geo_coordonnees', value.geo_coordonnees)
                               setFieldValue('adresse', value.name)

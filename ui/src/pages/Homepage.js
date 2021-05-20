@@ -84,19 +84,17 @@ const Mission = () => (
           Recruter un.e apprenti.e, c'est la garantie de transmettre votre savoir-faire et d'embaucher un.e futur.e
           collaborateur.ice tout en bénéficiant du soutien de l'État.
         </Text>
-        <Text fontWeight='bold'>
-          <Stack direction={['column', 'row']} spacing={[5, 10]}>
-            <Link href='https://mission-apprentissage.gitbook.io/general/' isExternal>
-              Mission Apprentissage
-            </Link>
-            <Link href='https://beta.gouv.fr/' isExternal>
-              Beta.gouv.fr
-            </Link>
-            <Link href='https://www.service-public.fr/' isExternal>
-              service-public.fr
-            </Link>
-          </Stack>
-        </Text>
+        <Stack direction={['column', 'row']} spacing={[5, 10]}>
+          <Link href='https://mission-apprentissage.gitbook.io/general/' isExternal>
+            <Text fontWeight='bold'>Mission Apprentissage</Text>
+          </Link>
+          <Link href='https://beta.gouv.fr/' isExternal>
+            <Text fontWeight='bold'>Beta.gouv.fr</Text>
+          </Link>
+          <Link href='https://www.service-public.fr/' isExternal>
+            <Text fontWeight='bold'>service-public.fr</Text>
+          </Link>
+        </Stack>
       </GridItem>
     </Grid>
   </Container>
@@ -120,11 +118,11 @@ const Footer = () => (
 
     <Text pt={8} color='emphase'>
       Sauf mention contraire, tous les textes de ce site sont sous{' '}
-      <Text as='u'>
-        <Link href='https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf' isExternal>
+      <Link href='https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf' isExternal>
+        <Text as='u'>
           licence etatlab-2.0 <Icon as={FiExternalLink} mx={1} />
-        </Link>
-      </Text>
+        </Text>
+      </Link>
     </Text>
   </Container>
 )

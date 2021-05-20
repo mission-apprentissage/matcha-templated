@@ -1,11 +1,6 @@
-import Homepage from './Homepage'
-import First from './First'
-import Final from './Final'
+import HomePage from './HomePage'
 import NotFound from './NotFound'
-import NotLooking from './NotLooking'
-import End from './End'
-import Edition from './Edition'
-import Formulaire from './formulaire-entreprise/Formulaire'
-import Remerciement from './formulaire-entreprise/Remerciement'
+import { Login, List } from './Admin'
+import { Formulaire, Remerciement } from './Formulaire'
 
-export { NotFound, Homepage, First, Final, NotLooking, End, Edition, Formulaire, Remerciement }
+export { Formulaire, Remerciement, HomePage, NotFound, Login, List }

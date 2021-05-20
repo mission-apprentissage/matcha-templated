@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
+import axios from 'axios'
+import moment from 'moment'
 import { AiOutlineEdit, AiOutlineRight } from 'react-icons/ai'
-
 import {
   Table,
   Tbody,
@@ -17,9 +18,8 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
 } from '@chakra-ui/react'
-import axios from 'axios'
+
 import { Layout } from '../../components'
-import moment from 'moment'
 
 const MyTable = ({ data }) => {
   if (data.length < 0) return <div>Chargement en cours</div>

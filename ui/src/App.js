@@ -1,6 +1,6 @@
 import { Switch, Route, Redirect } from 'react-router-dom'
 
-import { Formulaire, HomePage, NotFound, Remerciement, Login, List } from './pages'
+import { Formulaire, NotFound, Remerciement, Login, List, HomePage } from './pages'
 import useAuth from './common/hooks/useAuth'
 
 function PrivateRoute({ children, ...rest }) {

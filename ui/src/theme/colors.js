@@ -9,4 +9,6 @@ export default {
   middleGrey: '#98B0B7',
   white: '#FFFFFF',
   emphase: '#6A6A6A',
+  bluefrance: '#000091',
+  beige: '#f9f8f6',
 }

@@ -1,41 +1,58 @@
 import { useEffect, useState } from 'react'
-import { ImNewTab } from 'react-icons/im'
+import { AiOutlineEdit, AiOutlineRight } from 'react-icons/ai'
 
-import { Table, Tbody, Td, Th, Thead, Tr, Heading, Container, Link, Box, Center, Icon } from '@chakra-ui/react'
+import {
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  Container,
+  Link,
+  Box,
+  Center,
+  Icon,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+} from '@chakra-ui/react'
 import axios from 'axios'
 import { Layout } from '../../components'
+import moment from 'moment'
 
 const MyTable = ({ data }) => {
   if (data.length < 0) return <div>Chargement en cours</div>
 
+  const Date = (date) => moment(date).format('DD/MM/YYYY')
+
   return (
     <Box py='4'>
       <Table size='sm' bg='white'>
-        <Thead>
-          <Th>Entreprise</Th>
-          <Th>Adresse</Th>
-          <Th>Email</Th>
-          <Th isNumeric>Téléphone</Th>
-          <Th isNumeric>Nombre d'offres</Th>
-          <Th>formulaire</Th>
+        <Thead borderBottom='2px solid grey'>
+          <Th py={6} paddingLeft='30px'>
+            Raison Sociale
+          </Th>
+          <Th>Nombre d'offres</Th>
+          <Th>Postées le</Th>
+          <Th>Expire le</Th>
+          <Th></Th>
         </Thead>
         <Tbody>
           {data &&
             data.map((item, index) => {
               return (
                 <Tr key={index}>
-                  <Td>
-                    <strong>{item.raison_sociale}</strong>
+                  <Td py={4} paddingLeft='30px'>
+                    {item.raison_sociale}
                   </Td>
-                  <Td>{item.adresse}</Td>
-                  <Td>{item.email}</Td>
-                  <Td isNumeric>{item.telephone}</Td>
-                  <Td isNumeric>{item.offres.length}</Td>
+                  <Td>{item.offres.length}</Td>
+                  <Td>{Date(item.createdAt)}</Td>
+                  <Td>{Date(item.createdAt)}</Td>
                   <Td>
                     <Center>
-                      <Link href={`/${item.id_form}`} target='_blank' isExternal>
-                        Lien
-                        <Icon as={ImNewTab} />
+                      <Link href={`/formulaire/${item.id_form}`} target='_blank' isExternal>
+                        <Icon color='bluefrance' w={5} h={5} as={AiOutlineEdit} />
                       </Link>
                     </Center>
                   </Td>
@@ -73,12 +90,19 @@ export default function List() {
   return (
     <Layout background='beige'>
       <Container maxW='container.xl' py={4}>
-        <Heading size='md'>Formulaires avec offres ({state.formWithOffers.length})</Heading>
+        <Breadcrumb spacing='4px' separator={<AiOutlineRight />}>
+          <BreadcrumbItem>
+            <BreadcrumbLink textDecoration='underline' href='/'>
+              Accueil
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink href='#'>Consulter vos offres en cours</BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
+
         <MyTable data={state.formWithOffers} />
-      </Container>
-      <Container maxW='container.xl' py={4}>
-        <Heading size='md'>Formulaires complétés sans offres ({state.uncomplete.length})</Heading>
-        <MyTable data={state.uncomplete} />
       </Container>
     </Layout>
   )

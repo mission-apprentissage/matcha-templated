@@ -2,6 +2,7 @@ const rootFontSizePx = 16
 
 const colors = {
   bluefrance: '#000091',
+  beige: '#f9f8f6',
   white: '#ffffff',
   redmarianne: '#e1000f',
   success: '#0d6635',

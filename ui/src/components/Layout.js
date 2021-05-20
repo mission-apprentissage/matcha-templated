@@ -1,28 +1,12 @@
-import React, { useState, useEffect } from 'react'
 import { Box, Container } from '@chakra-ui/react'
-import { useLocation } from 'react-router-dom'
-
 import Navbar from './Navbar'
 
-const paths = ['step', 'admin']
-
-export default ({ children, rest }) => {
-  const { pathname } = useLocation()
-  const [bkg, setBkg] = useState(false)
-
-  useEffect(() => {
-    if (paths.some((s) => pathname.includes(s))) {
-      setBkg(true)
-    } else {
-      setBkg(false)
-    }
-  }, [pathname])
-
+export default ({ children, rest, background }) => {
   return (
-    <Container maxW='full' p='0' {...rest}>
+    <Container maxW='full' p='0'>
       <Navbar />
-      <Box bg={bkg && 'lightGrey'} h='100vh'>
-        <Container>{children}</Container>
+      <Box bg={background ?? 'lightGrey'} h='100vh'>
+        {children}
       </Box>
     </Container>
   )

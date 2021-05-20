@@ -20,6 +20,7 @@ import {
   useBoolean,
   Center,
   Link,
+  Container,
 } from '@chakra-ui/react'
 
 import { getFormulaire, saveFormulaire } from '../../api'
@@ -164,155 +165,157 @@ const Formulaire = (props) => {
   }
 
   return (
-    <Layout>
-      <AjouterVoeux {...ajouterVoeuxPopup} {...currentOffer} handleSave={saveOffer} />
-      <Box pb='3'>
-        <Formik
-          validateOnMount={true}
-          enableReinitialize={true}
-          initialValues={{
-            raison_sociale: initialFormState?.raison_sociale ?? '',
-            siret: initialFormState?.siret ? initialFormState?.siret.replace(/ /g, '') : '',
-            adresse: initialFormState?.adresse ?? '',
-            geo_coordonnees: initialFormState?.geo_coordonnees ?? '',
-            nom: initialFormState?.nom ?? '',
-            prenom: initialFormState?.prenom ?? '',
-            telephone: initialFormState?.telephone ? initialFormState?.telephone.replace(/ /g, '') : '',
-            email: initialFormState?.email ?? '',
-            offres: initialFormState?.offres,
-          }}
-          validationSchema={Yup.object().shape({
-            raison_sociale: Yup.string().required('champs obligatoire').min(1),
-            siret: Yup.string()
-              .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
-              .min(14, 'le siret est sur 14 chiffres')
-              .max(14, 'le siret est sur 14 chiffres')
-              .required('champs obligatoire'),
-            adresse: Yup.string().required('champ obligatoire'),
-            nom: Yup.string().required('champ obligatoire'),
-            prenom: Yup.string().required('champ obligatoire'),
-            telephone: Yup.string()
-              .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
-              .min(10, 'le téléphone est sur 10 chiffres')
-              .max(10, 'le téléphone est sur 10 chiffres')
-              .required('champ obligatoire'),
-            email: Yup.string().email('Insérer un email valide').required('champ obligatoire'),
-          })}
-          onSubmit={submitFormulaire}
-        >
-          {({ values, isValid, isSubmitting, setFieldValue }) => {
-            const hasOffer = values.offres?.length > 0
+    <Layout background='white'>
+      <Container>
+        <AjouterVoeux {...ajouterVoeuxPopup} {...currentOffer} handleSave={saveOffer} />
+        <Box pb='3'>
+          <Formik
+            validateOnMount={true}
+            enableReinitialize={true}
+            initialValues={{
+              raison_sociale: initialFormState?.raison_sociale ?? '',
+              siret: initialFormState?.siret ? initialFormState?.siret.replace(/ /g, '') : '',
+              adresse: initialFormState?.adresse ?? '',
+              geo_coordonnees: initialFormState?.geo_coordonnees ?? '',
+              nom: initialFormState?.nom ?? '',
+              prenom: initialFormState?.prenom ?? '',
+              telephone: initialFormState?.telephone ? initialFormState?.telephone.replace(/ /g, '') : '',
+              email: initialFormState?.email ?? '',
+              offres: initialFormState?.offres,
+            }}
+            validationSchema={Yup.object().shape({
+              raison_sociale: Yup.string().required('champs obligatoire').min(1),
+              siret: Yup.string()
+                .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
+                .min(14, 'le siret est sur 14 chiffres')
+                .max(14, 'le siret est sur 14 chiffres')
+                .required('champs obligatoire'),
+              adresse: Yup.string().required('champ obligatoire'),
+              nom: Yup.string().required('champ obligatoire'),
+              prenom: Yup.string().required('champ obligatoire'),
+              telephone: Yup.string()
+                .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
+                .min(10, 'le téléphone est sur 10 chiffres')
+                .max(10, 'le téléphone est sur 10 chiffres')
+                .required('champ obligatoire'),
+              email: Yup.string().email('Insérer un email valide').required('champ obligatoire'),
+            })}
+            onSubmit={submitFormulaire}
+          >
+            {({ values, isValid, isSubmitting, setFieldValue }) => {
+              const hasOffer = values.offres?.length > 0
 
-            return (
-              <Form autoComplete='off'>
-                <Autosave setInitialFormState={setInitialFormState} initialFormState={initialFormState} />
-                <Box my='3'>
-                  <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
-                    Renseignements sur votre entreprise
-                  </Text>
-                </Box>
-
-                <CustomInput
-                  name='raison_sociale'
-                  label="Nom de l'enseigne"
-                  type='text'
-                  value={values.raison_sociale}
-                />
-                <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
-
-                <Field name='adresse'>
-                  {({ meta, form }) => {
-                    return (
-                      <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
-                        <FormLabel>Adresse</FormLabel>
-                        <Autocomplete
-                          handleValues={(value) => {
-                            setFieldValue('geo_coordonnees', value.geo_coordonnees)
-                            setFieldValue('adresse', value.name)
-                          }}
-                          defaultValue={values.adresse}
-                          setFieldTouched={form.setFieldTouched}
-                        />
-                        <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
-                        <FormErrorMessage>{meta.error}</FormErrorMessage>
-                      </FormControl>
-                    )
-                  }}
-                </Field>
-
-                <Box mb='3'>
-                  <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
-                    Informations sur le contact privilégié
-                  </Text>
-                </Box>
-
-                <CustomInput name='nom' label='Nom' type='text' value={values.nom} />
-                <CustomInput name='prenom' label='Prénom' type='test' value={values.prenom} />
-                <CustomInput
-                  name='telephone'
-                  label='Téléphone'
-                  type='tel'
-                  pattern='[0-9]{10}'
-                  maxLength='10'
-                  value={values.telephone}
-                />
-                <CustomInput name='email' label='Email' type='email' value={values.email} />
-
-                <Box bg='lightGrey' py='5' px='5' width='100%' borderRadius='2'>
-                  <Box pb='6'>
+              return (
+                <Form autoComplete='off'>
+                  <Autosave setInitialFormState={setInitialFormState} initialFormState={initialFormState} />
+                  <Box my='3'>
                     <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
-                      Votre besoin de recrutement
+                      Renseignements sur votre entreprise
                     </Text>
                   </Box>
-                  <ChatBubble margin='0'>
-                    Recherchez le domaine d'activité se rapprochant le plus de votre offre d'apprentissage. Plusieurs
-                    offres possibles
-                  </ChatBubble>
 
-                  {!hasOffer && (
-                    <Center pt={3}>
-                      <Alert status='warning'>
-                        <AlertIcon />
-                        Vous n'avez ajouté aucune offre
-                      </Alert>
-                    </Center>
-                  )}
+                  <CustomInput
+                    name='raison_sociale'
+                    label="Nom de l'enseigne"
+                    type='text'
+                    value={values.raison_sociale}
+                  />
+                  <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
 
-                  <Box mt={4} mb={8}>
-                    <ListeVoeux data={initialFormState?.offres} removeOffer={removeOffer} editOffer={editOffer} />
+                  <Field name='adresse'>
+                    {({ meta, form }) => {
+                      return (
+                        <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
+                          <FormLabel>Adresse</FormLabel>
+                          <Autocomplete
+                            handleValues={(value) => {
+                              setFieldValue('geo_coordonnees', value.geo_coordonnees)
+                              setFieldValue('adresse', value.name)
+                            }}
+                            defaultValue={values.adresse}
+                            setFieldTouched={form.setFieldTouched}
+                          />
+                          <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
+                          <FormErrorMessage>{meta.error}</FormErrorMessage>
+                        </FormControl>
+                      )
+                    }}
+                  </Field>
+
+                  <Box mb='3'>
+                    <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
+                      Informations sur le contact privilégié
+                    </Text>
                   </Box>
 
-                  <Stack align='center' spacing='2'>
-                    <Button
-                      leftIcon={<IoIosAddCircleOutline />}
-                      rounded='50px'
-                      onClick={addOffer}
-                      bg='grey'
-                      color='green'
-                      size='lg'
-                    >
-                      Ajouter une offre d'apprentissage
-                    </Button>
-                  </Stack>
-                </Box>
+                  <CustomInput name='nom' label='Nom' type='text' value={values.nom} />
+                  <CustomInput name='prenom' label='Prénom' type='test' value={values.prenom} />
+                  <CustomInput
+                    name='telephone'
+                    label='Téléphone'
+                    type='tel'
+                    pattern='[0-9]{10}'
+                    maxLength='10'
+                    value={values.telephone}
+                  />
+                  <CustomInput name='email' label='Email' type='email' value={values.email} />
 
-                <Flex justify='center' align='center' my='50'>
-                  <Button
-                    type='submit'
-                    rounded='10px'
-                    color='red'
-                    size='lg'
-                    isActive={isValid}
-                    disabled={!isValid || isSubmitting}
-                  >
-                    Enregistrer mes offres
-                  </Button>
-                </Flex>
-              </Form>
-            )
-          }}
-        </Formik>
-      </Box>
+                  <Box bg='lightGrey' py='5' px='5' width='100%' borderRadius='2'>
+                    <Box pb='6'>
+                      <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
+                        Votre besoin de recrutement
+                      </Text>
+                    </Box>
+                    <ChatBubble margin='0'>
+                      Recherchez le domaine d'activité se rapprochant le plus de votre offre d'apprentissage. Plusieurs
+                      offres possibles
+                    </ChatBubble>
+
+                    {!hasOffer && (
+                      <Center pt={3}>
+                        <Alert status='warning'>
+                          <AlertIcon />
+                          Vous n'avez ajouté aucune offre
+                        </Alert>
+                      </Center>
+                    )}
+
+                    <Box mt={4} mb={8}>
+                      <ListeVoeux data={initialFormState?.offres} removeOffer={removeOffer} editOffer={editOffer} />
+                    </Box>
+
+                    <Stack align='center' spacing='2'>
+                      <Button
+                        leftIcon={<IoIosAddCircleOutline />}
+                        rounded='50px'
+                        onClick={addOffer}
+                        bg='grey'
+                        color='green'
+                        size='lg'
+                      >
+                        Ajouter une offre d'apprentissage
+                      </Button>
+                    </Stack>
+                  </Box>
+
+                  <Flex justify='center' align='center' my='50'>
+                    <Button
+                      type='submit'
+                      rounded='10px'
+                      color='red'
+                      size='lg'
+                      isActive={isValid}
+                      disabled={!isValid || isSubmitting}
+                    >
+                      Enregistrer mes offres
+                    </Button>
+                  </Flex>
+                </Form>
+              )
+            }}
+          </Formik>
+        </Box>
+      </Container>
     </Layout>
   )
 }

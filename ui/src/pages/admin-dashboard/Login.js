@@ -1,3 +1,6 @@
+import { useHistory } from 'react-router-dom'
+import { Field, Form, Formik } from 'formik'
+import * as Yup from 'yup'
 import {
   Box,
   Button,
@@ -10,10 +13,6 @@ import {
   Input,
   Text,
 } from '@chakra-ui/react'
-import { Field, Form, Formik } from 'formik'
-import React from 'react'
-import { useHistory } from 'react-router-dom'
-import * as Yup from 'yup'
 
 import useAuth from '../../common/hooks/useAuth'
 import { _post } from '../../common/httpClient'
@@ -73,7 +72,15 @@ const LoginPage = () => {
                       }}
                     </Field>
                   </Box>
-                  <HStack spacing='4w' justify='flex-end'>
+                  {status.error && (
+                    <Text color='red' mt={1}>
+                      {status.error}
+                    </Text>
+                  )}
+                  <HStack spacing='2w' justify='flex-end'>
+                    <Button variant='link' onClick={() => history.push('/')}>
+                      Annuler
+                    </Button>
                     <Button colorScheme='blue' type='submit'>
                       Connexion
                     </Button>
@@ -81,11 +88,6 @@ const LoginPage = () => {
                       Mot de passe oublié
                     </Link> */}
                   </HStack>
-                  {status.error && (
-                    <Text color='red' mt={2}>
-                      {status.error}
-                    </Text>
-                  )}
                 </Form>
               )
             }}

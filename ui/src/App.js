@@ -2,7 +2,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 
 import { Formulaire, Homepage, NotFound, Remerciement } from './pages'
-import { Login, UserList } from './pages/admin-dashboard'
+import { Login, FormList } from './pages/admin-dashboard'
 import useAuth from './common/hooks/useAuth'
 import theme from './theme'
 
@@ -15,7 +15,7 @@ function PrivateRoute({ children, ...rest }) {
     <Route
       {...rest}
       render={() => {
-        return auth.sub !== 'anonymous' ? children : <Redirect to='/login' />
+        return auth.sub !== 'anonymous' ? children : <Redirect to='/' />
       }}
     />
   )
@@ -26,7 +26,7 @@ const App = () => {
     <ChakraProvider theme={theme}>
       <Switch>
         <PrivateRoute exact path='/admin'>
-          <UserList />
+          <FormList />
         </PrivateRoute>
         <Route exact path='/' component={Homepage} />
         <Route exact path='/merci' component={Remerciement} />

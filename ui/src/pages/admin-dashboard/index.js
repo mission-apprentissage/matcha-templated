@@ -1,5 +1,4 @@
-import UserDetail from './UserDetail'
-import UserList from './UserList'
+import FormList from './FormList'
 import Login from './Login'
 
-export { UserDetail, UserList, Login }
+export { FormList, Login }

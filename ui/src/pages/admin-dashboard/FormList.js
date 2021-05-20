@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import AdminLayout from './AdminLayout'
 import { ImNewTab } from 'react-icons/im'
 
 import { Table, Tbody, Td, Th, Thead, Tr, Heading, Container, Link, Box, Center, Icon } from '@chakra-ui/react'
 import axios from 'axios'
+import { Layout } from '../../components'
 
 const MyTable = ({ data }) => {
   if (data.length < 0) return <div>Chargement en cours</div>
@@ -71,15 +71,15 @@ export default function List() {
   }
 
   return (
-    <AdminLayout>
-      <Container maxW='full' py={4}>
+    <Layout background='beige'>
+      <Container maxW='container.xl' py={4}>
         <Heading size='md'>Formulaires avec offres ({state.formWithOffers.length})</Heading>
         <MyTable data={state.formWithOffers} />
       </Container>
-      <Container maxW='full' py={4}>
+      <Container maxW='container.xl' py={4}>
         <Heading size='md'>Formulaires complétés sans offres ({state.uncomplete.length})</Heading>
         <MyTable data={state.uncomplete} />
       </Container>
-    </AdminLayout>
+    </Layout>
   )
 }

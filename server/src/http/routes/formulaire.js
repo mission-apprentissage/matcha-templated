@@ -166,7 +166,16 @@ module.exports = ({ mail, formulaire }) => {
 
         let { _id, id_form, raison_sociale, email } = newFormulaire;
 
-        const payload = mail.createNewFormulairePayload(id_form, email, raison_sociale);
+        const mailBody = {
+          id_form,
+          email,
+          raison_sociale,
+          tags: ["matcha-nouveau-formulaire"],
+          templateId: 178,
+          subject: `Accédez à vos offres déposées sur Matcha`,
+        };
+
+        const payload = mail.getEmailBody(mailBody);
 
         const { body: result } = await mail.sendmail(payload);
 
@@ -194,6 +203,10 @@ module.exports = ({ mail, formulaire }) => {
       return res.sendStatus(200);
     })
   );
+
+  /**
+   * UPDATE OFFERS STATUS
+   */
 
   return router;
 };

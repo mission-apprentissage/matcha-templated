@@ -40,15 +40,30 @@ module.exports = async () => {
         throw new Error("Sendmail ERROR :", error);
       }
     },
-    createNewFormulairePayload: (id_form, email, raison_sociale) => {
+    getEmailBody: ({ email, raison_sociale, templateId, params, tags, id_form, subject }) => {
       if (!id_form) {
-        throw new Error("createNewFormulairePayload ERROR : id_form is missing");
+        throw new Error("getEmailBody ERROR : id_form is missing");
       }
       if (!email) {
-        throw new Error("createNewFormulairePayload ERROR : email is missing");
+        throw new Error("getEmailBody ERROR : email is missing");
       }
       if (!raison_sociale) {
-        throw new Error("createNewFormulairePayload ERROR : raison_sociale is missing");
+        throw new Error("getEmailBody ERROR : raison_sociale is missing");
+      }
+      if (!templateId) {
+        throw new Error("getEmailBody ERROR : templateId is missing");
+      }
+      if (isNaN(templateId) || typeof templateId !== "number") {
+        throw new Error("getEmailBody ERROR : templateId must be a Number");
+      }
+      if (!tags) {
+        throw new Error("getEmailBody ERROR : tags is missing");
+      }
+      if (!Array.isArray(tags)) {
+        throw new Error("getEmailBody ERROR : tags must be an array of string(s)");
+      }
+      if (!subject) {
+        throw new Error("getEmailBody ERROR : subject is missing");
       }
 
       return {
@@ -66,83 +81,14 @@ module.exports = async () => {
           name: "Charlotte Lecuit",
           email: "charlotte.lecuit@beta.gouv.fr",
         },
-        subject: `Accédez à vos offres déposées sur Matcha`,
-        templateId: 178,
-        tags: ["matcha-nouveau-formulaire"],
+        subject,
+        templateId,
+        tags,
         params: {
           URL: `${config.publicUrl}/formulaire/${id_form}`,
+          ...params,
         },
       };
-    },
-    createContact: async (body) => {
-      if (!body.listIds) {
-        throw new Error("CreateContact ERROR : listIds is missing");
-      }
-
-      if (typeof body.listIds !== Array) {
-        throw new Error("CreateContact ERROR : listIds must be an array of number");
-      }
-
-      if (!body.email) {
-        throw new Error("CreateContact ERROR : email is missing ");
-      }
-
-      const options = {
-        method: "POST",
-        url: "https://api.sendinblue.com/v3/contacts",
-        headers: {
-          accept: "application/json",
-          "content-type": "application/json",
-          "api-key": config.sendinblue.apikey,
-        },
-        body: body,
-        json: true,
-        maxAttempts: 8,
-        retryDelay: 5000,
-        retryStrategy: request.RetryStrategies.HTTPOrNetworkError,
-      };
-
-      try {
-        const result = await request(options);
-        return result;
-      } catch (error) {
-        throw new Error("CreateContact ERROR :", error);
-      }
-    },
-    updateContact: async (body) => {
-      if (!body.listIds) {
-        throw new Error("CreateContact ERROR : listIds is missing");
-      }
-
-      if (typeof body.listIds !== Array) {
-        throw new Error("CreateContact ERROR : listIds must be an array of number");
-      }
-
-      if (!body.email) {
-        throw new Error("CreateContact ERROR : email is missing ");
-      }
-
-      const options = {
-        method: "PUT",
-        url: `https://api.sendinblue.com/v3/contacts/${body.email.replace("@", "%40")}`,
-        headers: {
-          accept: "application/json",
-          "content-type": "application/json",
-          "api-key": config.sendinblue.apikey,
-        },
-        body: body,
-        json: true,
-        maxAttempts: 8,
-        retryDelay: 5000,
-        retryStrategy: request.RetryStrategies.HTTPOrNetworkError,
-      };
-
-      try {
-        const result = await request(options);
-        return result;
-      } catch (error) {
-        throw new Error("UpdateContact ERROR :", error);
-      }
     },
     requestMailTransaction: async (options) => {
       try {

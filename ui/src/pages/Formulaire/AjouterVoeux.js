@@ -58,7 +58,7 @@ export default (props) => {
           : '',
         description: props.description ?? '',
         date_creation: moment().format(DATE_FORMAT),
-        date_expiration: moment().add(1, 'month').format(DATE_FORMAT),
+        date_expiration: moment().add(1, 'months').format(DATE_FORMAT),
       }}
       validationSchema={Yup.object().shape({
         libelle: Yup.string().required('Champ obligatoire'),

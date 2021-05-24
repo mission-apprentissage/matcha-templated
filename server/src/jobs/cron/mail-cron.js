@@ -2,6 +2,7 @@ const cron = require("node-cron");
 const logger = require("../../common/logger");
 const { getAllEvents } = require("../formulaire/getAllEvents");
 
+// Every 3 hours
 cron.schedule("0 */3 * * *", async () => {
   logger.info("[CRONJOB] Start getAllEvents ");
   await getAllEvents();

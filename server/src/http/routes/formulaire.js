@@ -207,6 +207,26 @@ module.exports = ({ mail, formulaire }) => {
   /**
    * UPDATE OFFERS STATUS
    */
+  router.get(
+    "/offre/:id_offre/:status",
+    tryCatch(async (req, res) => {
+      const { id_offre, status } = req.params;
+
+      if (status === "filled")
+        await Formulaire.findOneAndUpdate(
+          { "offres._id": id_offre },
+          { "offres.statut.filled": true, "offres.statut.active": false }
+        );
+
+      if (status === "canceled")
+        await Formulaire.findOneAndUpdate(
+          { "offres._id": id_offre },
+          { "offres.statut.canceled": true, "offres.statut.active": false }
+        );
+
+      return res.end();
+    })
+  );
 
   return router;
 };

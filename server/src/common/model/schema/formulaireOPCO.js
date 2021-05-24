@@ -9,7 +9,7 @@ const offresSchema = new Schema({
     default: null,
     description: "Niveau de formation requis",
   },
-  date: {
+  date_debut_apprentissage: {
     type: Date,
     default: null,
     description: "Date de début de l'apprentissage",
@@ -23,6 +23,33 @@ const offresSchema = new Schema({
     type: [String],
     default: [],
     description: "Liste des romes lié au métier",
+  },
+  date_creation: {
+    type: Date,
+    default: null,
+    description: "Date de creation de l'offre",
+  },
+  date_expiration: {
+    type: Date,
+    default: null,
+    description: "Date d'expiration de l'offre",
+  },
+  statut: {
+    active: {
+      type: Boolean,
+      default: true,
+      description: "L'offre est active",
+    },
+    filled: {
+      type: Boolean,
+      default: false,
+      description: "L'offre a été pourvue",
+    },
+    canceled: {
+      type: Boolean,
+      default: false,
+      description: "L'offre a été supprimé",
+    },
   },
 });
 

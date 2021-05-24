@@ -21,13 +21,14 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import moment from 'moment'
 
+const DATE_FORMAT = 'YYYY-MM-DD'
+
 export default (props) => {
   let { isOpen, onClose, handleSave } = props
   const [inputJobItems, setInputJobItems] = useState([])
   const initialRef = useRef()
   const finalRef = useRef()
-  const date = props.date ? moment(props.date).format('YYYY-MM-DD') : ''
-  const minDate = moment().format('YYYY-MM-DD')
+  const minDate = moment().format(DATE_FORMAT)
 
   const handleJobSearch = async (search) => {
     if (search) {
@@ -52,13 +53,17 @@ export default (props) => {
         libelle: props.libelle ?? '',
         romes: props.romes ?? [],
         niveau: props.niveau ?? '',
-        date: date,
+        date_debut_apprentissage: props.date_debut_apprentissage
+          ? moment(props.date_debut_apprentissage).format(DATE_FORMAT)
+          : '',
         description: props.description ?? '',
+        date_creation: moment().format(DATE_FORMAT),
+        date_expiration: moment().add(1, 'month').format(DATE_FORMAT),
       }}
       validationSchema={Yup.object().shape({
         libelle: Yup.string().required('Champ obligatoire'),
         niveau: Yup.string(),
-        date: Yup.date(),
+        date_debut_apprentissage: Yup.date(),
         description: Yup.string(),
       })}
       onSubmit={async (values, { resetForm }) => {
@@ -128,7 +133,13 @@ export default (props) => {
 
                 <FormControl mt={4}>
                   <FormLabel>Date de début</FormLabel>
-                  <Input type='date' name='date' min={minDate} defaultValue={values.date} onChange={handleChange} />
+                  <Input
+                    type='date'
+                    name='date_debut_apprentissage'
+                    min={minDate}
+                    defaultValue={values.date_debut_apprentissage}
+                    onChange={handleChange}
+                  />
                 </FormControl>
 
                 {values.description && (

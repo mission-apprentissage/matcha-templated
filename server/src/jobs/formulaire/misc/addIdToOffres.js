@@ -1,5 +1,5 @@
-const { Formulaire } = require("../../common/model");
-const { runScript } = require("../scriptWrapper");
+const { Formulaire } = require("../../../common/model");
+const { runScript } = require("../../scriptWrapper");
 
 if (process.env.standalone) {
   runScript(async () => {

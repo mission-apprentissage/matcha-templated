@@ -1,7 +1,7 @@
 const path = require("path");
-const { runScript } = require("../scriptWrapper");
-const { getJsonFromXlsxFile } = require("../../common/utils/fileUtils");
-const logger = require("../../common/logger");
+const { runScript } = require("../../scriptWrapper");
+const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
+const logger = require("../../../common/logger");
 
 const importer = async (formulaire) => {
   const file = path.resolve(__dirname, "./assets/lbb_20210323.xlsx");

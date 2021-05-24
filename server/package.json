@@ -17,7 +17,6 @@
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
     "admin:user": "node src/jobs/seed/createUsers.js",
     "form:dummy": "node src/jobs/seed/createFormulaire.js",
-    "form:import": "node src/jobs/formulaire/import.js",
     "form:campagne": "node src/jobs/formulaire/campagne.js",
     "form:index": "node src/jobs/formulaire/generateEsIndex.js",
     "clear": "node src/jobs/clear/index.js"

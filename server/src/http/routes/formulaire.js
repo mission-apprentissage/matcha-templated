@@ -3,13 +3,15 @@ const { Formulaire } = require("../../common/model");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { getElasticInstance } = require("../../common/esClient");
 const logger = require("../../common/logger");
-const config = require("config");
 
 const esClient = getElasticInstance();
 
-module.exports = ({ mail }) => {
+module.exports = ({ mail, formulaire }) => {
   const router = express.Router();
 
+  /**
+   * Query Search endpoint
+   */
   router.get(
     "/",
     tryCatch(async (req, res) => {
@@ -33,7 +35,7 @@ module.exports = ({ mail }) => {
   );
 
   /**
-   * Get single form
+   * Get single formulaire from id
    */
   router.get(
     "/:id_form",
@@ -48,7 +50,7 @@ module.exports = ({ mail }) => {
   );
 
   /**
-   * LBA ENDPOINT
+   * LBA ENDPOINT : get single offre from id
    */
   router.get(
     "/offre/:id_offre",
@@ -153,39 +155,18 @@ module.exports = ({ mail }) => {
   router.post(
     "/:id_form",
     tryCatch(async (req, res) => {
-      const form = req.body;
+      const formulaireData = req.body;
       const { id_form } = req.params;
 
       /**
        * Create new formulaire and send email
        */
       if (id_form == "undefined") {
-        const newForm = await Formulaire.create(form);
+        const newFormulaire = await formulaire.createForm(formulaireData);
 
-        let { _id, id_form, raison_sociale, email } = newForm;
+        let { _id, id_form, raison_sociale, email } = newFormulaire;
 
-        const payload = {
-          sender: {
-            name: "Mission interministérielle pour l'apprentissage",
-            email: "charlotte.lecuit@beta.gouv.fr",
-          },
-          to: [
-            {
-              name: `${raison_sociale}`,
-              email: `${email}`,
-            },
-          ],
-          replyTo: {
-            name: "Charlotte Lecuit",
-            email: "charlotte.lecuit@beta.gouv.fr",
-          },
-          subject: `Accédez à vos offres déposées sur Matcha`,
-          templateId: 178,
-          tags: ["matcha-nouveau-formulaire"],
-          params: {
-            URL: `${config.publicUrl}/formulaire/${id_form}`,
-          },
-        };
+        const payload = mail.createNewFormulairePayload(id_form, email, raison_sociale);
 
         const { body: result } = await mail.sendmail(payload);
 
@@ -208,7 +189,7 @@ module.exports = ({ mail }) => {
       /**
        * Update existing formulaire
        */
-      await Formulaire.findOneAndUpdate({ id_form }, form);
+      await Formulaire.findOneAndUpdate({ id_form }, formulaireData);
 
       return res.sendStatus(200);
     })

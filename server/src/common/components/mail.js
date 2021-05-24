@@ -1,7 +1,7 @@
-const request = require("requestretry");
 const config = require("config");
-const { Transactional } = require("../model");
+const request = require("requestretry");
 const mailRules = require("./mail.rules");
+const { Transactional } = require("../model");
 
 module.exports = async () => {
   return {
@@ -39,6 +39,40 @@ module.exports = async () => {
       } catch (error) {
         throw new Error("Sendmail ERROR :", error);
       }
+    },
+    createNewFormulairePayload: (id_form, email, raison_sociale) => {
+      if (!id_form) {
+        throw new Error("createNewFormulairePayload ERROR : id_form is missing");
+      }
+      if (!email) {
+        throw new Error("createNewFormulairePayload ERROR : email is missing");
+      }
+      if (!raison_sociale) {
+        throw new Error("createNewFormulairePayload ERROR : raison_sociale is missing");
+      }
+
+      return {
+        sender: {
+          name: "Mission interministérielle pour l'apprentissage",
+          email: "charlotte.lecuit@beta.gouv.fr",
+        },
+        to: [
+          {
+            name: `${raison_sociale}`,
+            email: `${email}`,
+          },
+        ],
+        replyTo: {
+          name: "Charlotte Lecuit",
+          email: "charlotte.lecuit@beta.gouv.fr",
+        },
+        subject: `Accédez à vos offres déposées sur Matcha`,
+        templateId: 178,
+        tags: ["matcha-nouveau-formulaire"],
+        params: {
+          URL: `${config.publicUrl}/formulaire/${id_form}`,
+        },
+      };
     },
     createContact: async (body) => {
       if (!body.listIds) {

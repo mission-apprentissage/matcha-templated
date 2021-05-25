@@ -215,13 +215,13 @@ module.exports = ({ mail, formulaire }) => {
       if (status === "filled")
         await Formulaire.findOneAndUpdate(
           { "offres._id": id_offre },
-          { "offres.statut.filled": true, "offres.statut.active": false }
+          { $set: { "offres.$.statut.filled": true, "offres.$.statut.active": false } }
         );
 
       if (status === "canceled")
         await Formulaire.findOneAndUpdate(
           { "offres._id": id_offre },
-          { "offres.statut.canceled": true, "offres.statut.active": false }
+          { $set: { "offres.$.statut.canceled": true, "offres.$.statut.active": false } }
         );
 
       return res.end();

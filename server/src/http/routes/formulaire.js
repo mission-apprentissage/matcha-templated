@@ -207,10 +207,11 @@ module.exports = ({ mail, formulaire }) => {
   /**
    * UPDATE OFFERS STATUS
    */
-  router.get(
-    "/offre/:id_offre/:status",
+  router.put(
+    "/offre/:id_offre",
     tryCatch(async (req, res) => {
-      const { id_offre, status } = req.params;
+      const { id_offre } = req.params;
+      const { status } = req.body;
 
       if (status === "filled")
         await Formulaire.findOneAndUpdate(
@@ -224,7 +225,9 @@ module.exports = ({ mail, formulaire }) => {
           { $set: { "offres.$.statut.canceled": true, "offres.$.statut.active": false } }
         );
 
-      return res.end();
+      const formulaire = await Formulaire.findOne({ "offres._id": id_offre });
+
+      return res.json(formulaire);
     })
   );
 

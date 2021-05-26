@@ -23,7 +23,6 @@ module.exports = {
     esIndexName: "formulaires",
     paginate: true,
   }),
-  Questionnaire: createModel("questionnaires", schema.questionnairesSchema),
   User: createModel("users", schema.usersSchema),
   Log: createModel("logs", schema.logSchema),
 };

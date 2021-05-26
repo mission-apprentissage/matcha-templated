@@ -48,7 +48,7 @@ const createUser = async (users) => {
       let exist = await users.getUser(email);
       if (exist) return;
 
-      await users.createUser(username, password, email, isAdmin, scope);
+      await users.createUser(username, password, email, { isAdmin, scope });
     } catch (e) {
       logger.error(e);
     }

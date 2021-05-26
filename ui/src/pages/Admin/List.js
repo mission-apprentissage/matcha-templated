@@ -21,6 +21,7 @@ import {
 
 import { Layout } from '../../components'
 import useAuth from '../../common/hooks/useAuth'
+import { getWithQS } from '../../api'
 
 const MyTable = ({ data }) => {
   if (data.length < 0) return <div>Chargement en cours</div>
@@ -67,30 +68,25 @@ const MyTable = ({ data }) => {
 }
 
 export default function List() {
-  const [state, setState] = useState({ formWithOffers: [], uncomplete: [] })
-  const [loading, setLoading] = useState(false)
+  const [state, setState] = useState([])
+  const [loading, setLoading] = useState(true)
   const [auth] = useAuth()
 
-  const getWithQS = (query) => axios.get('/api/formulaire', { params: { query: JSON.stringify(query) } })
-
   useEffect(() => {
-    ;(async function getData() {
-      setLoading(true)
-      const [availableOffers] = await Promise.all([
-        getWithQS({
-          $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
-          origine: { $in: auth.permissions.scope },
-        }),
-      ])
-      setState({ formWithOffers: availableOffers.data.data })
-      setLoading(false)
-    })()
+    getWithQS({
+      $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
+      origine: { $in: auth.permissions.scope },
+    })
+      .then((formulaires) => setState(formulaires.data.data))
+      .finally(() => setLoading(false))
   }, [])
 
-  console.log(state)
-
   if (loading) {
-    return <div>Chargement en cours...</div>
+    return (
+      <Layout>
+        <Center h='100vh'>Chargement en cours...</Center>
+      </Layout>
+    )
   }
 
   return (
@@ -108,7 +104,7 @@ export default function List() {
           </BreadcrumbItem>
         </Breadcrumb>
 
-        <MyTable data={state.formWithOffers} />
+        <MyTable data={state} />
       </Container>
     </Layout>
   )

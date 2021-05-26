@@ -17,3 +17,5 @@ export const saveFormulaire = async (formId, payload) =>
 
 export const getOffre = async (offreId, status) =>
   await API.put(`/formulaire/offre/${offreId}`, { status }).catch(errorHandler)
+
+export const getWithQS = async (query) => await API.get('/formulaire', { params: { query: JSON.stringify(query) } })

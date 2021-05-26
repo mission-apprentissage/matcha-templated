@@ -34,6 +34,7 @@ module.exports = ({ users }) => {
       tryCatch(async (req, res) => {
         const user = req.user;
         const token = createUserToken(user);
+        await users.registerUser(user.email);
         return res.json({ token });
       }),
     ])

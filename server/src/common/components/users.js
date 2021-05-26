@@ -23,34 +23,17 @@ module.exports = async () => {
       }
       return null;
     },
-    getUser: (username) => User.findOne({ username }),
-    createUser: async (surname, name, parcoursup_id, email, telephone, password, options = {}) => {
-      const hash = options.hash || sha512Utils.hash(password);
-      const permissions = options.permissions || {};
-
-      const user = new User({
-        username: email,
-        nom: name,
-        prenom: surname,
-        parcoursup_id: parcoursup_id,
-        email: email,
-        telephone: telephone,
-        password: hash,
-        isAdmin: !!permissions.isAdmin,
-      });
-
-      await user.save();
-      return user.toObject();
-    },
-    createAdmin: async (username, password, options = {}) => {
+    getUser: (email) => User.findOne({ email }),
+    createUser: async (username, password, email, options = {}) => {
       let hash = options.hash || sha512Utils.hash(password);
-      let permissions = options.permissions || {};
+      let { isAdmin, scope } = options;
 
       let user = new User({
         username,
+        email,
         password: hash,
-        writeable: !!permissions.writeable,
-        isAdmin: !!permissions.isAdmin,
+        isAdmin: isAdmin ?? false,
+        scope: scope ?? [],
       });
 
       await user.save();
@@ -75,5 +58,6 @@ module.exports = async () => {
 
       return user.toObject();
     },
+    registerUser: (email) => User.findOneAndUpdate({ email }, { last_connection: new Date() }),
   };
 };

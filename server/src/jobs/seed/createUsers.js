@@ -13,32 +13,42 @@ const passwordOptions = {
   numbers: true,
 };
 
-const mnaUsers = [
+const users = [
   {
     username: "mna",
     password: passwordGenerator.generate(passwordOptions),
-    writeable: true,
+    email: "contact@matcha.apprentissage.beta.gouv.fr",
     isAdmin: true,
+    scope: ["all"],
+  },
+  {
+    username: "opco",
+    password: passwordGenerator.generate(passwordOptions),
+    email: "test@opco2i.com",
+    isAdmin: true,
+    scope: ["opco2i"],
   },
 ];
 
 const prettify = (array) => JSON.stringify(array, null, 2);
 
 const buildAdminsUsers = async (exportJsonFile = true) => {
-  exportJsonFile && (await writeFile(path.join(outputDir, "usersMna.json"), prettify(mnaUsers), "utf8"));
-  return mnaUsers;
+  exportJsonFile && (await writeFile(path.join(outputDir, "usersMna.json"), prettify(users), "utf8"));
+  return users;
 };
 
 const createUser = async (users) => {
   logger.info(`-- START - Seed Default Users --`);
 
-  const defaultUsersToCreate = await buildAdminsUsers();
+  const userList = await buildAdminsUsers();
 
   // Users creation
-  await asyncForEach(defaultUsersToCreate, async ({ username, password, writeable, isAdmin }) => {
+  await asyncForEach(userList, async ({ username, password, email, isAdmin, scope }) => {
     try {
-      let permissions = { writeable, isAdmin };
-      await users.createAdmin(username, password, { permissions });
+      let exist = await users.getUser(email);
+      if (exist) return;
+
+      await users.createUser(username, password, email, isAdmin, scope);
     } catch (e) {
       logger.error(e);
     }

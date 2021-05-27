@@ -51,15 +51,7 @@ const Hero = () => {
             Matcha vous permet en quelques secondes d'exprimer vos besoins de recrutement en alternance pour les
             afficher sur le site <strong>La Bonne Alternance</strong>
           </Text>
-          <Button
-            color='white'
-            bg='red'
-            border='1px solid'
-            rightIcon={<IoIosArrowForward />}
-            borderRadius='50px'
-            px={6}
-            onClick={() => history.push('/matcha/')}
-          >
+          <Button variant='primary' rightIcon={<IoIosArrowForward />} px={6} onClick={() => history.push('/matcha/')}>
             Je cherche un.e alternant.e
           </Button>
         </Box>

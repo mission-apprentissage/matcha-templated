@@ -5,37 +5,24 @@ const bodyParser = require("body-parser");
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const tryCatch = require("./middlewares/tryCatchMiddleware");
-const apiKeyAuthMiddleware = require("./middlewares/apiKeyAuthMiddleware");
 const corsMiddleware = require("./middlewares/corsMiddleware");
-const authMiddleware = require("./middlewares/authMiddleware");
-const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
-const questionnaire = require("./routes/questionnaire");
-const secured = require("./routes/secured");
 const login = require("./routes/login");
-const authentified = require("./routes/authentified");
-const admin = require("./routes/admin");
+
 const password = require("./routes/password");
-const stats = require("./routes/stats");
+
 const formulaire = require("./routes/formulaire");
 
 module.exports = async (components) => {
   const { db } = components;
   const app = express();
-  const checkJwtToken = authMiddleware(components);
-  const adminOnly = permissionsMiddleware({ isAdmin: true });
 
   app.use(bodyParser.json());
   app.use(corsMiddleware());
   app.use(logMiddleware());
 
-  app.use("/api/questionnaire", questionnaire());
-  app.use("/api/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/login", login(components));
-  app.use("/api/authentified", checkJwtToken, authentified());
-  app.use("/api/admin", checkJwtToken, adminOnly, admin());
   app.use("/api/password", password(components));
-  app.use("/api/stats", checkJwtToken, adminOnly, stats(components));
   app.use("/api/formulaire", formulaire(components));
 
   app.get(
@@ -43,7 +30,7 @@ module.exports = async (components) => {
     tryCatch(async (req, res) => {
       let mongodbStatus;
       await db
-        .collection("questionnaires")
+        .collection("formulaires")
         .stats()
         .then(() => {
           mongodbStatus = true;

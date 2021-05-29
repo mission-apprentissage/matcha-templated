@@ -35,21 +35,10 @@ const offresSchema = new Schema({
     description: "Date d'expiration de l'offre",
   },
   statut: {
-    active: {
-      type: Boolean,
-      default: true,
-      description: "L'offre est active",
-    },
-    filled: {
-      type: Boolean,
-      default: false,
-      description: "L'offre a été pourvue",
-    },
-    canceled: {
-      type: Boolean,
-      default: false,
-      description: "L'offre a été supprimé",
-    },
+    type: String,
+    default: "Active",
+    enum: ["Active", "Annulée", "Pourvue"],
+    description: "Statut de l'offre",
   },
 });
 

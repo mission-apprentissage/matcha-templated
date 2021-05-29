@@ -13,11 +13,7 @@ runScript(async () => {
         date_debut_apprentissage: new Date("2021-09-06"),
         date_creation: new Date("2021-06-01"),
         date_expiration: new Date("2021-07-01"),
-        statut: {
-          active: true,
-          filled: false,
-          canceled: false,
-        },
+        statut: "Active",
       });
     });
 

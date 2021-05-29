@@ -1,6 +1,6 @@
 import { Switch, Route, Redirect } from 'react-router-dom'
 
-import { Formulaire, NotFound, Remerciement, Login, List, HomePage, Offre } from './pages'
+import { Formulaire, NotFound, Remerciement, Login, List, HomePage } from './pages'
 import useAuth from './common/hooks/useAuth'
 
 function PrivateRoute({ children, ...rest }) {
@@ -26,7 +26,6 @@ const App = () => {
       <Route exact path='/merci' component={Remerciement} />
       <Route exact path='/login' component={Login} />
       <Route exact path='/formulaire/:id' render={(props) => <Formulaire {...props} byId={true} />} />
-      <Route exact strict path='/offre/:id/:status' component={Offre} />
       <Route strict path='/:origine/' component={Formulaire} />
       <Route component={NotFound} />
     </Switch>

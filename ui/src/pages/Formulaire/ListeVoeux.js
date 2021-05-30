@@ -54,12 +54,14 @@ export default (props) => {
                 <Text fontSize='md' fontWeight='400'>
                   {item.niveau}
                 </Text>
-                <Flex direction='row'>
-                  <Text fontSize='md' fontWeight='400' pr={1}>
-                    Date de début souhaitée:
-                  </Text>
-                  <Text fontWeight='600'>{moment(item.date_debut_apprentissage).format('DD/MM/YYYY')}</Text>
-                </Flex>
+                {item.date_debut_apprentissage && (
+                  <Flex direction='row'>
+                    <Text fontSize='md' fontWeight='400' pr={1}>
+                      Date de début souhaitée:
+                    </Text>
+                    <Text fontWeight='600'>{moment(item.date_debut_apprentissage).format('DD/MM/YYYY')}</Text>
+                  </Flex>
+                )}
               </VStack>
               <Stack direction={['column', 'row']} spacing={3}>
                 <Button variant='secondary' leftIcon={<AiOutlineEdit />} onClick={() => props.editOffer(item)}>

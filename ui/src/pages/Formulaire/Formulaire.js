@@ -208,7 +208,7 @@ const Formulaire = (props) => {
 
               <BreadcrumbItem isCurrentPage>
                 <BreadcrumbLink href='#' textStyle='xs'>
-                  Consulter vos offres en cours
+                  {formState._id ? 'Consulter vos offres en cours' : "Nouveau dépot d'offre"}
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </Breadcrumb>
@@ -254,7 +254,7 @@ const Formulaire = (props) => {
                   <Autosave setInitialFormState={setFormState} initialFormState={formState} />
                   <Flex py={6}>
                     <Heading textStyle='h2' size='lg' color='grey.800'>
-                      Raison sociale
+                      {formState.id_form ? formState.raison_sociale : 'Nouveau formulaire'}
                     </Heading>
                     <Spacer />
                     <Button

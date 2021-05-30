@@ -25,7 +25,7 @@ const App = () => {
       <Route exact path='/' component={HomePage} />
       <Route exact path='/merci' component={Remerciement} />
       <Route exact path='/login' component={Login} />
-      <Route exact path='/formulaire/:id' render={(props) => <Formulaire {...props} byId={true} />} />
+      <Route exact path='/formulaire/:id_form' render={(props) => <Formulaire {...props} byId={true} />} />
       <Route strict path='/:origine/' component={Formulaire} />
       <Route component={NotFound} />
     </Switch>

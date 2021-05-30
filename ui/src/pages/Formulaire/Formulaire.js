@@ -2,7 +2,7 @@ import * as Yup from 'yup'
 import { useState, useEffect } from 'react'
 import { IoIosAddCircleOutline } from 'react-icons/io'
 import { useParams } from 'react-router-dom'
-import { Formik, Form, useField, Field, useFormikContext } from 'formik'
+import { Formik, Form, useField, Field } from 'formik'
 import {
   Button,
   Box,
@@ -35,16 +35,6 @@ import { Layout, AdresseAutocomplete } from '../../components'
 import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
 import ConfirmationSuppression from './ConfirmationSuppression'
-
-const Autosave = ({ initialFormState, setInitialFormState }) => {
-  const { values } = useFormikContext()
-
-  useEffect(() => {
-    setInitialFormState({ ...initialFormState, ...values })
-  }, [values])
-
-  return null
-}
 
 const CustomInput = (props) => {
   const [field, meta] = useField(props)
@@ -251,7 +241,6 @@ const Formulaire = (props) => {
 
               return (
                 <Form autoComplete='off'>
-                  <Autosave setInitialFormState={setFormState} initialFormState={formState} />
                   <Flex py={6}>
                     <Heading textStyle='h2' size='lg' color='grey.800'>
                       {formState.id_form ? formState.raison_sociale : 'Nouveau formulaire'}

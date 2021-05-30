@@ -22,8 +22,6 @@ export default (props) => {
   const initialRef = useRef()
   const finalRef = useRef()
 
-  console.log(currentOffer)
-
   const updateOffer = (statut) => {
     putOffre(currentOffer._id, { ...currentOffer, statut }).then((result) => {
       setOffersList(result.data.offres)

@@ -10,6 +10,7 @@ import {
   Text,
   Heading,
   Flex,
+  useToast,
 } from '@chakra-ui/react'
 
 import { ArrowRightLine, Close } from '../../theme/components/icons'
@@ -19,25 +20,24 @@ import { putOffre } from '../../api'
 
 export default (props) => {
   let { isOpen, onClose, currentOffer, setOffersList } = props
-  const initialRef = useRef()
-  const finalRef = useRef()
+  const toast = useToast()
 
   const updateOffer = (statut) => {
     putOffre(currentOffer._id, { ...currentOffer, statut }).then((result) => {
       setOffersList(result.data.offres)
+      toast({
+        title: `Offre ${statut}`,
+        position: 'top-right',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      })
       onClose()
     })
   }
 
   return (
-    <Modal
-      closeOnOverlayClick={false}
-      blockScrollOnMount={true}
-      initialFocusRef={initialRef}
-      finalFocusRef={finalRef}
-      isOpen={isOpen}
-      onClose={onClose}
-    >
+    <Modal closeOnOverlayClick={false} blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent mt={['0', '3.75rem']} h={['100%', 'auto']} mb={0} borderRadius={0}>
         <Button

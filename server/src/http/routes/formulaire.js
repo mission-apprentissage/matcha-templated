@@ -53,7 +53,7 @@ module.exports = ({ mail, formulaire }) => {
    * Post form
    */
   router.post(
-    "/:id_form",
+    "/",
     tryCatch(async (req, res) => {
       const form = req.body;
 
@@ -96,7 +96,7 @@ module.exports = ({ mail, formulaire }) => {
    */
   router.put(
     "/:id_form",
-    tryCatch(async (res, req) => {
+    tryCatch(async (req, res) => {
       const { id_form } = req.params;
       const form = req.body;
 
@@ -134,7 +134,7 @@ module.exports = ({ mail, formulaire }) => {
       const { id_form } = req.params;
       const offre = req.body;
 
-      const result = Formulaire.findOneAndUpdate({ id_form }, { $push: { offres: offre } }, { new: true });
+      const result = await Formulaire.findOneAndUpdate({ id_form }, { $push: { offres: offre } }, { new: true });
 
       return res.json(result);
     })
@@ -147,9 +147,33 @@ module.exports = ({ mail, formulaire }) => {
     "/offre/:id_offre",
     tryCatch(async (req, res) => {
       const { id_offre } = req.params;
-      const offre = req.body;
+      const {
+        libelle,
+        romes,
+        niveau,
+        date_debut_apprentissage,
+        description,
+        date_creation,
+        date_expiration,
+        statut,
+      } = req.body;
 
-      const result = Formulaire.findOneAndUpdate({ "offres._id": id_offre }, offre);
+      const result = await Formulaire.findOneAndUpdate(
+        { "offres._id": id_offre },
+        {
+          $set: {
+            "offres.$.libelle": libelle,
+            "offres.$.romes": romes,
+            "offres.$.niveau": niveau,
+            "offres.$.date_debut_apprentissage": date_debut_apprentissage,
+            "offres.$.description": description,
+            "offres.$.date_creation": date_creation,
+            "offres.$.date_expiration": date_expiration,
+            "offres.$.statut": statut,
+          },
+        },
+        { new: true }
+      );
 
       return res.json(result);
     })

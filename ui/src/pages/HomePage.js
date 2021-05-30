@@ -61,7 +61,7 @@ const Hero = () => {
   )
 }
 
-const Mission = () => (
+export const Mission = () => (
   <Container maxW='container.xl'>
     <Grid templateColumns={['1fr', '5fr 7fr']} gap={5} alignItems='center' pb={4}>
       <GridItem>
@@ -92,7 +92,7 @@ const Mission = () => (
   </Container>
 )
 
-const Footer = () => (
+export const Footer = () => (
   <Container maxW='container.xl' py={[5, 10]}>
     <Stack direction={['column', 'row']}>
       <Link color='emphase' href='https://beta.gouv.fr/accessibilite/' isExternal>

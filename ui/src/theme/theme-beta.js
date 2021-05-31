@@ -2,8 +2,8 @@ const rootFontSizePx = 16
 
 const colors = {
   bluefrance: '#000091',
-  beige: '#f9f8f6',
   white: '#ffffff',
+  beige: '#f9f8f6',
   redmarianne: '#e1000f',
   success: '#0d6635',
   error: '#b60000',
@@ -159,15 +159,47 @@ const fontSizes = {
   legal: '0.625rem',
 }
 
+const textStyles = {
+  h2: {
+    fontSize: ['1.75rem', '2rem'],
+    lineHeight: ['2.25rem', '2.5rem'],
+    fontWeight: '700',
+  },
+  h4: {
+    fontSize: ['1.375rem', '1.5rem'],
+    lineHeight: ['1.75rem', '2rem'],
+  },
+  h6: {
+    fontSize: ['1.125rem', '1.25rem'],
+    lineHeight: ['1.5rem', '1.75rem'],
+  },
+  'rf-text': {
+    fontSize: ['1rem'],
+    lineHeight: '1.5rem',
+    fontWeight: '400',
+  },
+  sm: {
+    fontSize: ['0.875rem'],
+    lineHeight: '1.5rem',
+    fontWeight: '400',
+  },
+  xs: {
+    fontSize: ['0.75rem'],
+    lineHeight: '1.35rem',
+    fontWeight: '400',
+  },
+}
+
 const fonts = {
-  body: 'Inter',
+  body: 'Marianne, Arial',
+  heading: 'Marianne, Arial',
 }
 
 const styles = {
   global: {
     'html, body': {
       fontSize: `${rootFontSizePx}px`,
-      fontFamily: 'Inter',
+      fontFamily: 'Marianne, Arial',
       background: 'white',
       color: 'bluefrance',
     },
@@ -191,4 +223,4 @@ const space = {
   '15w': `${120 / rootFontSizePx}rem`,
 }
 
-export { fonts, colors, styles, fontSizes, space, rootFontSizePx }
+export { fonts, colors, styles, fontSizes, space, rootFontSizePx, textStyles }

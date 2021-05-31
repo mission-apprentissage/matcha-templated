@@ -1,9 +1,11 @@
-import Select from './select'
-import Button from './button'
-import Input from './input'
-import Textarea from './textarea'
-import FormLabel from './formLabel'
-import FormError from './formError'
-import Form from './form'
+import { Tabs } from './tabs'
+import { Badge } from './badge'
+import { Button } from './button'
+import { Input } from './input'
+import { Text } from './text'
+import { Textarea } from './textarea'
+import { Link } from './link'
 
-export { Select, Button, Input, Textarea, FormLabel, Form, FormError }
+const components = { Tabs, Badge, Button, Input, Text, Textarea, Link }
+
+export { components }

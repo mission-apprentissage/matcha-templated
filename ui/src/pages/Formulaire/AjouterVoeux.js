@@ -7,19 +7,22 @@ import {
   ModalHeader,
   ModalFooter,
   ModalOverlay,
-  ModalCloseButton,
   FormControl,
   FormLabel,
   Select,
   Textarea,
-  Center,
   FormErrorMessage,
   Input,
+  Text,
+  Heading,
+  Flex,
 } from '@chakra-ui/react'
 import { DropdownCombobox } from '../../components'
+import { ArrowRightLine, Close } from '../../theme/components/icons/'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import moment from 'moment'
+import 'moment/locale/fr'
 
 const DATE_FORMAT = 'YYYY-MM-DD'
 
@@ -49,7 +52,6 @@ export default (props) => {
     <Formik
       enableReinitialize={true}
       initialValues={{
-        index: props.index ?? undefined,
         libelle: props.libelle ?? '',
         romes: props.romes ?? [],
         niveau: props.niveau ?? '',
@@ -57,8 +59,9 @@ export default (props) => {
           ? moment(props.date_debut_apprentissage).format(DATE_FORMAT)
           : '',
         description: props.description ?? '',
-        date_creation: moment().format(DATE_FORMAT),
-        date_expiration: moment().add(1, 'months').format(DATE_FORMAT),
+        date_creation: props.date_creation ?? moment().format(DATE_FORMAT),
+        date_expiration: props.date_expiration ?? moment().add(1, 'months').format(DATE_FORMAT),
+        statut: props.statut ?? 'Active',
       }}
       validationSchema={Yup.object().shape({
         libelle: Yup.string().required('Champ obligatoire'),
@@ -85,10 +88,34 @@ export default (props) => {
           >
             <ModalOverlay />
             <ModalContent mt={['0', '3.75rem']} h={['100%', 'auto']} mb={0} borderRadius={0}>
-              <ModalHeader bg='lightGrey' color='red'>
-                <Center>Ajouter une offre</Center>
+              <Button
+                display={'flex'}
+                alignSelf={'flex-end'}
+                color='bluefrance'
+                fontSize={'epsilon'}
+                onClick={onClose}
+                variant='unstyled'
+                p={6}
+                fontWeight={400}
+              >
+                fermer
+                <Text as={'span'} ml={2}>
+                  <Close boxSize={4} />
+                </Text>
+              </Button>
+              {/* <ModalHeader px={[4, 16]} pt={[3, 6]} pb={[3, 6]}> */}
+              <ModalHeader>
+                <Heading as='h2' fontSize='1.5rem'>
+                  <Flex>
+                    <Text as={'span'}>
+                      <ArrowRightLine boxSize={26} />
+                    </Text>
+                    <Text as={'span'} ml={4}>
+                      Ajouter une offre
+                    </Text>
+                  </Flex>
+                </Heading>
               </ModalHeader>
-              <ModalCloseButton />
               <ModalBody pb={6}>
                 <FormControl isRequired>
                   <FormLabel>Métier</FormLabel>
@@ -152,12 +179,8 @@ export default (props) => {
 
               <ModalFooter>
                 <Button
-                  type='button'
+                  variant='primary'
                   isFullWidth={true}
-                  color='white'
-                  bg='redLight'
-                  mr={3}
-                  borderRadius={20}
                   disabled={!(isValid && dirty) || isSubmitting}
                   onClick={submitForm}
                 >

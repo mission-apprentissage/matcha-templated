@@ -1,23 +1,25 @@
 import { extendTheme } from '@chakra-ui/react'
-import { Select, Input, Button, Textarea, FormLabel, Form, FormError } from './components'
-import { space } from './theme-beta'
-import colors from './colors'
+import { components } from './components'
+import { fonts, colors, fontSizes, space, textStyles, rootFontSizePx } from './theme-beta'
 
-const config = {
-  initialColorMode: 'light',
-  useSystemColorMode: false,
-}
-
-const fonts = {
-  body: 'Marianne',
+const styles = {
+  global: {
+    'html, body': {
+      fontSize: `${rootFontSizePx}px`,
+      fontFamily: 'Marianne, Arial',
+      background: 'white',
+    },
+  },
 }
 
 const theme = {
   fonts,
   colors: { ...colors },
-  config,
-  components: { Button, Select, Input, Textarea, FormLabel, Form, FormError },
+  styles,
+  fontSizes,
+  textStyles,
   space,
+  components,
 }
 
 export default extendTheme(theme)

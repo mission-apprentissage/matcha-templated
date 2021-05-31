@@ -1,42 +1,41 @@
 import * as Yup from 'yup'
 import { useState, useEffect } from 'react'
 import { IoIosAddCircleOutline } from 'react-icons/io'
-import { useHistory, useParams } from 'react-router-dom'
-import { Formik, Form, useField, Field, useFormikContext } from 'formik'
+import { useParams } from 'react-router-dom'
+import { Formik, Form, useField, Field } from 'formik'
 import {
-  Alert,
-  AlertIcon,
   Button,
-  useDisclosure,
   Box,
   Input,
   FormLabel,
   FormControl,
   FormHelperText,
   FormErrorMessage,
+  Link,
   Flex,
+  Grid,
+  GridItem,
   Text,
-  Stack,
+  useDisclosure,
   useBoolean,
   Center,
-  Link,
   Container,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Heading,
+  Spacer,
+  useToast,
+  useBreakpointValue,
 } from '@chakra-ui/react'
+import { AiOutlineEdit } from 'react-icons/ai'
+import { ArrowDropRightLine } from '../../theme/components/icons/'
 
-import { getFormulaire, saveFormulaire } from '../../api'
-import { ChatBubble, Layout, AdresseAutocomplete } from '../../components'
+import { getFormulaire, postFormulaire, postOffre, putFormulaire, putOffre } from '../../api'
+import { Layout, AdresseAutocomplete } from '../../components'
 import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
-
-const Autosave = ({ initialFormState, setInitialFormState }) => {
-  const { values } = useFormikContext()
-
-  useEffect(() => {
-    setInitialFormState({ ...initialFormState, ...values })
-  }, [values])
-
-  return null
-}
+import ConfirmationSuppression from './ConfirmationSuppression'
 
 const CustomInput = (props) => {
   const [field, meta] = useField(props)
@@ -52,19 +51,26 @@ const CustomInput = (props) => {
 }
 
 const Formulaire = (props) => {
-  const [initialFormState, setInitialFormState] = useState({})
+  const [formState, setFormState] = useState({})
+  const [offersList, setOffersList] = useState([])
   const [currentOffer, setCurrentOffer] = useState({})
   const [loading, setLoading] = useBoolean(true)
   const [error, setError] = useBoolean()
-  const { id, origine } = useParams()
   const ajouterVoeuxPopup = useDisclosure()
-  const history = useHistory()
+  const confirmationSuppression = useDisclosure()
+  const { id_form, origine } = useParams()
+  const toast = useToast()
+
+  const hasActiveOffers = offersList.filter((x) => x.statut === 'Active')
+
+  const buttonSize = useBreakpointValue(['sm', 'md'])
 
   useEffect(() => {
     if (props?.byId) {
-      getFormulaire(id)
+      getFormulaire(id_form)
         .then((result) => {
-          setInitialFormState(result.data)
+          setFormState(result.data)
+          setOffersList(result.data.offres)
         })
         .catch(() => {
           setError.toggle(true)
@@ -72,22 +78,22 @@ const Formulaire = (props) => {
         .finally(() => setLoading.toggle(false))
     } else {
       const params = new URLSearchParams(window.location.search)
-      let user = {}
-      user.origine = origine ? origine.toLowerCase().replace(/ /g, '-') : null
+      let form = {}
+      form.origine = origine ? origine.toLowerCase().replace(/ /g, '-') : null
 
       for (let i of params) {
         let [key, value] = i
-        user[key] = value
+        form[key] = value
       }
 
-      user.adresse = undefined
-      setInitialFormState(user)
+      form.adresse = undefined
+      setFormState(form)
       setLoading.toggle(false)
     }
   }, [])
 
-  const editOffer = (item, index) => {
-    setCurrentOffer({ ...item, index })
+  const editOffer = (offer) => {
+    setCurrentOffer(offer)
     ajouterVoeuxPopup.onOpen()
   }
 
@@ -97,38 +103,60 @@ const Formulaire = (props) => {
   }
 
   const saveOffer = (values) => {
-    const copy = { ...initialFormState }
-
-    if (values.index !== undefined) {
-      copy.offres[values.index] = values
-      setInitialFormState(copy)
-      return
+    if (currentOffer._id) {
+      // update
+      putOffre(currentOffer._id, values).then((result) => setOffersList(result.data.offres))
+    } else {
+      // create
+      postOffre(formState.id_form, values).then((result) => {
+        setOffersList(result.data.offres)
+      })
     }
-
-    if (copy.offres === undefined) {
-      copy.offres = []
-    }
-    copy.offres.push(values)
-    setInitialFormState(copy)
   }
 
-  const removeOffer = (index) => {
-    const copy = { ...initialFormState }
-    copy.offres.splice(index, 1)
-    setInitialFormState(copy)
+  const extendOffer = (idOffre, values) => {
+    putOffre(idOffre, values).then((result) => setOffersList(result.data.offres))
+    toast({
+      title: "Offre prolongé d'un mois",
+      position: 'top-right',
+      status: 'success',
+      duration: 2000,
+      isClosable: true,
+    })
   }
 
-  const submitFormulaire = async (values, { setSubmitting }) => {
-    const payload = {
-      ...values,
-      offres: initialFormState.offres ?? [],
-      origine: initialFormState.origine,
-    }
-    const res = await saveFormulaire(id, payload)
-    setSubmitting(false)
+  const removeOffer = (offer) => {
+    setCurrentOffer(offer)
+    confirmationSuppression.onOpen()
+  }
 
-    if (res.status === 200) {
-      history.push('/merci', { isNew: !id ? true : false })
+  const submitFormulaire = (values, { setSubmitting }) => {
+    if (formState.id_form) {
+      // update form
+      putFormulaire(id_form, values).then(() => {
+        setSubmitting(false)
+        toast({
+          title: 'Enregistré avec succès',
+          position: 'top-right',
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        })
+      })
+    } else {
+      // create form
+      postFormulaire(values).then((result) => {
+        setFormState(result.data)
+        toast({
+          title: 'Formulaire créé !',
+          description: "Un mail d'accès vous a été envoyé",
+          position: 'top-right',
+          status: 'success',
+          duration: 4000,
+        })
+        setSubmitting(false)
+        ajouterVoeuxPopup.onOpen()
+      })
     }
   }
 
@@ -164,23 +192,43 @@ const Formulaire = (props) => {
   }
 
   return (
-    <Layout background='white'>
-      <Container>
+    <>
+      <Layout background='beige'>
         <AjouterVoeux {...ajouterVoeuxPopup} {...currentOffer} handleSave={saveOffer} />
-        <Box pb='3'>
+        <ConfirmationSuppression
+          {...confirmationSuppression}
+          currentOffer={currentOffer}
+          setOffersList={setOffersList}
+        />
+        <Container maxW='container.xl' pb={16}>
+          <Box pt={3}>
+            <Breadcrumb separator={<ArrowDropRightLine color='grey.600' />} textStyle='xs'>
+              <BreadcrumbItem>
+                <BreadcrumbLink textDecoration='underline' href='/' textStyle='xs'>
+                  Accueil
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+
+              <BreadcrumbItem isCurrentPage>
+                <BreadcrumbLink href='#' textStyle='xs'>
+                  {formState._id ? 'Consulter vos offres en cours' : "Nouveau dépot d'offre"}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
+          </Box>
           <Formik
             validateOnMount={true}
             enableReinitialize={true}
             initialValues={{
-              raison_sociale: initialFormState?.raison_sociale ?? '',
-              siret: initialFormState?.siret ? initialFormState?.siret.replace(/ /g, '') : '',
-              adresse: initialFormState?.adresse ?? '',
-              geo_coordonnees: initialFormState?.geo_coordonnees ?? '',
-              nom: initialFormState?.nom ?? '',
-              prenom: initialFormState?.prenom ?? '',
-              telephone: initialFormState?.telephone ? initialFormState?.telephone.replace(/ /g, '') : '',
-              email: initialFormState?.email ?? '',
-              offres: initialFormState?.offres,
+              raison_sociale: formState?.raison_sociale ?? '',
+              siret: formState?.siret ? formState?.siret.replace(/ /g, '') : '',
+              adresse: formState?.adresse ?? '',
+              geo_coordonnees: formState?.geo_coordonnees ?? '',
+              nom: formState?.nom ?? '',
+              prenom: formState?.prenom ?? '',
+              telephone: formState?.telephone ? formState?.telephone.replace(/ /g, '') : '',
+              email: formState?.email ?? '',
+              origine: formState?.origine ?? '',
             }}
             validationSchema={Yup.object().shape({
               raison_sociale: Yup.string().required('champs obligatoire').min(1),
@@ -202,120 +250,106 @@ const Formulaire = (props) => {
             onSubmit={submitFormulaire}
           >
             {({ values, isValid, isSubmitting, setFieldValue }) => {
-              const hasOffer = values.offres?.length > 0
-
               return (
                 <Form autoComplete='off'>
-                  <Autosave setInitialFormState={setInitialFormState} initialFormState={initialFormState} />
-                  <Box my='3'>
-                    <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
-                      Renseignements sur votre entreprise
-                    </Text>
-                  </Box>
-
-                  <CustomInput
-                    name='raison_sociale'
-                    label="Nom de l'enseigne"
-                    type='text'
-                    value={values.raison_sociale}
-                  />
-                  <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
-
-                  <Field name='adresse'>
-                    {({ meta, form }) => {
-                      return (
-                        <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
-                          <FormLabel>Adresse</FormLabel>
-                          <AdresseAutocomplete
-                            handleValues={(value) => {
-                              setFieldValue('geo_coordonnees', value.geo_coordonnees)
-                              setFieldValue('adresse', value.name)
-                            }}
-                            defaultValue={values.adresse}
-                            setFieldTouched={form.setFieldTouched}
-                          />
-                          <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
-                          <FormErrorMessage>{meta.error}</FormErrorMessage>
-                        </FormControl>
-                      )
-                    }}
-                  </Field>
-
-                  <Box mb='3'>
-                    <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
-                      Informations sur le contact privilégié
-                    </Text>
-                  </Box>
-
-                  <CustomInput name='nom' label='Nom' type='text' value={values.nom} />
-                  <CustomInput name='prenom' label='Prénom' type='test' value={values.prenom} />
-                  <CustomInput
-                    name='telephone'
-                    label='Téléphone'
-                    type='tel'
-                    pattern='[0-9]{10}'
-                    maxLength='10'
-                    value={values.telephone}
-                  />
-                  <CustomInput name='email' label='Email' type='email' value={values.email} />
-
-                  <Box bg='lightGrey' py='5' px='5' width='100%' borderRadius='2'>
-                    <Box pb='6'>
-                      <Text as='strong' fontSize='md' fontFamily='Inter-bold'>
-                        Votre besoin de recrutement
-                      </Text>
+                  <Flex py={6} alignItems='center'>
+                    <Box as='h2' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
+                      {formState.id_form ? formState.raison_sociale : 'Nouveau formulaire'}
                     </Box>
-                    <ChatBubble margin='0'>
-                      Recherchez le domaine d'activité se rapprochant le plus de votre offre d'apprentissage. Plusieurs
-                      offres possibles
-                    </ChatBubble>
-
-                    {!hasOffer && (
-                      <Center pt={3}>
-                        <Alert status='warning'>
-                          <AlertIcon />
-                          Vous n'avez ajouté aucune offre
-                        </Alert>
-                      </Center>
-                    )}
-
-                    <Box mt={4} mb={8}>
-                      <ListeVoeux data={initialFormState?.offres} removeOffer={removeOffer} editOffer={editOffer} />
-                    </Box>
-
-                    <Stack align='center' spacing='2'>
-                      <Button
-                        leftIcon={<IoIosAddCircleOutline />}
-                        rounded='50px'
-                        onClick={addOffer}
-                        bg='grey'
-                        color='green'
-                        size='lg'
-                      >
-                        Ajouter une offre d'apprentissage
-                      </Button>
-                    </Stack>
-                  </Box>
-
-                  <Flex justify='center' align='center' my='50'>
+                    <Spacer />
                     <Button
                       type='submit'
-                      rounded='10px'
-                      color='red'
-                      size='lg'
+                      size={buttonSize}
+                      variant='primary'
+                      leftIcon={<AiOutlineEdit />}
                       isActive={isValid}
                       disabled={!isValid || isSubmitting}
                     >
-                      Enregistrer mes offres
+                      Enregistrer les informations
                     </Button>
                   </Flex>
+                  <Grid templateColumns='repeat(12, 1fr)'>
+                    <GridItem colSpan={12} bg='white' p={8} border='1px solid' borderColor='bluefrance'>
+                      <Grid templateColumns='repeat(12, 1fr)'>
+                        <GridItem colSpan={[12, 6]} p={[, 8]}>
+                          <Heading size='md' pb={6}>
+                            Renseignements Entreprise
+                          </Heading>
+                          <CustomInput
+                            name='raison_sociale'
+                            label="Nom de l'enseigne"
+                            type='text'
+                            value={values.raison_sociale}
+                          />
+                          <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
+
+                          <Field name='adresse'>
+                            {({ meta, form }) => {
+                              return (
+                                <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
+                                  <FormLabel>Adresse</FormLabel>
+                                  <AdresseAutocomplete
+                                    handleValues={(value) => {
+                                      setFieldValue('geo_coordonnees', value.geo_coordonnees)
+                                      setFieldValue('adresse', value.name)
+                                    }}
+                                    defaultValue={values.adresse}
+                                    setFieldTouched={form.setFieldTouched}
+                                  />
+                                  <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
+                                  <FormErrorMessage>{meta.error}</FormErrorMessage>
+                                </FormControl>
+                              )
+                            }}
+                          </Field>
+                        </GridItem>
+                        <GridItem colSpan={[12, 6]} p={[, 8]}>
+                          <Heading size='md' pb={6}>
+                            Information de contact
+                          </Heading>
+                          <CustomInput name='nom' label='Nom' type='text' value={values.nom} />
+                          <CustomInput name='prenom' label='Prénom' type='test' value={values.prenom} />
+                          <CustomInput
+                            name='telephone'
+                            label='Téléphone'
+                            type='tel'
+                            pattern='[0-9]{10}'
+                            maxLength='10'
+                            value={values.telephone}
+                          />
+                          <CustomInput name='email' label='Email' type='email' value={values.email} />
+                        </GridItem>
+                      </Grid>
+                    </GridItem>
+                  </Grid>
                 </Form>
               )
             }}
           </Formik>
-        </Box>
-      </Container>
-    </Layout>
+
+          {formState?._id && (
+            <Box mb={12}>
+              <Flex pt={12} pb={6} alignItems='center'>
+                <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
+                  Offre(s) disponible(s)
+                </Box>
+                <Spacer />
+                <Button variant='primary' size={buttonSize} leftIcon={<IoIosAddCircleOutline />} onClick={addOffer}>
+                  Ajouter une offre
+                </Button>
+              </Flex>
+              {/* {hasActiveOffers.length > 0 ? ( */}
+              <ListeVoeux data={offersList} removeOffer={removeOffer} editOffer={editOffer} extendOffer={extendOffer} />
+              {/* ) : (
+                <Box bg='white' p={8} border='1px solid' borderColor='bluefrance'>
+                  CTA Ajouter une offre ?
+                </Box>
+              )} */}
+            </Box>
+          )}
+        </Container>
+      </Layout>
+    </>
   )
 }
 

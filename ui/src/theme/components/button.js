@@ -1,33 +1,30 @@
-import colors from '../colors'
+const commonButtonStyle = {
+  borderRadius: 0,
+  textTransform: 'none',
+  fontWeight: 400,
+  _focus: { boxShadow: '0 0 0 3px #000091', outlineColor: 'bluefrance' },
+}
 
-export default {
+const Button = {
   variants: {
-    matcha: {
-      backgroundColor: colors.lightGrey,
-      color: colors.red,
-      lineHeight: '1.2',
-      borderRadius: 'md',
-      fontWeight: 'semibold',
-      _focus: {
-        boxShadow: 'outline',
-      },
-      _disabled: {
-        opacity: 0.4,
-        cursor: 'not-allowed',
-        boxShadow: 'none',
-      },
-      _hover: {
-        _disabled: {
-          bg: 'initial',
-        },
-      },
-      _active: {
-        bg: colors.red,
-        color: colors.white,
-      },
+    unstyled: {
+      ...commonButtonStyle,
+    },
+    secondary: {
+      ...commonButtonStyle,
+      bg: 'white',
+      color: 'bluefrance',
+      border: '1px solid',
+      borderColor: 'bluefrance',
+      _hover: { bg: 'grey.200' },
+    },
+    primary: {
+      ...commonButtonStyle,
+      bg: 'bluefrance',
+      color: 'white',
+      _hover: { bg: 'blue.700' },
     },
   },
-  defaultProps: {
-    variant: 'matcha',
-  },
 }
+
+export { Button }

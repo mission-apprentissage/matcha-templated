@@ -1,11 +1,11 @@
 const transactionalSchema = require("./transactional");
-const formulaireOPCOSchema = require("./formulaireOPCO");
+const formulaireSchema = require("./formulaire");
 const logSchema = require("./logs");
 const usersSchema = require("./users");
 
 module.exports = {
   transactionalSchema,
-  formulaireOPCOSchema,
+  formulaireSchema,
   logSchema,
   usersSchema,
 };

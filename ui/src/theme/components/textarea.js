@@ -1,15 +1,14 @@
-import colors from '../colors'
-
-import Input from './input'
-
-export default {
-  baseStyle: {
-    ...Input.variants.matcha.field,
-    paddingY: '8px',
-    minHeight: '80px',
-    lineHeight: 'short',
-  },
-  defaultProps: {
-    variant: 'matcha',
+const Textarea = {
+  variants: {
+    outline: {
+      borderBottomRadius: 0,
+      borderWidth: 0,
+      borderBottom: '2px solid',
+      marginBottom: '-2px',
+      borderColor: 'grey.600',
+      bg: 'grey.200',
+    },
   },
 }
+
+export { Textarea }

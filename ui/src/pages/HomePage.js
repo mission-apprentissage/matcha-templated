@@ -51,15 +51,7 @@ const Hero = () => {
             Matcha vous permet en quelques secondes d'exprimer vos besoins de recrutement en alternance pour les
             afficher sur le site <strong>La Bonne Alternance</strong>
           </Text>
-          <Button
-            color='white'
-            bg='red'
-            border='1px solid'
-            rightIcon={<IoIosArrowForward />}
-            borderRadius='50px'
-            px={6}
-            onClick={() => history.push('/matcha/')}
-          >
+          <Button variant='primary' rightIcon={<IoIosArrowForward />} px={6} onClick={() => history.push('/matcha/')}>
             Je cherche un.e alternant.e
           </Button>
         </Box>
@@ -69,7 +61,7 @@ const Hero = () => {
   )
 }
 
-const Mission = () => (
+export const Mission = () => (
   <Container maxW='container.xl'>
     <Grid templateColumns={['1fr', '5fr 7fr']} gap={5} alignItems='center' pb={4}>
       <GridItem>
@@ -100,7 +92,7 @@ const Mission = () => (
   </Container>
 )
 
-const Footer = () => (
+export const Footer = () => (
   <Container maxW='container.xl' py={[5, 10]}>
     <Stack direction={['column', 'row']}>
       <Link color='emphase' href='https://beta.gouv.fr/accessibilite/' isExternal>

@@ -16,11 +16,12 @@ export default () => {
         <Flex justifyContent='flex-start' alignItems='center'>
           <Image src={logoMinistere} alt='logo ministere' />
           <Box pr={10} />
-          <Image src={logo} alt='logo matcha' />
+          <Image display={['none', 'flex']} src={logo} alt='logo matcha' />
           <Spacer />
           {auth.permissions.isAdmin ? (
             <>
               <Button
+                display={['none', 'flex']}
                 onClick={() => setAuth('')}
                 fontWeight='normal'
                 variant='link'
@@ -33,6 +34,7 @@ export default () => {
           ) : (
             <>
               <Button
+                display={['none', 'flex']}
                 onClick={() => history.push('/login')}
                 fontWeight='normal'
                 variant='link'

@@ -26,6 +26,7 @@ import {
   Heading,
   Spacer,
   useToast,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { ArrowDropRightLine } from '../../theme/components/icons/'
@@ -59,6 +60,10 @@ const Formulaire = (props) => {
   const confirmationSuppression = useDisclosure()
   const { id_form, origine } = useParams()
   const toast = useToast()
+
+  const hasActiveOffers = offersList.filter((x) => x.statut === 'Active')
+
+  const buttonSize = useBreakpointValue(['sm', 'md'])
 
   useEffect(() => {
     if (props?.byId) {
@@ -142,7 +147,15 @@ const Formulaire = (props) => {
       // create form
       postFormulaire(values).then((result) => {
         setFormState(result.data)
+        toast({
+          title: 'Formulaire créé !',
+          description: "Un mail d'accès vous a été envoyé",
+          position: 'top-right',
+          status: 'success',
+          duration: 4000,
+        })
         setSubmitting(false)
+        ajouterVoeuxPopup.onOpen()
       })
     }
   }
@@ -237,29 +250,28 @@ const Formulaire = (props) => {
             onSubmit={submitFormulaire}
           >
             {({ values, isValid, isSubmitting, setFieldValue }) => {
-              const hasOffer = values.offres?.length > 0
-
               return (
                 <Form autoComplete='off'>
-                  <Flex py={6}>
-                    <Heading textStyle='h2' size='lg' color='grey.800'>
+                  <Flex py={6} alignItems='center'>
+                    <Box as='h2' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
                       {formState.id_form ? formState.raison_sociale : 'Nouveau formulaire'}
-                    </Heading>
+                    </Box>
                     <Spacer />
                     <Button
                       type='submit'
+                      size={buttonSize}
                       variant='primary'
                       leftIcon={<AiOutlineEdit />}
                       isActive={isValid}
                       disabled={!isValid || isSubmitting}
                     >
-                      Enregister les informations
+                      Enregistrer les informations
                     </Button>
                   </Flex>
                   <Grid templateColumns='repeat(12, 1fr)'>
                     <GridItem colSpan={12} bg='white' p={8} border='1px solid' borderColor='bluefrance'>
                       <Grid templateColumns='repeat(12, 1fr)'>
-                        <GridItem colSpan={[12, 6]} p={8}>
+                        <GridItem colSpan={[12, 6]} p={[, 8]}>
                           <Heading size='md' pb={6}>
                             Renseignements Entreprise
                           </Heading>
@@ -291,7 +303,7 @@ const Formulaire = (props) => {
                             }}
                           </Field>
                         </GridItem>
-                        <GridItem colSpan={[12, 6]} p={8}>
+                        <GridItem colSpan={[12, 6]} p={[, 8]}>
                           <Heading size='md' pb={6}>
                             Information de contact
                           </Heading>
@@ -317,16 +329,22 @@ const Formulaire = (props) => {
 
           {formState?._id && (
             <Box mb={12}>
-              <Flex pt={12} pb={6}>
-                <Heading textStyle='h2' size='lg' color='grey.800'>
+              <Flex pt={12} pb={6} alignItems='center'>
+                <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
                   Offre(s) disponible(s)
-                </Heading>
+                </Box>
                 <Spacer />
-                <Button variant='primary' leftIcon={<IoIosAddCircleOutline />} onClick={addOffer}>
+                <Button variant='primary' size={buttonSize} leftIcon={<IoIosAddCircleOutline />} onClick={addOffer}>
                   Ajouter une offre
                 </Button>
               </Flex>
+              {/* {hasActiveOffers.length > 0 ? ( */}
               <ListeVoeux data={offersList} removeOffer={removeOffer} editOffer={editOffer} extendOffer={extendOffer} />
+              {/* ) : (
+                <Box bg='white' p={8} border='1px solid' borderColor='bluefrance'>
+                  CTA Ajouter une offre ?
+                </Box>
+              )} */}
             </Box>
           )}
         </Container>

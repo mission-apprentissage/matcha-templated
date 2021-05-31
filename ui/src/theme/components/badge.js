@@ -10,6 +10,13 @@ const commonStatusBadgeStyle = {
 
 const Badge = {
   variants: {
+    readOnly: {
+      ...commonStatusBadgeStyle,
+      bg: 'beige',
+      pl: 2,
+      pr: 2,
+      borderRadius: 0,
+    },
     notRelevant: {
       ...commonStatusBadgeStyle,
       bg: '#e3e8ea',

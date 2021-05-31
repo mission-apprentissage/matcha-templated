@@ -100,9 +100,9 @@ module.exports = ({ mail, formulaire }) => {
       const { id_form } = req.params;
       const form = req.body;
 
-      await Formulaire.findOneAndUpdate({ id_form }, form);
+      const result = await Formulaire.findOneAndUpdate({ id_form }, form, { new: true });
 
-      return res.sendStatus(200);
+      return res.json(result);
     })
   );
 

@@ -1,7 +1,7 @@
 import * as Yup from 'yup'
 import { useState, useEffect } from 'react'
 import { IoIosAddCircleOutline } from 'react-icons/io'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { Formik, Form, useField, Field } from 'formik'
 import {
   Button,
@@ -28,6 +28,7 @@ import {
   useToast,
   useBreakpointValue,
   Image,
+  Badge,
 } from '@chakra-ui/react'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { ArrowDropRightLine } from '../../theme/components/icons/'
@@ -52,16 +53,93 @@ const CustomInput = (props) => {
   )
 }
 
+const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
+  const gridTemplate = useBreakpointValue(['1fr', 'repeat(2, 1fr)'])
+  return (
+    <>
+      <Flex py={6} alignItems='center'>
+        <Box as='h2' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
+          {formState.raison_sociale}
+        </Box>
+        <Spacer />
+        <Button
+          type='submit'
+          size={buttonSize}
+          variant='primary'
+          leftIcon={<AiOutlineEdit />}
+          onClick={() => setEditionMode.toggle(false)}
+        >
+          Editer les informations
+        </Button>
+      </Flex>
+      <Grid
+        templateColumns={gridTemplate}
+        py={6}
+        p={8}
+        bg='white'
+        border='1px solid'
+        borderColor='bluefrance'
+        gap={[6, 0]}
+      >
+        <GridItem>
+          <Heading size='md' pb={6}>
+            Renseignements Entreprise
+          </Heading>
+          <Grid templateRows='repeat(3, 1fr)' gap={4}>
+            <Flex>
+              <Text pr={3}>Nom de l'enseigne :</Text>
+              <Badge variant='readOnly'>{formState.raison_sociale}</Badge>
+            </Flex>
+            <Flex>
+              <Text pr={3}>SIRET :</Text>
+              <Badge variant='readOnly'>{formState.siret}</Badge>
+            </Flex>
+            <Flex>
+              <Text pr={3}>Adresse :</Text>
+              <Badge variant='readOnly'>{formState.adresse}</Badge>
+            </Flex>
+          </Grid>
+        </GridItem>
+        <GridItem>
+          <Heading size='md' pb={6}>
+            Information de contact
+          </Heading>
+          <Grid templateRows='repeat(4, 1fr)' gap={4}>
+            <Flex>
+              <Text pr={3}>Nom :</Text>
+              <Badge variant='readOnly'>{formState.nom}</Badge>
+            </Flex>
+            <Flex>
+              <Text pr={3}>Prénom :</Text>
+              <Badge variant='readOnly'>{formState.prenom}</Badge>
+            </Flex>
+            <Flex>
+              <Text pr={3}>Téléphone :</Text>
+              <Badge variant='readOnly'>{formState.telephone}</Badge>
+            </Flex>
+            <Flex>
+              <Text pr={3}>Email :</Text>
+              <Badge variant='readOnly'>{formState.email}</Badge>
+            </Flex>
+          </Grid>
+        </GridItem>
+      </Grid>
+    </>
+  )
+}
+
 const Formulaire = (props) => {
   const [formState, setFormState] = useState({})
   const [offersList, setOffersList] = useState([])
   const [currentOffer, setCurrentOffer] = useState({})
   const [loading, setLoading] = useBoolean(true)
   const [error, setError] = useBoolean()
+  const [readOnlyMode, setReadOnlyMode] = useBoolean()
   const ajouterVoeuxPopup = useDisclosure()
   const confirmationSuppression = useDisclosure()
   const { id_form, origine } = useParams()
   const toast = useToast()
+  const history = useHistory()
 
   const hasActiveOffers = offersList.filter((x) => x.statut === 'Active')
 
@@ -77,7 +155,10 @@ const Formulaire = (props) => {
         .catch(() => {
           setError.toggle(true)
         })
-        .finally(() => setLoading.toggle(false))
+        .finally(() => {
+          setLoading.toggle(false)
+          setReadOnlyMode.toggle(true)
+        })
     } else {
       const params = new URLSearchParams(window.location.search)
       let form = {}
@@ -135,8 +216,8 @@ const Formulaire = (props) => {
   const submitFormulaire = (values, { setSubmitting }) => {
     if (formState.id_form) {
       // update form
-      putFormulaire(id_form, values).then(() => {
-        setSubmitting(false)
+      putFormulaire(id_form, values).then((result) => {
+        setFormState(result.data)
         toast({
           title: 'Enregistré avec succès',
           position: 'top-right',
@@ -144,11 +225,14 @@ const Formulaire = (props) => {
           duration: 2000,
           isClosable: true,
         })
+        setSubmitting(false)
+        setReadOnlyMode.toggle(true)
       })
     } else {
       // create form
       postFormulaire(values).then((result) => {
         setFormState(result.data)
+        history.push(`/formulaire/${result.data.id_form}`)
         toast({
           title: 'Formulaire créé !',
           description: "Un mail d'accès vous a été envoyé",
@@ -157,6 +241,7 @@ const Formulaire = (props) => {
           duration: 4000,
         })
         setSubmitting(false)
+        setReadOnlyMode.toggle(true)
         ajouterVoeuxPopup.onOpen()
       })
     }
@@ -218,116 +303,121 @@ const Formulaire = (props) => {
               </BreadcrumbItem>
             </Breadcrumb>
           </Box>
-          <Formik
-            validateOnMount={true}
-            enableReinitialize={true}
-            initialValues={{
-              raison_sociale: formState?.raison_sociale ?? '',
-              siret: formState?.siret ? formState?.siret.replace(/ /g, '') : '',
-              adresse: formState?.adresse ?? '',
-              geo_coordonnees: formState?.geo_coordonnees ?? '',
-              nom: formState?.nom ?? '',
-              prenom: formState?.prenom ?? '',
-              telephone: formState?.telephone ? formState?.telephone.replace(/ /g, '') : '',
-              email: formState?.email ?? '',
-              origine: formState?.origine ?? '',
-            }}
-            validationSchema={Yup.object().shape({
-              raison_sociale: Yup.string().required('champs obligatoire').min(1),
-              siret: Yup.string()
-                .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
-                .min(14, 'le siret est sur 14 chiffres')
-                .max(14, 'le siret est sur 14 chiffres')
-                .required('champs obligatoire'),
-              adresse: Yup.string().required('champ obligatoire'),
-              nom: Yup.string().required('champ obligatoire'),
-              prenom: Yup.string().required('champ obligatoire'),
-              telephone: Yup.string()
-                .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
-                .min(10, 'le téléphone est sur 10 chiffres')
-                .max(10, 'le téléphone est sur 10 chiffres')
-                .required('champ obligatoire'),
-              email: Yup.string().email('Insérer un email valide').required('champ obligatoire'),
-            })}
-            onSubmit={submitFormulaire}
-          >
-            {({ values, isValid, isSubmitting, setFieldValue }) => {
-              return (
-                <Form autoComplete='off'>
-                  <Flex py={6} alignItems='center'>
-                    <Box as='h2' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
-                      {formState.id_form ? formState.raison_sociale : 'Nouveau formulaire'}
-                    </Box>
-                    <Spacer />
-                    <Button
-                      type='submit'
-                      size={buttonSize}
-                      variant='primary'
-                      leftIcon={<AiOutlineEdit />}
-                      isActive={isValid}
-                      disabled={!isValid || isSubmitting}
-                    >
-                      Enregistrer les informations
-                    </Button>
-                  </Flex>
-                  <Grid templateColumns='repeat(12, 1fr)'>
-                    <GridItem colSpan={12} bg='white' p={8} border='1px solid' borderColor='bluefrance'>
-                      <Grid templateColumns='repeat(12, 1fr)'>
-                        <GridItem colSpan={[12, 6]} p={[, 8]}>
-                          <Heading size='md' pb={6}>
-                            Renseignements Entreprise
-                          </Heading>
-                          <CustomInput
-                            name='raison_sociale'
-                            label="Nom de l'enseigne"
-                            type='text'
-                            value={values.raison_sociale}
-                          />
-                          <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
 
-                          <Field name='adresse'>
-                            {({ meta, form }) => {
-                              return (
-                                <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
-                                  <FormLabel>Adresse</FormLabel>
-                                  <AdresseAutocomplete
-                                    handleValues={(value) => {
-                                      setFieldValue('geo_coordonnees', value.geo_coordonnees)
-                                      setFieldValue('adresse', value.name)
-                                    }}
-                                    defaultValue={values.adresse}
-                                    setFieldTouched={form.setFieldTouched}
-                                  />
-                                  <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
-                                  <FormErrorMessage>{meta.error}</FormErrorMessage>
-                                </FormControl>
-                              )
-                            }}
-                          </Field>
-                        </GridItem>
-                        <GridItem colSpan={[12, 6]} p={[, 8]}>
-                          <Heading size='md' pb={6}>
-                            Information de contact
-                          </Heading>
-                          <CustomInput name='nom' label='Nom' type='text' value={values.nom} />
-                          <CustomInput name='prenom' label='Prénom' type='test' value={values.prenom} />
-                          <CustomInput
-                            name='telephone'
-                            label='Téléphone'
-                            type='tel'
-                            pattern='[0-9]{10}'
-                            maxLength='10'
-                            value={values.telephone}
-                          />
-                          <CustomInput name='email' label='Email' type='email' value={values.email} />
-                        </GridItem>
-                      </Grid>
-                    </GridItem>
-                  </Grid>
-                </Form>
-              )
-            }}
-          </Formik>
+          {readOnlyMode ? (
+            <FormulaireLectureSeul formState={formState} buttonSize={buttonSize} setEditionMode={setReadOnlyMode} />
+          ) : (
+            <Formik
+              validateOnMount={true}
+              enableReinitialize={true}
+              initialValues={{
+                raison_sociale: formState?.raison_sociale ?? '',
+                siret: formState?.siret ? formState?.siret.replace(/ /g, '') : '',
+                adresse: formState?.adresse ?? '',
+                geo_coordonnees: formState?.geo_coordonnees ?? '',
+                nom: formState?.nom ?? '',
+                prenom: formState?.prenom ?? '',
+                telephone: formState?.telephone ? formState?.telephone.replace(/ /g, '') : '',
+                email: formState?.email ?? '',
+                origine: formState?.origine ?? '',
+              }}
+              validationSchema={Yup.object().shape({
+                raison_sociale: Yup.string().required('champs obligatoire').min(1),
+                siret: Yup.string()
+                  .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
+                  .min(14, 'le siret est sur 14 chiffres')
+                  .max(14, 'le siret est sur 14 chiffres')
+                  .required('champs obligatoire'),
+                adresse: Yup.string().required('champ obligatoire'),
+                nom: Yup.string().required('champ obligatoire'),
+                prenom: Yup.string().required('champ obligatoire'),
+                telephone: Yup.string()
+                  .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
+                  .min(10, 'le téléphone est sur 10 chiffres')
+                  .max(10, 'le téléphone est sur 10 chiffres')
+                  .required('champ obligatoire'),
+                email: Yup.string().email('Insérer un email valide').required('champ obligatoire'),
+              })}
+              onSubmit={submitFormulaire}
+            >
+              {({ values, isValid, isSubmitting, setFieldValue }) => {
+                return (
+                  <Form autoComplete='off'>
+                    <Flex py={6} alignItems='center'>
+                      <Box as='h2' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
+                        {formState.id_form ? formState.raison_sociale : 'Nouveau formulaire'}
+                      </Box>
+                      <Spacer />
+                      <Button
+                        type='submit'
+                        size={buttonSize}
+                        variant='primary'
+                        leftIcon={<AiOutlineEdit />}
+                        isActive={isValid}
+                        disabled={!isValid || isSubmitting}
+                      >
+                        Enregistrer les informations
+                      </Button>
+                    </Flex>
+                    <Grid templateColumns='repeat(12, 1fr)'>
+                      <GridItem colSpan={12} bg='white' p={8} border='1px solid' borderColor='bluefrance'>
+                        <Grid templateColumns='repeat(12, 1fr)'>
+                          <GridItem colSpan={[12, 6]} p={[, 8]}>
+                            <Heading size='md' pb={6}>
+                              Renseignements Entreprise
+                            </Heading>
+                            <CustomInput
+                              name='raison_sociale'
+                              label="Nom de l'enseigne"
+                              type='text'
+                              value={values.raison_sociale}
+                            />
+                            <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
+
+                            <Field name='adresse'>
+                              {({ meta, form }) => {
+                                return (
+                                  <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
+                                    <FormLabel>Adresse</FormLabel>
+                                    <AdresseAutocomplete
+                                      handleValues={(value) => {
+                                        setFieldValue('geo_coordonnees', value.geo_coordonnees)
+                                        setFieldValue('adresse', value.name)
+                                      }}
+                                      defaultValue={values.adresse}
+                                      setFieldTouched={form.setFieldTouched}
+                                    />
+                                    <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
+                                    <FormErrorMessage>{meta.error}</FormErrorMessage>
+                                  </FormControl>
+                                )
+                              }}
+                            </Field>
+                          </GridItem>
+                          <GridItem colSpan={[12, 6]} p={[, 8]}>
+                            <Heading size='md' pb={6}>
+                              Information de contact
+                            </Heading>
+                            <CustomInput name='nom' label='Nom' type='text' value={values.nom} />
+                            <CustomInput name='prenom' label='Prénom' type='test' value={values.prenom} />
+                            <CustomInput
+                              name='telephone'
+                              label='Téléphone'
+                              type='tel'
+                              pattern='[0-9]{10}'
+                              maxLength='10'
+                              value={values.telephone}
+                            />
+                            <CustomInput name='email' label='Email' type='email' value={values.email} />
+                          </GridItem>
+                        </Grid>
+                      </GridItem>
+                    </Grid>
+                  </Form>
+                )
+              }}
+            </Formik>
+          )}
 
           {formState?._id && (
             <Box mb={12}>

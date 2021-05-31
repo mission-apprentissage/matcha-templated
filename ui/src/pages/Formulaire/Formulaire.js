@@ -27,9 +27,11 @@ import {
   Spacer,
   useToast,
   useBreakpointValue,
+  Image,
 } from '@chakra-ui/react'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { ArrowDropRightLine } from '../../theme/components/icons/'
+import addOfferImage from '../../assets/images/add-offer.svg'
 
 import { getFormulaire, postFormulaire, postOffre, putFormulaire, putOffre } from '../../api'
 import { Layout, AdresseAutocomplete } from '../../components'
@@ -338,13 +340,37 @@ const Formulaire = (props) => {
                   Ajouter une offre
                 </Button>
               </Flex>
-              {/* {hasActiveOffers.length > 0 ? ( */}
-              <ListeVoeux data={offersList} removeOffer={removeOffer} editOffer={editOffer} extendOffer={extendOffer} />
-              {/* ) : (
-                <Box bg='white' p={8} border='1px solid' borderColor='bluefrance'>
-                  CTA Ajouter une offre ?
+              {hasActiveOffers.length > 0 ? (
+                <ListeVoeux
+                  data={offersList}
+                  removeOffer={removeOffer}
+                  editOffer={editOffer}
+                  extendOffer={extendOffer}
+                />
+              ) : (
+                <Box bg='white' p={8} border='1px solid' borderColor='grey.400'>
+                  <Flex direction='column' alignItems='center'>
+                    <Image src={addOfferImage} pb={3} />
+                    <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
+                      Créer votre première offre d'emploi en alternance
+                    </Box>
+                    <Text>En quelques secondes, exprimez vos besoins de recrutement pour les</Text>
+                    <Text>
+                      afficher sur le site <span style={{ fontWeight: 700 }}>La Bonne Alternance</span> dès aujourd’hui.
+                    </Text>
+                    <Button
+                      mt={6}
+                      mb={3}
+                      variant='primary'
+                      size={buttonSize}
+                      leftIcon={<IoIosAddCircleOutline />}
+                      onClick={addOffer}
+                    >
+                      Ajouter une offre
+                    </Button>
+                  </Flex>
                 </Box>
-              )} */}
+              )}
             </Box>
           )}
         </Container>

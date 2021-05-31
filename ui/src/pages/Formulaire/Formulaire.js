@@ -438,28 +438,26 @@ const Formulaire = (props) => {
                   extendOffer={extendOffer}
                 />
               ) : (
-                <Box bg='white' p={8} border='1px solid' borderColor='grey.400'>
-                  <Flex direction='column' alignItems='center'>
-                    <Image src={addOfferImage} pb={3} />
-                    <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
-                      Créer votre première offre d'emploi en alternance
-                    </Box>
-                    <Text>En quelques secondes, exprimez vos besoins de recrutement pour les</Text>
-                    <Text>
-                      afficher sur le site <span style={{ fontWeight: 700 }}>La Bonne Alternance</span> dès aujourd’hui.
-                    </Text>
-                    <Button
-                      mt={6}
-                      mb={3}
-                      variant='primary'
-                      size={buttonSize}
-                      leftIcon={<IoIosAddCircleOutline />}
-                      onClick={addOffer}
-                    >
-                      Ajouter une offre
-                    </Button>
-                  </Flex>
-                </Box>
+                <Flex direction='column' alignItems='center' bg='white' p={8} border='1px solid' borderColor='grey.400'>
+                  <Image src={addOfferImage} pb={3} />
+                  <Box align='center' textStyle='h3' fontSize={['md', '3xl']} fontWeight='700' color='grey.800'>
+                    Créer votre première offre d'emploi en alternance
+                  </Box>
+                  <Text align='center'>En quelques secondes, exprimez vos besoins de recrutement pour les</Text>
+                  <Text align='center'>
+                    afficher sur le site <span style={{ fontWeight: 700 }}>La Bonne Alternance</span> dès aujourd’hui.
+                  </Text>
+                  <Button
+                    mt={6}
+                    mb={3}
+                    variant='primary'
+                    size={buttonSize}
+                    leftIcon={<IoIosAddCircleOutline />}
+                    onClick={addOffer}
+                  >
+                    Ajouter une offre
+                  </Button>
+                </Flex>
               )}
             </Box>
           )}

@@ -1,4 +1,4 @@
-import { Button, Box, Flex, Text, Heading, Spacer, Icon, Badge, VStack, HStack, Stack } from '@chakra-ui/react'
+import { Button, Box, Flex, Text, Heading, Spacer, Icon, Badge, VStack, HStack, Stack, Tooltip } from '@chakra-ui/react'
 import { AiOutlineEdit, AiOutlineExclamationCircle, AiOutlineDelete } from 'react-icons/ai'
 import moment from 'moment'
 import 'moment/locale/fr'
@@ -57,7 +57,7 @@ export default (props) => {
                 {item.date_debut_apprentissage && (
                   <Flex direction='row'>
                     <Text fontSize='md' fontWeight='400' pr={1}>
-                      Date de début souhaitée:
+                      Date de début du contrat:
                     </Text>
                     <Text fontWeight='600'>{moment(item.date_debut_apprentissage).format('DD/MM/YYYY')}</Text>
                   </Flex>
@@ -65,21 +65,31 @@ export default (props) => {
               </VStack>
               <Stack direction={['column', 'row']} spacing={3}>
                 <Button variant='secondary' leftIcon={<AiOutlineEdit />} onClick={() => props.editOffer(item)}>
-                  Editer l'offre
+                  Modifier l'offre
                 </Button>
-                <Button
-                  variant='secondary'
-                  isDisabled={!isExtendable}
-                  leftIcon={<AiOutlineEdit />}
-                  onClick={() =>
-                    props.extendOffer(item._id, {
-                      ...item,
-                      date_expiration: moment().add(1, 'months').format('YYYY-MM-DD'),
-                    })
-                  }
+
+                <Tooltip
+                  hasArrow
+                  label="Disponible une semaine avant l'expiration de l'offre"
+                  placement='top'
+                  isDisabled={isExtendable}
                 >
-                  Prolonger l'offre
-                </Button>
+                  <Box>
+                    <Button
+                      variant='secondary'
+                      isDisabled={!isExtendable}
+                      leftIcon={<AiOutlineEdit />}
+                      onClick={() =>
+                        props.extendOffer(item._id, {
+                          ...item,
+                          date_expiration: moment().add(1, 'months').format('YYYY-MM-DD'),
+                        })
+                      }
+                    >
+                      Modifier l'échéance
+                    </Button>
+                  </Box>
+                </Tooltip>
                 <Button
                   variant='outline'
                   color='redmarianne'

@@ -5,9 +5,11 @@ import Navbar from './Navbar'
 export default ({ children, background }) => {
   return (
     <Container maxW='full' p='0'>
-      <Flex direction='column'>
+      <Flex direction='column' h='100vh'>
         <Navbar />
-        <Box bg={background ?? 'lightGrey'}>{children}</Box>
+        <Box bg={background ?? 'lightGrey'} flexGrow='1'>
+          {children}
+        </Box>
         <Spacer />
         <Box>
           <Mission />

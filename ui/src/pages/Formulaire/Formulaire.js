@@ -335,7 +335,7 @@ const Formulaire = (props) => {
               validationSchema={Yup.object().shape({
                 raison_sociale: Yup.string().required('champs obligatoire').min(1),
                 siret: Yup.string()
-                  .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
+                  .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffres')
                   .min(14, 'le siret est sur 14 chiffres')
                   .max(14, 'le siret est sur 14 chiffres')
                   .required('champs obligatoire'),
@@ -343,11 +343,11 @@ const Formulaire = (props) => {
                 nom: Yup.string().required('champ obligatoire'),
                 prenom: Yup.string().required('champ obligatoire'),
                 telephone: Yup.string()
-                  .matches(/^[0-9]+$/, 'Le téléphone est composé uniquement de chiffre')
+                  .matches(/^[0-9]+$/, 'Le téléphone est composé uniquement de chiffres')
                   .min(10, 'le téléphone est sur 10 chiffres')
                   .max(10, 'le téléphone est sur 10 chiffres')
                   .required('champ obligatoire'),
-                email: Yup.string().email('Insérer un email valide').required('champ obligatoire'),
+                email: Yup.string().email('Insérez un email valide').required('champ obligatoire'),
               })}
               onSubmit={submitFormulaire}
             >

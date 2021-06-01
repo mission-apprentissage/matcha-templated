@@ -105,9 +105,13 @@ export default function List() {
           </BreadcrumbItem>
 
           <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink href='#'>Consulter vos offres en cours</BreadcrumbLink>
+            <BreadcrumbLink href='#'>Administration des offres</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
+
+        <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800' py={3}>
+          Offre(s) de l'organisation : {auth.permissions.organization}
+        </Box>
 
         <MyTable formulaires={state} />
       </Container>

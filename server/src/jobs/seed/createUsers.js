@@ -16,6 +16,7 @@ const passwordOptions = {
 const users = [
   {
     username: "mna",
+    organization: "Mission Apprentissage",
     password: passwordGenerator.generate(passwordOptions),
     email: "contact@matcha.apprentissage.beta.gouv.fr",
     isAdmin: true,
@@ -23,6 +24,7 @@ const users = [
   },
   {
     username: "opco",
+    organization: "Opco 2i",
     password: passwordGenerator.generate(passwordOptions),
     email: "test@opco2i.com",
     isAdmin: true,
@@ -43,12 +45,12 @@ const createUser = async (users) => {
   const userList = await buildAdminsUsers();
 
   // Users creation
-  await asyncForEach(userList, async ({ username, password, email, isAdmin, scope }) => {
+  await asyncForEach(userList, async ({ username, organization, password, email, isAdmin, scope }) => {
     try {
       let exist = await users.getUser(email);
       if (exist) return;
 
-      await users.createUser(username, password, email, { isAdmin, scope });
+      await users.createUser(username, organization, password, email, { isAdmin, scope });
     } catch (e) {
       logger.error(e);
     }

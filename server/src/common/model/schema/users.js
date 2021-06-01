@@ -8,6 +8,11 @@ module.exports = new Schema(
       description: "L'identifiant de l'utilisateur",
       unique: true,
     },
+    organization: {
+      type: String,
+      default: null,
+      description: "Organisme de l'utilisateur",
+    },
     email: {
       type: String,
       default: null,

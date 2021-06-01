@@ -24,13 +24,14 @@ module.exports = async () => {
       return null;
     },
     getUser: (email) => User.findOne({ email }),
-    createUser: async (username, password, email, options = {}) => {
+    createUser: async (username, organization, password, email, options = {}) => {
       let hash = options.hash || sha512Utils.hash(password);
       let { isAdmin, scope } = options;
 
       let user = new User({
         username,
         email,
+        organization,
         password: hash,
         isAdmin: isAdmin ?? false,
         scope: scope ?? [],

@@ -40,6 +40,14 @@ import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
 import ConfirmationSuppression from './ConfirmationSuppression'
 
+const CustomToast = () => {
+  return (
+    <Box color='white' p={3} bg='grey.200' borderLeft='4px solid bluefrance'>
+      Hello World
+    </Box>
+  )
+}
+
 const CustomInput = (props) => {
   const [field, meta] = useField(props)
   return (
@@ -47,6 +55,7 @@ const CustomInput = (props) => {
       <FormControl isInvalid={meta.error && meta.touched} isRequired>
         <FormLabel>{props.label}</FormLabel>
         <Input {...field} {...props} />
+        {props.helper && <FormHelperText>{props.helper}</FormHelperText>}
         <FormErrorMessage>{meta.error}</FormErrorMessage>
       </FormControl>
     </Box>
@@ -95,7 +104,9 @@ const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
               <Badge variant='readOnly'>{formState.siret}</Badge>
             </Flex>
             <Flex>
-              <Text pr={3}>Adresse :</Text>
+              <Text pr={3} isTruncated>
+                Adresse :
+              </Text>
               <Badge variant='readOnly'>{formState.adresse}</Badge>
             </Flex>
           </Grid>
@@ -249,7 +260,7 @@ const Formulaire = (props) => {
 
   if (loading) {
     return (
-      <Layout>
+      <Layout background='beige'>
         <Center p={5}>
           <Text>Chargement en cours...</Text>
         </Center>
@@ -259,7 +270,7 @@ const Formulaire = (props) => {
 
   if (error) {
     return (
-      <Layout>
+      <Layout background='beige'>
         <Center p={5}>
           <Box>
             <Text align='center'>Une erreur est survenu lors du chargement du formulaire.</Text>
@@ -332,7 +343,7 @@ const Formulaire = (props) => {
                 nom: Yup.string().required('champ obligatoire'),
                 prenom: Yup.string().required('champ obligatoire'),
                 telephone: Yup.string()
-                  .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffre')
+                  .matches(/^[0-9]+$/, 'Le téléphone est composé uniquement de chiffre')
                   .min(10, 'le téléphone est sur 10 chiffres')
                   .max(10, 'le téléphone est sur 10 chiffres')
                   .required('champ obligatoire'),
@@ -396,7 +407,7 @@ const Formulaire = (props) => {
                           </GridItem>
                           <GridItem colSpan={[12, 6]} p={[, 8]}>
                             <Heading size='md' pb={6}>
-                              Information de contact
+                              Informations de contact
                             </Heading>
                             <CustomInput name='nom' label='Nom' type='text' value={values.nom} />
                             <CustomInput name='prenom' label='Prénom' type='test' value={values.prenom} />
@@ -407,6 +418,7 @@ const Formulaire = (props) => {
                               pattern='[0-9]{10}'
                               maxLength='10'
                               value={values.telephone}
+                              helper='ex: 0632923456'
                             />
                             <CustomInput name='email' label='Email' type='email' value={values.email} />
                           </GridItem>
@@ -441,7 +453,7 @@ const Formulaire = (props) => {
                 <Flex direction='column' alignItems='center' bg='white' p={8} border='1px solid' borderColor='grey.400'>
                   <Image src={addOfferImage} pb={3} />
                   <Box align='center' textStyle='h3' fontSize={['md', '3xl']} fontWeight='700' color='grey.800'>
-                    Créer votre première offre d'emploi en alternance
+                    Créez votre première offre d'emploi en alternance
                   </Box>
                   <Text align='center'>En quelques secondes, exprimez vos besoins de recrutement pour les</Text>
                   <Text align='center'>

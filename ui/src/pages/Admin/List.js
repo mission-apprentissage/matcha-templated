@@ -35,10 +35,11 @@ const MyTable = ({ formulaires }) => {
           <Th py={6} paddingLeft='30px'>
             Raison Sociale
           </Th>
-          <Th>Nombre d'offres</Th>
-          <Th>Postées le</Th>
-          <Th>Expire le</Th>
-          <Th></Th>
+          <Th>Nombre d'offre(s)</Th>
+          <Th>Contact</Th>
+          <Th>Email</Th>
+          <Th>Téléphone</Th>
+          <Th>Accès formulaire</Th>
         </Thead>
         <Tbody>
           {formulaires?.map((item, index) => {
@@ -48,8 +49,11 @@ const MyTable = ({ formulaires }) => {
                   {item.raison_sociale}
                 </Td>
                 <Td>{item.offres.length}</Td>
-                <Td>{Date(item.createdAt)}</Td>
-                <Td>{Date(item.createdAt)}</Td>
+                <Td>
+                  {item.prenom.toLowerCase().charAt(0).toUpperCase() + item.prenom.slice(1)} {item.nom.toUpperCase()}
+                </Td>
+                <Td>{item.email}</Td>
+                <Td>{item.telephone}</Td>
                 <Td>
                   <Center>
                     <Link href={`/formulaire/${item.id_form}`} target='_blank' isExternal>

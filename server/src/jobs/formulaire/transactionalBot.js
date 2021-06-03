@@ -7,7 +7,8 @@ const mail = require("../../common/components/mail");
 const logger = require("../../common/logger");
 
 const transactionalReports = async () => {
-  let currentDate = moment().utc().startOf("day");
+  // number of days to expiration for the reminder email to be sent
+  let threshold = 7;
 
   await paginator(
     Formulaire,
@@ -19,14 +20,14 @@ const transactionalReports = async () => {
       const params = [];
 
       await asyncForEach(formulaire.offres, async (offre) => {
-        let { date_creation } = offre;
+        let { date_expiration } = offre;
 
         if (offre.statut != "Active") return;
 
-        const triggerDate = moment(date_creation).add(3, "weeks").utc();
-
+        let remainingDays = moment(date_expiration).diff(moment(), "day");
         // if the current date is not equal or above the trigger date, do nothing
-        if (triggerDate < currentDate) return;
+
+        if (remainingDays !== threshold) return;
 
         // add offers details to params array
         params.push(offre);

@@ -38,7 +38,7 @@ const transactionalReports = async () => {
         email,
         raison_sociale,
         id_form,
-        templateId: 180,
+        templateId: 182,
         tags: ["bot-relance-expiration"],
         params,
       };

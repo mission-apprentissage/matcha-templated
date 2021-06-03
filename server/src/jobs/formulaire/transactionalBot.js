@@ -11,7 +11,7 @@ const transactionalReports = async () => {
 
   await paginator(
     Formulaire,
-    { "offres.statut.active": true, $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }] },
+    { "offres.statut": "Active", $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }] },
     {},
     async (formulaire) => {
       let { email, raison_sociale, id_form, _id } = formulaire;
@@ -21,12 +21,14 @@ const transactionalReports = async () => {
       await asyncForEach(formulaire.offres, async (offre) => {
         let { date_creation } = offre;
 
+        if (offre.statut != "Active") return;
+
         const triggerDate = moment(date_creation).add(3, "weeks").utc();
 
         // if the current date is not equal or above the trigger date, do nothing
-        if (triggerDate <= currentDate) return;
+        if (triggerDate < currentDate) return;
 
-        // add offers dateil to params array
+        // add offers details to params array
         params.push(offre);
       });
 

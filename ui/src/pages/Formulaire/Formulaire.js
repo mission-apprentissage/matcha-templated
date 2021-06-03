@@ -200,10 +200,22 @@ const Formulaire = (props) => {
     if (currentOffer._id) {
       // update
       putOffre(currentOffer._id, values).then((result) => setOffersList(result.data.offres))
+      toast({
+        title: 'Offre mise à jour avec succès !',
+        position: 'top-right',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      })
     } else {
       // create
-      postOffre(formState.id_form, values).then((result) => {
-        setOffersList(result.data.offres)
+      postOffre(formState.id_form, values).then((result) => setOffersList(result.data.offres))
+      toast({
+        title: 'Offre enregistré avec succès !',
+        position: 'top-right',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
       })
     }
   }

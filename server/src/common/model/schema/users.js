@@ -5,35 +5,18 @@ module.exports = new Schema(
     username: {
       type: String,
       default: null,
-      description: "L'identifiant username de l'utilisateur",
+      description: "L'identifiant de l'utilisateur",
       unique: true,
     },
-    nom: {
+    organization: {
       type: String,
       default: null,
-      description: "Le nom de l'utilisateur",
-    },
-    prenom: {
-      type: String,
-      default: null,
-      description: "Le prénom de l'utilisateur",
-    },
-    parcoursup_id: {
-      type: String,
-      default: null,
-      description: "L'identifiant parcoursup de l'utilisateur",
-      unique: true,
+      description: "Organisme de l'utilisateur",
     },
     email: {
       type: String,
       default: null,
       description: "L'email de l'utilisateur",
-      unique: true,
-    },
-    telephone: {
-      type: String,
-      default: null,
-      description: "Le numéro de telephone de l'utilisateur",
       unique: true,
     },
     password: {
@@ -46,15 +29,15 @@ module.exports = new Schema(
       default: false,
       description: "true si l'utilisateur est administrateur",
     },
-    created_at: {
-      type: Date,
-      default: Date.now,
-      description: "Date d'ajout en base de données",
+    scope: {
+      type: [String],
+      default: [],
+      description: "Scope accessible par l'utilisateur",
     },
-    last_update_at: {
+    last_connection: {
       type: Date,
-      default: Date.now,
-      description: "Date de dernières mise à jour",
+      default: null,
+      description: "Date de dernière connexion",
     },
   },
   {

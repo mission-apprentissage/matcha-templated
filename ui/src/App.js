@@ -1,15 +1,7 @@
-import { ChakraProvider } from '@chakra-ui/react'
 import { Switch, Route, Redirect } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from 'react-query'
 
-import { Formulaire, Homepage, NotFound, Remerciement } from './pages'
-import { Login, UserList } from './pages/admin-dashboard'
+import { Formulaire, NotFound, Remerciement, Login, List, HomePage } from './pages'
 import useAuth from './common/hooks/useAuth'
-import theme from './theme'
-
-import './App.css'
-
-const client = new QueryClient()
 
 function PrivateRoute({ children, ...rest }) {
   let [auth] = useAuth()
@@ -18,7 +10,7 @@ function PrivateRoute({ children, ...rest }) {
     <Route
       {...rest}
       render={() => {
-        return auth.sub !== 'anonymous' ? children : <Redirect to='/login' />
+        return auth.sub !== 'anonymous' ? children : <Redirect to='/' />
       }}
     />
   )
@@ -26,21 +18,17 @@ function PrivateRoute({ children, ...rest }) {
 
 const App = () => {
   return (
-    <QueryClientProvider client={client}>
-      <ChakraProvider theme={theme}>
-        <Switch>
-          <PrivateRoute exact path='/admin'>
-            <UserList />
-          </PrivateRoute>
-          <Route exact path='/' component={Homepage} />
-          <Route exact path='/merci' component={Remerciement} />
-          <Route exact path='/login' component={Login} />
-          <Route exact path='/formulaire/:id' render={(props) => <Formulaire {...props} byId={true} />} />
-          <Route strict path='/:origine/' component={Formulaire} />
-          <Route component={NotFound} />
-        </Switch>
-      </ChakraProvider>
-    </QueryClientProvider>
+    <Switch>
+      <PrivateRoute exact path='/admin'>
+        <List />
+      </PrivateRoute>
+      <Route exact path='/' component={HomePage} />
+      <Route exact path='/merci' component={Remerciement} />
+      <Route exact path='/login' component={Login} />
+      <Route exact path='/formulaire/:id_form' render={(props) => <Formulaire {...props} byId={true} />} />
+      <Route strict path='/:origine/' component={Formulaire} />
+      <Route component={NotFound} />
+    </Switch>
   )
 }
 

@@ -19,11 +19,10 @@ const createModel = (modelName, descriptor, options = {}) => {
 };
 
 module.exports = {
-  Formulaire: createModel("formulaires", schema.formulaireOPCOSchema, {
+  Formulaire: createModel("formulaires", schema.formulaireSchema, {
     esIndexName: "formulaires",
     paginate: true,
   }),
-  Questionnaire: createModel("questionnaires", schema.questionnairesSchema),
   User: createModel("users", schema.usersSchema),
   Log: createModel("logs", schema.logSchema),
 };

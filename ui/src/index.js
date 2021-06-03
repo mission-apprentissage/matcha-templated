@@ -1,16 +1,20 @@
 import ReactDOM from 'react-dom'
-import { BrowserRouter } from 'react-router-dom'
-import { ContextProvider } from './context'
 import TagManager from 'react-gtm-module'
+import { BrowserRouter } from 'react-router-dom'
+import { ChakraProvider } from '@chakra-ui/react'
+
+import theme from './theme'
 import App from './App'
+
+import './index.css'
 
 TagManager.initialize({ gtmId: 'GTM-KL849C7' })
 
 ReactDOM.render(
   <BrowserRouter>
-    <ContextProvider>
+    <ChakraProvider theme={theme}>
       <App />
-    </ContextProvider>
+    </ChakraProvider>
   </BrowserRouter>,
   document.getElementById('root')
 )

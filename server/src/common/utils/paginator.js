@@ -34,4 +34,4 @@ const paginator = async (
   }
 };
 
-module.exports = { paginator };
+module.exports.paginator = paginator;

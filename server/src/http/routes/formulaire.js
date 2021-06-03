@@ -3,13 +3,15 @@ const { Formulaire } = require("../../common/model");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { getElasticInstance } = require("../../common/esClient");
 const logger = require("../../common/logger");
-const config = require("config");
 
 const esClient = getElasticInstance();
 
-module.exports = ({ mail }) => {
+module.exports = ({ mail, formulaire }) => {
   const router = express.Router();
 
+  /**
+   * Query search endpoint
+   */
   router.get(
     "/",
     tryCatch(async (req, res) => {
@@ -33,7 +35,7 @@ module.exports = ({ mail }) => {
   );
 
   /**
-   * Get single form
+   * Get form from id
    */
   router.get(
     "/:id_form",
@@ -48,7 +50,64 @@ module.exports = ({ mail }) => {
   );
 
   /**
-   * LBA ENDPOINT
+   * Post form
+   */
+  router.post(
+    "/",
+    tryCatch(async (req, res) => {
+      const form = req.body;
+
+      const newFormulaire = await formulaire.createForm(form);
+
+      let { _id, id_form, raison_sociale, email } = newFormulaire;
+
+      const mailBody = {
+        id_form,
+        email,
+        raison_sociale,
+        tags: ["matcha-nouveau-formulaire"],
+        templateId: 178,
+        subject: `Accédez à vos offres déposées sur Matcha`,
+      };
+
+      const payload = mail.getEmailBody(mailBody);
+
+      const { body: result } = await mail.sendmail(payload);
+
+      const message = {
+        campagne: "matcha-nouveau-formulaire",
+        code: result.code ?? null,
+        message: result.message ?? null,
+        messageId: result.messageId ?? null,
+      };
+
+      if (!result.messageId) {
+        logger.info(`error : ${message.code} —— ${message.message} — ${email}`);
+      }
+
+      await Formulaire.findByIdAndUpdate(_id, { $push: { mailing: message } });
+
+      return res.json(newFormulaire);
+    })
+  );
+
+  /**
+   * Put form
+   */
+  router.put(
+    "/:id_form",
+    tryCatch(async (req, res) => {
+      const { id_form } = req.params;
+      const form = req.body;
+
+      const result = await Formulaire.findOneAndUpdate({ id_form }, form, { new: true });
+
+      return res.json(result);
+    })
+  );
+
+  /**
+   * LBA ENDPOINT : get offer from id
    */
   router.get(
     "/offre/:id_offre",
@@ -60,6 +119,61 @@ module.exports = ({ mail }) => {
 
       result.events = undefined;
       result.mailing = undefined;
+
+      return res.json(result);
+    })
+  );
+
+  /**
+   * Post new offer to form
+   */
+
+  router.post(
+    "/:id_form/offre",
+    tryCatch(async (req, res) => {
+      const { id_form } = req.params;
+      const offre = req.body;
+
+      const result = await Formulaire.findOneAndUpdate({ id_form }, { $push: { offres: offre } }, { new: true });
+
+      return res.json(result);
+    })
+  );
+
+  /**
+   * Put existing offer from id
+   */
+  router.put(
+    "/offre/:id_offre",
+    tryCatch(async (req, res) => {
+      const { id_offre } = req.params;
+      const {
+        libelle,
+        romes,
+        niveau,
+        date_debut_apprentissage,
+        description,
+        date_creation,
+        date_expiration,
+        statut,
+      } = req.body;
+
+      const result = await Formulaire.findOneAndUpdate(
+        { "offres._id": id_offre },
+        {
+          $set: {
+            "offres.$.libelle": libelle,
+            "offres.$.romes": romes,
+            "offres.$.niveau": niveau,
+            "offres.$.date_debut_apprentissage": date_debut_apprentissage,
+            "offres.$.description": description,
+            "offres.$.date_creation": date_creation,
+            "offres.$.date_expiration": date_expiration,
+            "offres.$.statut": statut,
+          },
+        },
+        { new: true }
+      );
 
       return res.json(result);
     })
@@ -144,73 +258,6 @@ module.exports = ({ mail }) => {
       });
 
       return res.json(filtered);
-    })
-  );
-
-  /**
-   * Post FORM
-   */
-  router.post(
-    "/:id_form",
-    tryCatch(async (req, res) => {
-      const form = req.body;
-      const { id_form } = req.params;
-
-      /**
-       * Create new formulaire and send email
-       */
-      if (id_form == "undefined") {
-        const newForm = await Formulaire.create(form);
-
-        let { _id, id_form, raison_sociale, email } = newForm;
-
-        const payload = {
-          sender: {
-            name: "Mission interministérielle pour l'apprentissage",
-            email: "charlotte.lecuit@beta.gouv.fr",
-          },
-          to: [
-            {
-              name: `${raison_sociale}`,
-              email: `${email}`,
-            },
-          ],
-          replyTo: {
-            name: "Charlotte Lecuit",
-            email: "charlotte.lecuit@beta.gouv.fr",
-          },
-          subject: `Accédez à vos offres déposées sur Matcha`,
-          templateId: 178,
-          tags: ["matcha-nouveau-formulaire"],
-          params: {
-            URL: `${config.publicUrl}/formulaire/${id_form}`,
-          },
-        };
-
-        const { body: result } = await mail.sendmail(payload);
-
-        const message = {
-          campagne: "matcha-nouveau-formulaire",
-          code: result.code ?? null,
-          message: result.message ?? null,
-          messageId: result.messageId ?? null,
-        };
-
-        if (!result.messageId) {
-          logger.info(`error : ${message.code} —— ${message.message} — ${email}`);
-        }
-
-        await Formulaire.findByIdAndUpdate(_id, { $push: { mailing: message } });
-
-        return res.json(result);
-      }
-
-      /**
-       * Update existing formulaire
-       */
-      await Formulaire.findOneAndUpdate({ id_form }, form);
-
-      return res.sendStatus(200);
     })
   );
 

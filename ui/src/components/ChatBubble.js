@@ -1,19 +1,6 @@
 import React from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import leaf from '../assets/images/leaf-bubble.svg'
-
-const animate = keyframes`
- from{
-  -webkit-transform: translateY(50px);
-  transform: translateY(50px);
-  opacity: 0;
- }
- to {
-  -webkit-transform: translateY(0);
-  transform: translateY(0);
-  opacity: 1;
- }
-`
 
 const Bubble = styled.div`
   font-family: Marianne;
@@ -37,12 +24,10 @@ const LogoBubble = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
-  animation: ${animate} 0.5 ease-in infinite;
-  /* padding-top: 1.5rem; */
   padding-bottom: ${(props) => props.margin || '2rem'};
 `
 
-const ChatBubble = ({ children, darken, bubble = true, margin }) => {
+export default ({ children, darken, bubble = true, margin }) => {
   return (
     <Wrapper margin={margin}>
       {bubble && (
@@ -50,11 +35,7 @@ const ChatBubble = ({ children, darken, bubble = true, margin }) => {
           <img alt='logo' src={leaf} />
         </LogoBubble>
       )}
-      <Bubble darken={darken} className='flex-grow-1 ml-2'>
-        {children}
-      </Bubble>
+      <Bubble darken={darken}>{children}</Bubble>
     </Wrapper>
   )
 }
-
-export default ChatBubble

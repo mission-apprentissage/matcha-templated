@@ -1,7 +1,5 @@
-import React from 'react'
-import { useCombobox } from 'downshift'
 import styled from 'styled-components'
-import color from './helper/color'
+import { useCombobox } from 'downshift'
 import { Input } from '@chakra-ui/react'
 
 const Wrapper = styled.ul`
@@ -24,8 +22,7 @@ export default (props) => {
   let { saveSelectedItem, setInputItems, handleSearch, value, placeholder, inputItems, name } = props
 
   const itemToString = (item) => (item ? item.label : '')
-  // const onSelectedItemChange = ({ selectedItem }) => props.saveSelectedItem(props.valueName, selectedItem, props.index)
-  const onSelectedItemChange = ({ selectedItem }) => saveSelectedItem(selectedItem) // remove index for OPCO ATLAS FORM
+  const onSelectedItemChange = ({ selectedItem }) => saveSelectedItem(selectedItem)
   const onInputValueChange = async ({ inputValue }) => setInputItems(await handleSearch(inputValue))
 
   const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({
@@ -45,7 +42,7 @@ export default (props) => {
         {isOpen &&
           inputItems.map((item, index) => (
             <li
-              style={highlightedIndex === index ? { backgroundColor: color.lightGrey } : {}}
+              style={highlightedIndex === index ? { backgroundColor: 'lightGrey' } : {}}
               key={`${item}${index}`}
               {...getItemProps({ item, index })}
             >

@@ -31,7 +31,7 @@ export default () => {
                 Se déconnecter
               </Button>
             </>
-          ) : (
+          ) : history.location.pathname === '/' ? (
             <>
               <Button
                 display={['none', 'flex']}
@@ -41,10 +41,10 @@ export default () => {
                 color='bluefrance'
                 leftIcon={<RiAccountCircleLine />}
               >
-                Se connecter
+                Espace partenaires
               </Button>
             </>
-          )}
+          ) : null}
         </Flex>
       </Container>
     </Box>

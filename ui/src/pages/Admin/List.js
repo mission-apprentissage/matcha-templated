@@ -35,6 +35,7 @@ const MyTable = ({ formulaires }) => {
           <Th py={6} paddingLeft='30px'>
             Raison Sociale
           </Th>
+          <Th>Origine</Th>
           <Th>Nombre d'offre(s)</Th>
           <Th>Contact</Th>
           <Th>Email</Th>
@@ -48,6 +49,7 @@ const MyTable = ({ formulaires }) => {
                 <Td py={4} paddingLeft='30px'>
                   {item.raison_sociale}
                 </Td>
+                <Td>{item.origine}</Td>
                 <Td>{item.offres.length}</Td>
                 <Td>
                   {item.prenom.toLowerCase().charAt(0).toUpperCase() + item.prenom.slice(1)} {item.nom.toUpperCase()}

@@ -116,7 +116,7 @@ module.exports = ({ mail, formulaire }) => {
       let result = await Formulaire.findOne({ "offres._id": id_offre });
 
       if (!result) {
-        return res.statut(400).json({ error: true, message: "Not found" });
+        return res.status(400).json({ error: true, message: "Not found" });
       }
 
       result.offres = result.offres.filter((x) => x._id == id_offre);

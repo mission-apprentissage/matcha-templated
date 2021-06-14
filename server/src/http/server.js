@@ -10,8 +10,8 @@ const packageJson = require("../../package.json");
 const login = require("./routes/login");
 
 const password = require("./routes/password");
-
 const formulaire = require("./routes/formulaire");
+const entreprise = require("./routes/entreprise");
 
 module.exports = async (components) => {
   const { db } = components;
@@ -24,6 +24,7 @@ module.exports = async (components) => {
   app.use("/api/login", login(components));
   app.use("/api/password", password(components));
   app.use("/api/formulaire", formulaire(components));
+  app.use("/api/entreprise", entreprise());
 
   app.get(
     "/api",

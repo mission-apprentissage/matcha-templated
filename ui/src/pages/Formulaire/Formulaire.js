@@ -34,7 +34,7 @@ import { AiOutlineEdit } from 'react-icons/ai'
 import { ArrowDropRightLine } from '../../theme/components/icons/'
 import addOfferImage from '../../assets/images/add-offer.svg'
 
-import { getFormulaire, postFormulaire, postOffre, putFormulaire, putOffre } from '../../api'
+import { getFormulaire, getSiretInfo, postFormulaire, postOffre, putFormulaire, putOffre } from '../../api'
 import { Layout, AdresseAutocomplete } from '../../components'
 import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
@@ -391,7 +391,37 @@ const Formulaire = (props) => {
                       <GridItem colSpan={12} bg='white' p={8} border='1px solid' borderColor='bluefrance.500'>
                         <Grid templateColumns='repeat(12, 1fr)'>
                           <GridItem colSpan={[12, 4]} p={[, 8]}>
-                            {isMandataire && (
+                            <Box p={5} border='1px solid' borderColor='bluefrance.500'>
+                              <FormControl mb={5}>
+                                <Flex alignItems='center'>
+                                  <FormLabel htmlFor='mandataire'>Je suis mandataire d'un établissement</FormLabel>
+                                  <Spacer />
+                                  <Flex direction='column' alignItems='center'>
+                                    <Switch
+                                      onChange={() => {
+                                        setIsMandataire.toggle(!isMandataire)
+                                        setFieldValue('raison_sociale_mandataire', undefined)
+                                        setFieldValue('siret_mandataire', undefined)
+                                        setFieldValue('adresse_mandataire', undefined)
+                                        setFieldValue('geo_coordonnees_mandataire', undefined)
+                                      }}
+                                      isChecked={isMandataire}
+                                    />
+                                    <Text
+                                      color={isMandataire ? 'bluefrance.500' : 'grey.500'}
+                                      fontSize='xs'
+                                      fontWeight={isMandataire ? 600 : 400}
+                                    >
+                                      {isMandataire ? 'Oui' : 'Non'}
+                                    </Text>
+                                  </Flex>
+                                </Flex>
+                                <FormHelperText color='grey.600' fontSize='xs'>
+                                  Une entreprise vous a mandaté pour gérer ses offres (vous êtes une CCI, un OPCO, un
+                                  CFA...)
+                                </FormHelperText>
+                              </FormControl>
+
                               <Collapse in={isMandataire} animateOpacity>
                                 <Heading size='md' pb={6}>
                                   Renseignements Mandataire
@@ -422,6 +452,7 @@ const Formulaire = (props) => {
                                           }}
                                           defaultValue={values.adresse_mandataire}
                                           setFieldTouched={form.setFieldTouched}
+                                          name='adresse_mandataire'
                                         />
                                         <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
                                         <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -430,45 +461,29 @@ const Formulaire = (props) => {
                                   }}
                                 </Field>
                               </Collapse>
-                            )}
-
-                            <Box p={5} bg='bluefrance.100'>
-                              <FormControl>
-                                <Flex alignItems='center'>
-                                  <FormLabel htmlFor='mandataire'>Je suis mandataire d'un établissement</FormLabel>
-                                  <Spacer />
-                                  <Flex direction='column' alignItems='center'>
-                                    <Switch
-                                      onChange={() => {
-                                        setIsMandataire.toggle(!isMandataire)
-                                        setFieldValue('raison_sociale_mandataire', null)
-                                        setFieldValue('siret_mandataire', null)
-                                        setFieldValue('adresse_mandataire', null)
-                                        setFieldValue('geo_coordonnees_mandataire', null)
-                                      }}
-                                      isChecked={isMandataire}
-                                    />
-                                    <Text
-                                      color={isMandataire ? 'bluefrance.500' : 'grey.500'}
-                                      fontSize='xs'
-                                      fontWeight={isMandataire ? 600 : 400}
-                                    >
-                                      {isMandataire ? 'Oui' : 'Non'}
-                                    </Text>
-                                  </Flex>
-                                </Flex>
-                                <FormHelperText color='grey.600' fontSize='xs'>
-                                  Une entreprise vous a mandaté pour gérer ses offres (vous êtes une CCI, un OPCO, un
-                                  CFA...)
-                                </FormHelperText>
-                              </FormControl>
                             </Box>
                           </GridItem>
                           <GridItem colSpan={[12, 4]} p={[, 8]}>
                             <Heading size='md' pb={6}>
                               Renseignements Entreprise
                             </Heading>
-                            <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
+                            <Input
+                              name='siret'
+                              label='SIRET'
+                              type='text'
+                              value={values.siret}
+                              maxLength='14'
+                              onChange={async (event) => {
+                                setFieldValue('siret', event.target.value)
+                                if (event.target.value.length === 14) {
+                                  const { data } = await getSiretInfo(event.target.value)
+                                  if (data) {
+                                    setFieldValue('raison_sociale', data.raison_sociale)
+                                    setFieldValue('adresse', data.adresse)
+                                  }
+                                }
+                              }}
+                            />
                             <CustomInput
                               name='raison_sociale'
                               label="Nom de l'enseigne"
@@ -488,6 +503,7 @@ const Formulaire = (props) => {
                                       }}
                                       defaultValue={values.adresse}
                                       setFieldTouched={form.setFieldTouched}
+                                      name='adresse'
                                     />
                                     <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
                                     <FormErrorMessage>{meta.error}</FormErrorMessage>

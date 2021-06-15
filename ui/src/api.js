@@ -21,3 +21,5 @@ export const postOffre = (formId, offre) => API.post(`/formulaire/${formId}/offr
 export const putOffre = (offreId, offre) => API.put(`/formulaire/offre/${offreId}`, offre).catch(errorHandler)
 
 export const getWithQS = (query) => API.get('/formulaire', { params: { query: JSON.stringify(query) } })
+
+export const getSiretInfo = async (siret) => await API.get(`/entreprise/${siret}`).catch(errorHandler)

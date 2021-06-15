@@ -8,7 +8,7 @@ const Input = {
         bg: 'grey.200',
         color: 'grey.800',
         border: '1px solid',
-        borderColor: 'bluefrance',
+        borderColor: 'bluefrance.500',
       },
     },
     outline: {

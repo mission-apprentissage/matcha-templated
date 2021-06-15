@@ -14,7 +14,7 @@ const Tabs = {
     },
     tab: {
       color: 'grey.500',
-      _focus: { boxShadow: '0 0 0 3px #000091', outlineColor: 'bluefrance' },
+      _focus: { boxShadow: '0 0 0 3px #000091', outlineColor: 'bluefrance.500' },
     },
   },
   variants: {
@@ -43,7 +43,7 @@ const Tabs = {
         textStyle: 'sm',
         _selected: {
           bg: 'white',
-          color: 'bluefrance',
+          color: 'bluefrance.500',
           borderTop: '2px solid #000091',
           borderLeft: '1px solid #CECECE',
           borderRight: '1px solid #CECECE',

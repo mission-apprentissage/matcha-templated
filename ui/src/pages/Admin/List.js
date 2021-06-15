@@ -59,7 +59,7 @@ const MyTable = ({ formulaires }) => {
                 <Td>
                   <Center>
                     <Link href={`/formulaire/${item.id_form}`} target='_blank' isExternal>
-                      <Icon color='bluefrance' w={5} h={5} as={AiOutlineEdit} />
+                      <Icon color='bluefrance.500' w={5} h={5} as={AiOutlineEdit} />
                     </Link>
                   </Center>
                 </Td>

@@ -32,13 +32,13 @@ export default (props) => {
           let isExtendable = moment().to(item.date_expiration) === 'dans 7 jours'
 
           return (
-            <Box bg='white' p={8} border='1px solid' borderColor='bluefrance'>
+            <Box bg='white' p={8} border='1px solid' borderColor='bluefrance.500'>
               <Flex alignItems='flex-start'>
                 <Text fontSize='sm' pr={9}>
                   Postée le {moment(item.date_creation).format('DD/MM/YYYY')}
                 </Text>
                 <Flex alignItems='center'>
-                  <Icon as={AiOutlineExclamationCircle} color='bluefrance' w={5} h={5} />
+                  <Icon as={AiOutlineExclamationCircle} color='bluefrance.500' w={5} h={5} />
                   <Text fontSize='sm' pl={3}>
                     Expire {moment().to(item.date_expiration)}
                   </Text>

@@ -91,7 +91,7 @@ export default (props) => {
               <Button
                 display={'flex'}
                 alignSelf={'flex-end'}
-                color='bluefrance'
+                color='bluefrance.500'
                 fontSize={'epsilon'}
                 onClick={onClose}
                 variant='unstyled'

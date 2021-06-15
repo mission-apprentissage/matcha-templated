@@ -28,7 +28,15 @@ module.exports = () => {
           }
         );
 
-        return res.json(result.data);
+        let { adresse, libelle_naf } = result.data.etablissement;
+
+        let company = {
+          raison_sociale: adresse.l1,
+          libelle_naf: libelle_naf,
+          adresse: `${adresse.l4}, ${adresse.l6}`,
+        };
+
+        return res.json(company);
       } catch (error) {
         return res
           .status(400)

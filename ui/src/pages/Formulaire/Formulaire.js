@@ -11,14 +11,12 @@ import {
   FormControl,
   FormHelperText,
   FormErrorMessage,
-  Link,
   Flex,
   Grid,
   GridItem,
   Text,
   useDisclosure,
   useBoolean,
-  Center,
   Container,
   Breadcrumb,
   BreadcrumbItem,
@@ -29,6 +27,8 @@ import {
   useBreakpointValue,
   Image,
   Badge,
+  Switch,
+  Collapse,
 } from '@chakra-ui/react'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { ArrowDropRightLine } from '../../theme/components/icons/'
@@ -42,7 +42,7 @@ import ConfirmationSuppression from './ConfirmationSuppression'
 
 const CustomToast = () => {
   return (
-    <Box color='white' p={3} bg='grey.200' borderLeft='4px solid bluefrance'>
+    <Box color='white' p={3} bg='grey.200' borderLeft='4px solid bluefrance.500'>
       Hello World
     </Box>
   )
@@ -87,7 +87,7 @@ const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
         p={8}
         bg='white'
         border='1px solid'
-        borderColor='bluefrance'
+        borderColor='bluefrance.500'
         gap={[6, 0]}
       >
         <GridItem>
@@ -146,6 +146,7 @@ const Formulaire = (props) => {
   const [loading, setLoading] = useBoolean(true)
   const [error, setError] = useBoolean()
   const [readOnlyMode, setReadOnlyMode] = useBoolean()
+  const [isMandataire, setIsMandataire] = useBoolean(false)
   const ajouterVoeuxPopup = useDisclosure()
   const confirmationSuppression = useDisclosure()
   const { id_form, origine } = useParams()
@@ -270,36 +271,36 @@ const Formulaire = (props) => {
     }
   }
 
-  if (loading) {
-    return (
-      <Layout background='beige'>
-        <Center p={5}>
-          <Text>Chargement en cours...</Text>
-        </Center>
-      </Layout>
-    )
-  }
+  // if (loading) {
+  //   return (
+  //     <Layout background='beige'>
+  //       <Center p={5}>
+  //         <Text>Chargement en cours...</Text>
+  //       </Center>
+  //     </Layout>
+  //   )
+  // }
 
-  if (error) {
-    return (
-      <Layout background='beige'>
-        <Center p={5}>
-          <Box>
-            <Text align='center'>Une erreur est survenu lors du chargement du formulaire.</Text>
-            <Text align='center' pt={3}>
-              Merci de prendre contact directement avec un administrateur en cliquant sur le lien suivant :&nbsp;
-              <Link
-                href="mailto:matcha@apprentissage.beta.gouv.fr?subject=Problème d'accès au formulaire"
-                target='_blank'
-              >
-                contact
-              </Link>
-            </Text>
-          </Box>
-        </Center>
-      </Layout>
-    )
-  }
+  // if (error) {
+  //   return (
+  //     <Layout background='beige'>
+  //       <Center p={5}>
+  //         <Box>
+  //           <Text align='center'>Une erreur est survenu lors du chargement du formulaire.</Text>
+  //           <Text align='center' pt={3}>
+  //             Merci de prendre contact directement avec un administrateur en cliquant sur le lien suivant :&nbsp;
+  //             <Link
+  //               href="mailto:matcha@apprentissage.beta.gouv.fr?subject=Problème d'accès au formulaire"
+  //               target='_blank'
+  //             >
+  //               contact
+  //             </Link>
+  //           </Text>
+  //         </Box>
+  //       </Center>
+  //     </Layout>
+  //   )
+  // }
 
   return (
     <>
@@ -334,6 +335,10 @@ const Formulaire = (props) => {
               validateOnMount={true}
               enableReinitialize={true}
               initialValues={{
+                raison_sociale_mandataire: formState?.raison_sociale_mandataire ?? '',
+                siret_mandataire: formState?.siret_mandataire ? formState?.siret_mandataire.replace(/ /g, '') : '',
+                adresse_mandataire: formState?.adresse_mandataire ?? '',
+                geo_coordonnees_mandataire: formState?.geo_coordonnees_mandataire ?? '',
                 raison_sociale: formState?.raison_sociale ?? '',
                 siret: formState?.siret ? formState?.siret.replace(/ /g, '') : '',
                 adresse: formState?.adresse ?? '',
@@ -383,19 +388,93 @@ const Formulaire = (props) => {
                       </Button>
                     </Flex>
                     <Grid templateColumns='repeat(12, 1fr)'>
-                      <GridItem colSpan={12} bg='white' p={8} border='1px solid' borderColor='bluefrance'>
+                      <GridItem colSpan={12} bg='white' p={8} border='1px solid' borderColor='bluefrance.500'>
                         <Grid templateColumns='repeat(12, 1fr)'>
-                          <GridItem colSpan={[12, 6]} p={[, 8]}>
+                          <GridItem colSpan={[12, 4]} p={[, 8]}>
+                            {isMandataire && (
+                              <Collapse in={isMandataire} animateOpacity>
+                                <Heading size='md' pb={6}>
+                                  Renseignements Mandataire
+                                </Heading>
+                                <CustomInput
+                                  name='siret_mandataire'
+                                  label='SIRET'
+                                  type='text'
+                                  value={values.siret_mandataire}
+                                  maxLength='14'
+                                />
+                                <CustomInput
+                                  name='raison_sociale_mandataire'
+                                  label="Nom de l'enseigne"
+                                  type='text'
+                                  value={values.raison_sociale_mandataire}
+                                />
+
+                                <Field name='adresse_mandataire'>
+                                  {({ meta, form }) => {
+                                    return (
+                                      <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
+                                        <FormLabel>Adresse</FormLabel>
+                                        <AdresseAutocomplete
+                                          handleValues={(value) => {
+                                            setFieldValue('geo_coordonnees_mandataire', value.geo_coordonnees)
+                                            setFieldValue('adresse_mandataire', value.name)
+                                          }}
+                                          defaultValue={values.adresse_mandataire}
+                                          setFieldTouched={form.setFieldTouched}
+                                        />
+                                        <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
+                                        <FormErrorMessage>{meta.error}</FormErrorMessage>
+                                      </FormControl>
+                                    )
+                                  }}
+                                </Field>
+                              </Collapse>
+                            )}
+
+                            <Box p={5} bg='bluefrance.100'>
+                              <FormControl>
+                                <Flex alignItems='center'>
+                                  <FormLabel htmlFor='mandataire'>Je suis mandataire d'un établissement</FormLabel>
+                                  <Spacer />
+                                  <Flex direction='column' alignItems='center'>
+                                    <Switch
+                                      onChange={() => {
+                                        setIsMandataire.toggle(!isMandataire)
+                                        setFieldValue('raison_sociale_mandataire', null)
+                                        setFieldValue('siret_mandataire', null)
+                                        setFieldValue('adresse_mandataire', null)
+                                        setFieldValue('geo_coordonnees_mandataire', null)
+                                      }}
+                                      isChecked={isMandataire}
+                                    />
+                                    <Text
+                                      color={isMandataire ? 'bluefrance.500' : 'grey.500'}
+                                      fontSize='xs'
+                                      fontWeight={isMandataire ? 600 : 400}
+                                    >
+                                      {isMandataire ? 'Oui' : 'Non'}
+                                    </Text>
+                                  </Flex>
+                                </Flex>
+                                <FormHelperText color='grey.600' fontSize='xs'>
+                                  Une entreprise vous a mandaté pour gérer ses offres (vous êtes une CCI, un OPCO, un
+                                  CFA...)
+                                </FormHelperText>
+                              </FormControl>
+                            </Box>
+                          </GridItem>
+                          <GridItem colSpan={[12, 4]} p={[, 8]}>
                             <Heading size='md' pb={6}>
                               Renseignements Entreprise
                             </Heading>
+                            <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
                             <CustomInput
                               name='raison_sociale'
                               label="Nom de l'enseigne"
                               type='text'
                               value={values.raison_sociale}
                             />
-                            <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
 
                             <Field name='adresse'>
                               {({ meta, form }) => {
@@ -417,7 +496,7 @@ const Formulaire = (props) => {
                               }}
                             </Field>
                           </GridItem>
-                          <GridItem colSpan={[12, 6]} p={[, 8]}>
+                          <GridItem colSpan={[12, 4]} p={[, 8]}>
                             <Heading size='md' pb={6}>
                               Informations de contact
                             </Heading>

@@ -1,5 +1,5 @@
 import { Button, Box, Flex, Text, Heading, Spacer, Icon, Badge, VStack, Stack, Tooltip, Link } from '@chakra-ui/react'
-import { AiOutlineEdit, AiOutlineExclamationCircle, AiOutlineDelete } from 'react-icons/ai'
+import { AiOutlineEdit, AiOutlineExclamationCircle, AiOutlineDelete, AiOutlineArrowRight } from 'react-icons/ai'
 import moment from 'moment'
 import 'moment/locale/fr'
 
@@ -46,12 +46,18 @@ export default (props) => {
                   </Text>
                 </Flex>
                 <Spacer />
-                <Link
-                  isExternal
-                  href={`https://labonnealternance.apprentissage.beta.gouv.fr/recherche-apprentissage-formation?&caller=matcha&romes=${item.romes}&lon=${lon}&lat=${lat}`}
-                >
-                  Voir les centres de formations
-                </Link>
+
+                <Flex alignItems='center'>
+                  <Link
+                    color='bluefrance.500'
+                    isExternal
+                    href={`https://labonnealternance.apprentissage.beta.gouv.fr/recherche-apprentissage-formation?&caller=matcha&romes=${item.romes}&lon=${lon}&lat=${lat}`}
+                  >
+                    Voir les centres de formations
+                    <Icon ml={1} as={AiOutlineArrowRight} color='bluefrance.500' />
+                  </Link>
+                </Flex>
+
                 {/* {getStatusBadge(item.statut)} */}
                 {/* <Badge variant='published'>Active</Badge> */}
               </Flex>

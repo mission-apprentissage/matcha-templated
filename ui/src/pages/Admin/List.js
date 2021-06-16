@@ -83,7 +83,7 @@ export default function List() {
       }
     : {
         $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
-        origine: { $in: auth.permissions.scope },
+        origine: { $regex: auth.permissions.scope },
       }
 
   useEffect(() => {

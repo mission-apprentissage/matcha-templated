@@ -30,8 +30,8 @@ module.exports = new Schema(
       description: "true si l'utilisateur est administrateur",
     },
     scope: {
-      type: [String],
-      default: [],
+      type: String,
+      default: null,
       description: "Scope accessible par l'utilisateur",
     },
     last_connection: {

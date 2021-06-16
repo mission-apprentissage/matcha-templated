@@ -29,6 +29,8 @@ import {
   Badge,
   Switch,
   Collapse,
+  Center,
+  Link,
 } from '@chakra-ui/react'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { ArrowDropRightLine } from '../../theme/components/icons/'
@@ -294,36 +296,36 @@ const Formulaire = (props) => {
     }
   }
 
-  // if (loading) {
-  //   return (
-  //     <Layout background='beige'>
-  //       <Center p={5}>
-  //         <Text>Chargement en cours...</Text>
-  //       </Center>
-  //     </Layout>
-  //   )
-  // }
+  if (loading) {
+    return (
+      <Layout background='beige'>
+        <Center p={5}>
+          <Text>Chargement en cours...</Text>
+        </Center>
+      </Layout>
+    )
+  }
 
-  // if (error) {
-  //   return (
-  //     <Layout background='beige'>
-  //       <Center p={5}>
-  //         <Box>
-  //           <Text align='center'>Une erreur est survenu lors du chargement du formulaire.</Text>
-  //           <Text align='center' pt={3}>
-  //             Merci de prendre contact directement avec un administrateur en cliquant sur le lien suivant :&nbsp;
-  //             <Link
-  //               href="mailto:matcha@apprentissage.beta.gouv.fr?subject=Problème d'accès au formulaire"
-  //               target='_blank'
-  //             >
-  //               contact
-  //             </Link>
-  //           </Text>
-  //         </Box>
-  //       </Center>
-  //     </Layout>
-  //   )
-  // }
+  if (error) {
+    return (
+      <Layout background='beige'>
+        <Center p={5}>
+          <Box>
+            <Text align='center'>Une erreur est survenu lors du chargement du formulaire.</Text>
+            <Text align='center' pt={3}>
+              Merci de prendre contact directement avec un administrateur en cliquant sur le lien suivant :&nbsp;
+              <Link
+                href="mailto:matcha@apprentissage.beta.gouv.fr?subject=Problème d'accès au formulaire"
+                target='_blank'
+              >
+                contact
+              </Link>
+            </Text>
+          </Box>
+        </Center>
+      </Layout>
+    )
+  }
 
   return (
     <>

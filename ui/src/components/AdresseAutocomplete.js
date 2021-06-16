@@ -22,15 +22,8 @@ const Wrapper = styled.ul`
 `
 
 export default (props) => {
-  // console.log(props)
   const [items, setItems] = useState([])
-  const [search, setSearch] = useState('')
   const adresse = []
-
-  useEffect(() => {
-    setSearch(props.defaultValue)
-    handleSearch()
-  }, [props.defaultValue])
 
   const getAddress = async (value) => {
     const result = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}`)
@@ -41,7 +34,6 @@ export default (props) => {
   const handleSearch = async (search) => {
     if (search) {
       const data = await getAddress(search)
-      console.log(data)
       data.features.forEach((feat) => {
         const name = `${feat.properties.label}`
         const coordinates = feat.geometry.coordinates.reverse().join(',')
@@ -54,12 +46,12 @@ export default (props) => {
 
   const itemToString = (item) => (item ? item.name : '')
   const onSelectedItemChange = ({ selectedItem }) => props.handleValues(selectedItem)
-
   const onInputValueChange = async ({ inputValue }) => {
-    setItems(await handleSearch(inputValue))
     if (inputValue === '') {
       props.handleValues({ name: '', geo_coordonnees: '' })
+      return
     }
+    setItems(await handleSearch(inputValue))
   }
 
   const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({
@@ -70,15 +62,14 @@ export default (props) => {
     initialInputValue: props.defaultValue,
   })
 
-  console.log(items)
-
   return (
     <Box>
       <div {...getComboboxProps()}>
         <Input
           onFocus={() => setTimeout(() => props.setFieldTouched(props.name, true), 100)}
           placeholder='Taper votre adresse complète'
-          {...getInputProps({ value: search })}
+          required={props.required ?? false}
+          {...getInputProps()}
         />
       </div>
       <Wrapper {...getMenuProps()}>

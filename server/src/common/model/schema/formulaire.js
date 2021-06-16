@@ -89,6 +89,11 @@ module.exports = new Schema(
       default: null,
       description: "Longitude/Latitude de l'adresse de l'etablissement mandataire ",
     },
+    mandataire: {
+      type: Boolean,
+      default: null,
+      description: "le formulaire est-il géré par un mandataire ?",
+    },
     nom: {
       type: String,
       default: null,

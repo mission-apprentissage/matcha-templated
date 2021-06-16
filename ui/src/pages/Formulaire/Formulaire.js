@@ -34,7 +34,7 @@ import { AiOutlineEdit } from 'react-icons/ai'
 import { ArrowDropRightLine } from '../../theme/components/icons/'
 import addOfferImage from '../../assets/images/add-offer.svg'
 
-import { getFormulaire, getSiretInfo, postFormulaire, postOffre, putFormulaire, putOffre } from '../../api'
+import { getFormulaire, postFormulaire, postOffre, putFormulaire, putOffre } from '../../api'
 import { Layout, AdresseAutocomplete } from '../../components'
 import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
@@ -63,7 +63,7 @@ const CustomInput = (props) => {
 }
 
 const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
-  const gridTemplate = useBreakpointValue(['1fr', 'repeat(2, 1fr)'])
+  const gridTemplate = useBreakpointValue(['1fr', formState.mandataire ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)'])
   return (
     <>
       <Flex py={6} alignItems='center'>
@@ -90,6 +90,29 @@ const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
         borderColor='bluefrance.500'
         gap={[6, 0]}
       >
+        {formState.mandataire && (
+          <GridItem>
+            <Heading size='md' pb={6}>
+              Renseignements Mandataire
+            </Heading>
+            <Grid templateRows='repeat(3, 1fr)' gap={4}>
+              <Flex>
+                <Text pr={3}>Nom de l'etablissement :</Text>
+                <Badge variant='readOnly'>{formState.raison_sociale_mandataire}</Badge>
+              </Flex>
+              <Flex>
+                <Text pr={3}>SIRET :</Text>
+                <Badge variant='readOnly'>{formState.siret_mandataire}</Badge>
+              </Flex>
+              <Flex>
+                <Text pr={3} isTruncated>
+                  Adresse :
+                </Text>
+                <Badge variant='readOnly'>{formState.adresse_mandataire}</Badge>
+              </Flex>
+            </Grid>
+          </GridItem>
+        )}
         <GridItem>
           <Heading size='md' pb={6}>
             Renseignements Entreprise
@@ -335,6 +358,7 @@ const Formulaire = (props) => {
               validateOnMount={true}
               enableReinitialize={true}
               initialValues={{
+                mandataire: formState?.mandataire ?? false,
                 raison_sociale_mandataire: formState?.raison_sociale_mandataire ?? '',
                 siret_mandataire: formState?.siret_mandataire ? formState?.siret_mandataire.replace(/ /g, '') : '',
                 adresse_mandataire: formState?.adresse_mandataire ?? '',
@@ -399,20 +423,21 @@ const Formulaire = (props) => {
                                   <Flex direction='column' alignItems='center'>
                                     <Switch
                                       onChange={() => {
-                                        setIsMandataire.toggle(!isMandataire)
+                                        setIsMandataire.toggle()
+                                        setFieldValue('mandataire', isMandataire)
                                         setFieldValue('raison_sociale_mandataire', undefined)
                                         setFieldValue('siret_mandataire', undefined)
                                         setFieldValue('adresse_mandataire', undefined)
                                         setFieldValue('geo_coordonnees_mandataire', undefined)
                                       }}
-                                      isChecked={isMandataire}
+                                      isChecked={values.mandataire}
                                     />
                                     <Text
-                                      color={isMandataire ? 'bluefrance.500' : 'grey.500'}
+                                      color={values.mandataire ? 'bluefrance.500' : 'grey.500'}
                                       fontSize='xs'
-                                      fontWeight={isMandataire ? 600 : 400}
+                                      fontWeight={values.mandataire ? 600 : 400}
                                     >
-                                      {isMandataire ? 'Oui' : 'Non'}
+                                      {values.mandataire ? 'Oui' : 'Non'}
                                     </Text>
                                   </Flex>
                                 </Flex>
@@ -422,7 +447,7 @@ const Formulaire = (props) => {
                                 </FormHelperText>
                               </FormControl>
 
-                              <Collapse in={isMandataire} animateOpacity>
+                              <Collapse in={values.mandataire} animateOpacity>
                                 <Heading size='md' pb={6}>
                                   Renseignements Mandataire
                                 </Heading>
@@ -432,12 +457,14 @@ const Formulaire = (props) => {
                                   type='text'
                                   value={values.siret_mandataire}
                                   maxLength='14'
+                                  required={false}
                                 />
                                 <CustomInput
                                   name='raison_sociale_mandataire'
                                   label="Nom de l'enseigne"
                                   type='text'
                                   value={values.raison_sociale_mandataire}
+                                  required={false}
                                 />
 
                                 <Field name='adresse_mandataire'>
@@ -453,6 +480,7 @@ const Formulaire = (props) => {
                                           defaultValue={values.adresse_mandataire}
                                           setFieldTouched={form.setFieldTouched}
                                           name='adresse_mandataire'
+                                          required={false}
                                         />
                                         <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
                                         <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -467,23 +495,7 @@ const Formulaire = (props) => {
                             <Heading size='md' pb={6}>
                               Renseignements Entreprise
                             </Heading>
-                            <Input
-                              name='siret'
-                              label='SIRET'
-                              type='text'
-                              value={values.siret}
-                              maxLength='14'
-                              onChange={async (event) => {
-                                setFieldValue('siret', event.target.value)
-                                if (event.target.value.length === 14) {
-                                  const { data } = await getSiretInfo(event.target.value)
-                                  if (data) {
-                                    setFieldValue('raison_sociale', data.raison_sociale)
-                                    setFieldValue('adresse', data.adresse)
-                                  }
-                                }
-                              }}
-                            />
+                            <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
                             <CustomInput
                               name='raison_sociale'
                               label="Nom de l'enseigne"

@@ -143,16 +143,17 @@ const Formulaire = (props) => {
   const [formState, setFormState] = useState({})
   const [offersList, setOffersList] = useState([])
   const [currentOffer, setCurrentOffer] = useState({})
-  const [loading, setLoading] = useBoolean(true)
   const [error, setError] = useBoolean()
+  const [loading, setLoading] = useBoolean(true)
   const [readOnlyMode, setReadOnlyMode] = useBoolean()
-  const [isMandataire, setIsMandataire] = useBoolean(false)
+  const [siretErrors, setSiretErrors] = useBoolean()
+  const [isMandataire, setIsMandataire] = useBoolean()
   const ajouterVoeuxPopup = useDisclosure()
   const confirmationSuppression = useDisclosure()
   const { id_form, origine } = useParams()
   const toast = useToast()
   const history = useHistory()
-
+  console.log(siretErrors)
   const hasActiveOffers = offersList.filter((x) => x.statut === 'Active')
 
   const buttonSize = useBreakpointValue(['sm', 'md'])
@@ -399,7 +400,7 @@ const Formulaire = (props) => {
                                   <Flex direction='column' alignItems='center'>
                                     <Switch
                                       onChange={() => {
-                                        setIsMandataire.toggle(!isMandataire)
+                                        setIsMandataire.toggle()
                                         setFieldValue('raison_sociale_mandataire', undefined)
                                         setFieldValue('siret_mandataire', undefined)
                                         setFieldValue('adresse_mandataire', undefined)
@@ -467,23 +468,31 @@ const Formulaire = (props) => {
                             <Heading size='md' pb={6}>
                               Renseignements Entreprise
                             </Heading>
-                            <Input
-                              name='siret'
-                              label='SIRET'
-                              type='text'
-                              value={values.siret}
-                              maxLength='14'
-                              onChange={async (event) => {
-                                setFieldValue('siret', event.target.value)
-                                if (event.target.value.length === 14) {
-                                  const { data } = await getSiretInfo(event.target.value)
-                                  if (data) {
-                                    setFieldValue('raison_sociale', data.raison_sociale)
-                                    setFieldValue('adresse', data.adresse)
+                            <FormControl pb={5}>
+                              <FormLabel>SIRET</FormLabel>
+                              <Input
+                                name='siret'
+                                label='SIRET'
+                                type='text'
+                                value={values.siret}
+                                maxLength='14'
+                                onChange={async (event) => {
+                                  setFieldValue('siret', event.target.value)
+                                  setSiretErrors.off()
+                                  if (event.target.value.length === 14 && event.target.value.match(/^\d+$/)) {
+                                    const result = await getSiretInfo(event.target.value)
+                                    console.log(result)
+                                    if (result?.data) {
+                                      setFieldValue('raison_sociale', result.data?.raison_sociale)
+                                      setFieldValue('adresse', result.data?.adresse)
+                                    } else {
+                                      setSiretErrors.on()
+                                    }
                                   }
-                                }
-                              }}
-                            />
+                                }}
+                              />
+                              <FormErrorMessage>Le siret renseigné est invalide</FormErrorMessage>
+                            </FormControl>
                             <CustomInput
                               name='raison_sociale'
                               label="Nom de l'enseigne"

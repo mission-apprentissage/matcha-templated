@@ -77,14 +77,15 @@ export default function List() {
   const [loading, setLoading] = useState(true)
   const [auth] = useAuth()
 
-  let query = auth.permissions.scope.includes('all')
-    ? {
-        $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
-      }
-    : {
-        $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
-        origine: { $regex: auth.permissions.scope },
-      }
+  let query =
+    auth.scope === 'all'
+      ? {
+          $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
+        }
+      : {
+          $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
+          origine: { $regex: auth.scope },
+        }
 
   useEffect(() => {
     getWithQS(query)

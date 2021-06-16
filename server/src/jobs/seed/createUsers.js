@@ -26,7 +26,7 @@ const users = [
     username: "opco",
     organization: "Opco 2i",
     password: passwordGenerator.generate(passwordOptions),
-    email: "test@opco2i.com",
+    email: "d.neveu@opco2i.fr",
     isAdmin: true,
     scope: "opco2i",
   },

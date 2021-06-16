@@ -567,6 +567,7 @@ const Formulaire = (props) => {
                   removeOffer={removeOffer}
                   editOffer={editOffer}
                   extendOffer={extendOffer}
+                  geo_coordonnees={formState.geo_coordonnees}
                 />
               ) : (
                 <Flex direction='column' alignItems='center' bg='white' p={8} border='1px solid' borderColor='grey.400'>

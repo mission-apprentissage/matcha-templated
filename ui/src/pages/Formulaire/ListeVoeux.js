@@ -1,4 +1,4 @@
-import { Button, Box, Flex, Text, Heading, Spacer, Icon, Badge, VStack, HStack, Stack, Tooltip } from '@chakra-ui/react'
+import { Button, Box, Flex, Text, Heading, Spacer, Icon, Badge, VStack, Stack, Tooltip, Link } from '@chakra-ui/react'
 import { AiOutlineEdit, AiOutlineExclamationCircle, AiOutlineDelete } from 'react-icons/ai'
 import moment from 'moment'
 import 'moment/locale/fr'
@@ -24,6 +24,8 @@ export default (props) => {
     return <div />
   }
 
+  const [lat, lon] = props.geo_coordonnees.split(',')
+
   return (
     <Stack direction='column' align='stretch' spacing={3}>
       {props.data
@@ -44,6 +46,12 @@ export default (props) => {
                   </Text>
                 </Flex>
                 <Spacer />
+                <Link
+                  isExternal
+                  href={`https://labonnealternance.apprentissage.beta.gouv.fr/recherche-apprentissage-formation?&caller=matcha&romes=${item.romes}&lon=${lon}&lat=${lat}`}
+                >
+                  Voir les centres de formations
+                </Link>
                 {/* {getStatusBadge(item.statut)} */}
                 {/* <Badge variant='published'>Active</Badge> */}
               </Flex>

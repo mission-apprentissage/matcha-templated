@@ -22,7 +22,7 @@ import {
   Badge,
 } from '@chakra-ui/react'
 
-import { Layout } from '../../components'
+import { AnimationContainer, Layout } from '../../components'
 import useAuth from '../../common/hooks/useAuth'
 import { getWithQS } from '../../api'
 
@@ -105,33 +105,35 @@ export default function List() {
   }
 
   return (
-    <Layout background='beige'>
-      <Container maxW='container.xl' py={4}>
-        <Breadcrumb spacing='4px' separator={<AiOutlineRight />}>
-          <BreadcrumbItem>
-            <BreadcrumbLink textDecoration='underline' as={Link} to='/'>
-              Accueil
-            </BreadcrumbLink>
-          </BreadcrumbItem>
+    <AnimationContainer>
+      <Layout background='beige'>
+        <Container maxW='container.xl' py={4}>
+          <Breadcrumb spacing='4px' separator={<AiOutlineRight />}>
+            <BreadcrumbItem>
+              <BreadcrumbLink textDecoration='underline' as={Link} to='/'>
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
 
-          <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink href='#'>Administration des offres</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink href='#'>Administration des offres</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
 
-        <Flex alignItems='center'>
-          <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800' py={3}>
-            Offre(s) de l'organisation : {auth.organisation}
-          </Box>
-          <Spacer />
-          <Text>
-            <Badge variant='outline'>{state.stats.nbFormulaires}</Badge> formulaires dont{' '}
-            <Badge variant='outline'>{state.stats.nbOffres}</Badge> offres
-          </Text>
-        </Flex>
+          <Flex alignItems='center'>
+            <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800' py={3}>
+              Offre(s) de l'organisation : {auth.organisation}
+            </Box>
+            <Spacer />
+            <Text>
+              <Badge variant='outline'>{state.stats.nbFormulaires}</Badge> formulaires dont{' '}
+              <Badge variant='outline'>{state.stats.nbOffres}</Badge> offres
+            </Text>
+          </Flex>
 
-        <MyTable formulaires={state.data} />
-      </Container>
-    </Layout>
+          <MyTable formulaires={state.data} />
+        </Container>
+      </Layout>
+    </AnimationContainer>
   )
 }

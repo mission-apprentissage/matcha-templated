@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { IoIosAddCircleOutline } from 'react-icons/io'
 import { useParams, useHistory } from 'react-router-dom'
 import { Formik, Form, useField, Field } from 'formik'
@@ -30,14 +31,13 @@ import {
   Switch,
   Collapse,
   Center,
-  Link,
 } from '@chakra-ui/react'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { ArrowDropRightLine } from '../../theme/components/icons/'
 import addOfferImage from '../../assets/images/add-offer.svg'
 
 import { getFormulaire, postFormulaire, postOffre, putFormulaire, putOffre } from '../../api'
-import { Layout, AdresseAutocomplete } from '../../components'
+import { Layout, AdresseAutocomplete, AnimationContainer } from '../../components'
 import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
 import ConfirmationSuppression from './ConfirmationSuppression'
@@ -328,7 +328,7 @@ const Formulaire = (props) => {
   }
 
   return (
-    <>
+    <AnimationContainer>
       <Layout background='beige'>
         <AjouterVoeux {...ajouterVoeuxPopup} {...currentOffer} handleSave={saveOffer} />
         <ConfirmationSuppression
@@ -340,7 +340,7 @@ const Formulaire = (props) => {
           <Box pt={3}>
             <Breadcrumb separator={<ArrowDropRightLine color='grey.600' />} textStyle='xs'>
               <BreadcrumbItem>
-                <BreadcrumbLink textDecoration='underline' href='/' textStyle='xs'>
+                <BreadcrumbLink textDecoration='underline' as={Link} to='/' textStyle='xs'>
                   Accueil
                 </BreadcrumbLink>
               </BreadcrumbItem>
@@ -597,7 +597,7 @@ const Formulaire = (props) => {
           )}
         </Container>
       </Layout>
-    </>
+    </AnimationContainer>
   )
 }
 

@@ -57,9 +57,6 @@ export default (props) => {
                     <Icon ml={1} as={AiOutlineArrowRight} color='bluefrance.500' />
                   </Link>
                 </Flex>
-
-                {/* {getStatusBadge(item.statut)} */}
-                {/* <Badge variant='published'>Active</Badge> */}
               </Flex>
               <VStack spacing={2} align='flex-start' pt={3} pb={9}>
                 <Heading textStyle='h3' size='md'>

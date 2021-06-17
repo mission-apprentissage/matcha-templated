@@ -10,13 +10,16 @@ import {
   Thead,
   Tr,
   Container,
-  // Link,
   Box,
   Center,
   Icon,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Spacer,
+  Flex,
+  Text,
+  Badge,
 } from '@chakra-ui/react'
 
 import { Layout } from '../../components'
@@ -58,7 +61,7 @@ const MyTable = ({ formulaires }) => {
                 <Td>{item.telephone}</Td>
                 <Td>
                   <Center>
-                    <Link href={`/formulaire/${item.id_form}`} target='_blank' isExternal>
+                    <Link to={`/formulaire/${item.id_form}`} target='_blank'>
                       <Icon color='bluefrance.500' w={5} h={5} as={AiOutlineEdit} />
                     </Link>
                   </Center>
@@ -89,7 +92,7 @@ export default function List() {
 
   useEffect(() => {
     getWithQS(query)
-      .then((formulaires) => setState(formulaires.data.data))
+      .then((formulaires) => setState(formulaires.data))
       .finally(() => setLoading(false))
   }, [])
 
@@ -116,11 +119,18 @@ export default function List() {
           </BreadcrumbItem>
         </Breadcrumb>
 
-        <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800' py={3}>
-          Offre(s) de l'organisation : {auth.organisation}
-        </Box>
+        <Flex alignItems='center'>
+          <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800' py={3}>
+            Offre(s) de l'organisation : {auth.organisation}
+          </Box>
+          <Spacer />
+          <Text>
+            <Badge variant='outline'>{state.stats.nbFormulaires}</Badge> formulaires dont{' '}
+            <Badge variant='outline'>{state.stats.nbOffres}</Badge> offres
+          </Text>
+        </Flex>
 
-        <MyTable formulaires={state} />
+        <MyTable formulaires={state.data} />
       </Container>
     </Layout>
   )

@@ -22,7 +22,13 @@ module.exports = ({ mail, formulaire }) => {
 
       const result = await Formulaire.paginate(query, { page, limit, lean: true });
 
+      const stats = {
+        nbFormulaires: result.total,
+        nbOffres: result.docs.reduce((acc, form) => (acc += form.offres.length), 0),
+      };
+
       return res.json({
+        stats,
         data: result.docs,
         pagination: {
           page: result.page,

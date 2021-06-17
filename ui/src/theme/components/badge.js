@@ -10,6 +10,10 @@ const commonStatusBadgeStyle = {
 
 const Badge = {
   variants: {
+    outline: {
+      borderColor: 'bluefrance.500',
+      color: 'bluefrance.500',
+    },
     readOnly: {
       ...commonStatusBadgeStyle,
       bg: 'beige',

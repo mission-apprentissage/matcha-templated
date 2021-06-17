@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { Link } from 'react-router-dom'
 import moment from 'moment'
 import { AiOutlineEdit, AiOutlineRight } from 'react-icons/ai'
 import {
@@ -10,7 +10,7 @@ import {
   Thead,
   Tr,
   Container,
-  Link,
+  // Link,
   Box,
   Center,
   Icon,
@@ -106,7 +106,7 @@ export default function List() {
       <Container maxW='container.xl' py={4}>
         <Breadcrumb spacing='4px' separator={<AiOutlineRight />}>
           <BreadcrumbItem>
-            <BreadcrumbLink textDecoration='underline' href='/'>
+            <BreadcrumbLink textDecoration='underline' as={Link} to='/'>
               Accueil
             </BreadcrumbLink>
           </BreadcrumbItem>
@@ -117,7 +117,7 @@ export default function List() {
         </Breadcrumb>
 
         <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800' py={3}>
-          Offre(s) de l'organisation : {auth.permissions.organization}
+          Offre(s) de l'organisation : {auth.organisation}
         </Box>
 
         <MyTable formulaires={state} />

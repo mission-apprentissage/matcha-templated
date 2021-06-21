@@ -416,84 +416,7 @@ const Formulaire = (props) => {
                     <Grid templateColumns='repeat(12, 1fr)'>
                       <GridItem colSpan={12} bg='white' p={8} border='1px solid' borderColor='bluefrance.500'>
                         <Grid templateColumns='repeat(12, 1fr)'>
-                          <GridItem colSpan={[12, 4]} p={[, 8]}>
-                            <Box p={5} border='1px solid' borderColor='bluefrance.500'>
-                              <FormControl mb={5}>
-                                <Flex alignItems='center'>
-                                  <FormLabel htmlFor='mandataire'>Je suis mandataire d'un établissement</FormLabel>
-                                  <Spacer />
-                                  <Flex direction='column' alignItems='center'>
-                                    <Switch
-                                      onChange={() => {
-                                        setIsMandataire.toggle()
-                                        setFieldValue('mandataire', isMandataire)
-                                        setFieldValue('raison_sociale_mandataire', undefined)
-                                        setFieldValue('siret_mandataire', undefined)
-                                        setFieldValue('adresse_mandataire', undefined)
-                                        setFieldValue('geo_coordonnees_mandataire', undefined)
-                                      }}
-                                      isChecked={values.mandataire}
-                                    />
-                                    <Text
-                                      color={values.mandataire ? 'bluefrance.500' : 'grey.500'}
-                                      fontSize='xs'
-                                      fontWeight={values.mandataire ? 600 : 400}
-                                    >
-                                      {values.mandataire ? 'Oui' : 'Non'}
-                                    </Text>
-                                  </Flex>
-                                </Flex>
-                                <FormHelperText color='grey.600' fontSize='xs'>
-                                  Une entreprise vous a mandaté pour gérer ses offres (vous êtes une CCI, un OPCO, un
-                                  CFA...)
-                                </FormHelperText>
-                              </FormControl>
-
-                              <Collapse in={values.mandataire} animateOpacity>
-                                <Heading size='md' pb={6}>
-                                  Renseignements Mandataire
-                                </Heading>
-                                <CustomInput
-                                  name='siret_mandataire'
-                                  label='SIRET'
-                                  type='text'
-                                  value={values.siret_mandataire}
-                                  maxLength='14'
-                                  required={false}
-                                />
-                                <CustomInput
-                                  name='raison_sociale_mandataire'
-                                  label="Nom de l'enseigne"
-                                  type='text'
-                                  value={values.raison_sociale_mandataire}
-                                  required={false}
-                                />
-
-                                <Field name='adresse_mandataire'>
-                                  {({ meta, form }) => {
-                                    return (
-                                      <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
-                                        <FormLabel>Adresse</FormLabel>
-                                        <AdresseAutocomplete
-                                          handleValues={(value) => {
-                                            setFieldValue('geo_coordonnees_mandataire', value.geo_coordonnees)
-                                            setFieldValue('adresse_mandataire', value.name)
-                                          }}
-                                          defaultValue={values.adresse_mandataire}
-                                          setFieldTouched={form.setFieldTouched}
-                                          name='adresse_mandataire'
-                                          required={false}
-                                        />
-                                        <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
-                                        <FormErrorMessage>{meta.error}</FormErrorMessage>
-                                      </FormControl>
-                                    )
-                                  }}
-                                </Field>
-                              </Collapse>
-                            </Box>
-                          </GridItem>
-                          <GridItem colSpan={[12, 4]} p={[, 8]}>
+                          <GridItem colSpan={[12, 6]} p={[, 8]}>
                             <Heading size='md' pb={6}>
                               Renseignements Entreprise
                             </Heading>
@@ -526,7 +449,7 @@ const Formulaire = (props) => {
                               }}
                             </Field>
                           </GridItem>
-                          <GridItem colSpan={[12, 4]} p={[, 8]}>
+                          <GridItem colSpan={[12, 6]} p={[, 8]}>
                             <Heading size='md' pb={6}>
                               Informations de contact
                             </Heading>

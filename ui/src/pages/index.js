@@ -1,6 +1,6 @@
 import HomePage from './HomePage'
 import NotFound from './NotFound'
 import { Login, List } from './Admin'
-import { Formulaire, Remerciement } from './Formulaire'
+import { Formulaire } from './Formulaire'
 
-export { Formulaire, Remerciement, HomePage, NotFound, Login, List }
+export { Formulaire, HomePage, NotFound, Login, List }

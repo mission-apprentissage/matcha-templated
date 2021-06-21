@@ -25,7 +25,7 @@ export default () => {
                 onClick={() => setAuth('')}
                 fontWeight='normal'
                 variant='link'
-                color='bluefrance'
+                color='bluefrance.500'
                 leftIcon={<RiAccountCircleLine />}
               >
                 Se déconnecter
@@ -38,7 +38,7 @@ export default () => {
                 onClick={() => history.push('/login')}
                 fontWeight='normal'
                 variant='link'
-                color='bluefrance'
+                color='bluefrance.500'
                 leftIcon={<RiAccountCircleLine />}
               >
                 Espace partenaires

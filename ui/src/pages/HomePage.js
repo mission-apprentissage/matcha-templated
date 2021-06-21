@@ -14,7 +14,7 @@ import {
   Stack,
   Spacer,
 } from '@chakra-ui/react'
-import { Navbar } from '../components'
+import { Navbar, AnimationContainer } from '../components'
 
 import { IoIosArrowForward } from 'react-icons/io'
 import { FiExternalLink } from 'react-icons/fi'
@@ -25,7 +25,7 @@ import { useHistory } from 'react-router'
 
 export default () => {
   return (
-    <>
+    <AnimationContainer>
       <Navbar />
       <Flex direction='column' height='100vh'>
         <Hero />
@@ -34,7 +34,7 @@ export default () => {
         <Divider />
         <Footer />
       </Flex>
-    </>
+    </AnimationContainer>
   )
 }
 

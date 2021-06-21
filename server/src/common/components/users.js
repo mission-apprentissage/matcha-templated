@@ -34,7 +34,7 @@ module.exports = async () => {
         organization,
         password: hash,
         isAdmin: isAdmin ?? false,
-        scope: scope ?? [],
+        scope: scope ?? "",
       });
 
       await user.save();

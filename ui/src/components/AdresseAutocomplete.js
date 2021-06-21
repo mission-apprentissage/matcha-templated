@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useCombobox } from 'downshift'
 
@@ -45,14 +45,13 @@ export default (props) => {
   }
 
   const itemToString = (item) => (item ? item.name : '')
-  const onSelectedItemChange = ({ selectedItem }) => {
-    props.handleValues(selectedItem)
-  }
+  const onSelectedItemChange = ({ selectedItem }) => props.handleValues(selectedItem)
   const onInputValueChange = async ({ inputValue }) => {
-    setItems(await handleSearch(inputValue))
     if (inputValue === '') {
       props.handleValues({ name: '', geo_coordonnees: '' })
+      return
     }
+    setItems(await handleSearch(inputValue))
   }
 
   const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({
@@ -67,8 +66,9 @@ export default (props) => {
     <Box>
       <div {...getComboboxProps()}>
         <Input
-          onFocus={() => setTimeout(() => props.setFieldTouched('adresse', true), 100)}
+          onFocus={() => setTimeout(() => props.setFieldTouched(props.name, true), 100)}
           placeholder='Taper votre adresse complète'
+          required={props.required ?? false}
           {...getInputProps()}
         />
       </div>

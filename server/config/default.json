@@ -11,6 +11,7 @@
   "sendinblue": {
     "apikey": "MATCHA_SD_API_KEY"
   },
+  "apiEntreprise": "MATCHA_ENTREPRISE_API_KEY",
   "auth": {
     "passwordHashRounds": 1001,
     "user": {

@@ -5,7 +5,8 @@ import { Input } from './input'
 import { Text } from './text'
 import { Textarea } from './textarea'
 import { Link } from './link'
+import { Switch } from './switch'
 
-const components = { Tabs, Badge, Button, Input, Text, Textarea, Link }
+const components = { Tabs, Badge, Button, Input, Text, Textarea, Link, Switch }
 
 export { components }

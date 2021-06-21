@@ -1,7 +1,6 @@
 const rootFontSizePx = 16
 
 const colors = {
-  bluefrance: '#000091',
   white: '#ffffff',
   beige: '#f9f8f6',
   redmarianne: '#e1000f',
@@ -9,6 +8,11 @@ const colors = {
   error: '#b60000',
   warning: '#fa5c00',
   info: '#3a55d1',
+  bluefrance: {
+    100: '#F2F2F9',
+    200: '#E5E5F4',
+    500: '#000091',
+  },
   grey: {
     800: '#1e1e1e',
     750: '#2a2a2a',

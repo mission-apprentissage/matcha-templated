@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { Link } from 'react-router-dom'
 import moment from 'moment'
 import { AiOutlineEdit, AiOutlineRight } from 'react-icons/ai'
 import {
@@ -10,16 +10,19 @@ import {
   Thead,
   Tr,
   Container,
-  Link,
   Box,
   Center,
   Icon,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Spacer,
+  Flex,
+  Text,
+  Badge,
 } from '@chakra-ui/react'
 
-import { Layout } from '../../components'
+import { AnimationContainer, Layout } from '../../components'
 import useAuth from '../../common/hooks/useAuth'
 import { getWithQS } from '../../api'
 
@@ -58,8 +61,8 @@ const MyTable = ({ formulaires }) => {
                 <Td>{item.telephone}</Td>
                 <Td>
                   <Center>
-                    <Link href={`/formulaire/${item.id_form}`} target='_blank' isExternal>
-                      <Icon color='bluefrance' w={5} h={5} as={AiOutlineEdit} />
+                    <Link to={`/formulaire/${item.id_form}`} target='_blank'>
+                      <Icon color='bluefrance.500' w={5} h={5} as={AiOutlineEdit} />
                     </Link>
                   </Center>
                 </Td>
@@ -77,18 +80,19 @@ export default function List() {
   const [loading, setLoading] = useState(true)
   const [auth] = useAuth()
 
-  let query = auth.permissions.scope.includes('all')
-    ? {
-        $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
-      }
-    : {
-        $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
-        origine: { $in: auth.permissions.scope },
-      }
+  let query =
+    auth.scope === 'all'
+      ? {
+          $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
+        }
+      : {
+          $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }],
+          origine: { $regex: auth.scope },
+        }
 
   useEffect(() => {
     getWithQS(query)
-      .then((formulaires) => setState(formulaires.data.data))
+      .then((formulaires) => setState(formulaires.data))
       .finally(() => setLoading(false))
   }, [])
 
@@ -101,26 +105,35 @@ export default function List() {
   }
 
   return (
-    <Layout background='beige'>
-      <Container maxW='container.xl' py={4}>
-        <Breadcrumb spacing='4px' separator={<AiOutlineRight />}>
-          <BreadcrumbItem>
-            <BreadcrumbLink textDecoration='underline' href='/'>
-              Accueil
-            </BreadcrumbLink>
-          </BreadcrumbItem>
+    <AnimationContainer>
+      <Layout background='beige'>
+        <Container maxW='container.xl' py={4}>
+          <Breadcrumb spacing='4px' separator={<AiOutlineRight />}>
+            <BreadcrumbItem>
+              <BreadcrumbLink textDecoration='underline' as={Link} to='/'>
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
 
-          <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink href='#'>Administration des offres</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink href='#'>Administration des offres</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
 
-        <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800' py={3}>
-          Offre(s) de l'organisation : {auth.permissions.organization}
-        </Box>
+          <Flex alignItems='center'>
+            <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800' py={3}>
+              Offre(s) de l'organisation : {auth.organisation}
+            </Box>
+            <Spacer />
+            <Text>
+              <Badge variant='outline'>{state.stats.nbFormulaires}</Badge> formulaires dont{' '}
+              <Badge variant='outline'>{state.stats.nbOffres}</Badge> offres
+            </Text>
+          </Flex>
 
-        <MyTable formulaires={state} />
-      </Container>
-    </Layout>
+          <MyTable formulaires={state.data} />
+        </Container>
+      </Layout>
+    </AnimationContainer>
   )
 }

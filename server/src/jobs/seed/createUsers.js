@@ -20,15 +20,23 @@ const users = [
     password: passwordGenerator.generate(passwordOptions),
     email: "contact@matcha.apprentissage.beta.gouv.fr",
     isAdmin: true,
-    scope: ["all"],
+    scope: "all",
   },
   {
     username: "opco",
     organization: "Opco 2i",
     password: passwordGenerator.generate(passwordOptions),
-    email: "test@opco2i.com",
+    email: "d.neveu@opco2i.fr",
     isAdmin: true,
-    scope: ["opco2i"],
+    scope: "opco2i",
+  },
+  {
+    username: "cci-guyane",
+    organization: "CCI Guyane",
+    password: passwordGenerator.generate(passwordOptions),
+    email: "l.nemouthe@guyane.cci.fr",
+    isAdmin: true,
+    scope: "cci-guyane",
   },
 ];
 

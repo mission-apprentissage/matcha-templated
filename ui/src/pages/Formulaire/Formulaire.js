@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { IoIosAddCircleOutline } from 'react-icons/io'
 import { useParams, useHistory } from 'react-router-dom'
 import { Formik, Form, useField, Field } from 'formik'
@@ -11,14 +12,12 @@ import {
   FormControl,
   FormHelperText,
   FormErrorMessage,
-  Link,
   Flex,
   Grid,
   GridItem,
   Text,
   useDisclosure,
   useBoolean,
-  Center,
   Container,
   Breadcrumb,
   BreadcrumbItem,
@@ -29,20 +28,23 @@ import {
   useBreakpointValue,
   Image,
   Badge,
+  Switch,
+  Collapse,
+  Center,
 } from '@chakra-ui/react'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { ArrowDropRightLine } from '../../theme/components/icons/'
 import addOfferImage from '../../assets/images/add-offer.svg'
 
 import { getFormulaire, postFormulaire, postOffre, putFormulaire, putOffre } from '../../api'
-import { Layout, AdresseAutocomplete } from '../../components'
+import { Layout, AdresseAutocomplete, AnimationContainer } from '../../components'
 import AjouterVoeux from './AjouterVoeux'
 import ListeVoeux from './ListeVoeux'
 import ConfirmationSuppression from './ConfirmationSuppression'
 
 const CustomToast = () => {
   return (
-    <Box color='white' p={3} bg='grey.200' borderLeft='4px solid bluefrance'>
+    <Box color='white' p={3} bg='grey.200' borderLeft='4px solid bluefrance.500'>
       Hello World
     </Box>
   )
@@ -63,7 +65,7 @@ const CustomInput = (props) => {
 }
 
 const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
-  const gridTemplate = useBreakpointValue(['1fr', 'repeat(2, 1fr)'])
+  const gridTemplate = useBreakpointValue(['1fr', formState.mandataire ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)'])
   return (
     <>
       <Flex py={6} alignItems='center'>
@@ -87,9 +89,32 @@ const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
         p={8}
         bg='white'
         border='1px solid'
-        borderColor='bluefrance'
+        borderColor='bluefrance.500'
         gap={[6, 0]}
       >
+        {formState.mandataire && (
+          <GridItem>
+            <Heading size='md' pb={6}>
+              Renseignements Mandataire
+            </Heading>
+            <Grid templateRows='repeat(3, 1fr)' gap={4}>
+              <Flex>
+                <Text pr={3}>Nom de l'etablissement :</Text>
+                <Badge variant='readOnly'>{formState.raison_sociale_mandataire}</Badge>
+              </Flex>
+              <Flex>
+                <Text pr={3}>SIRET :</Text>
+                <Badge variant='readOnly'>{formState.siret_mandataire}</Badge>
+              </Flex>
+              <Flex>
+                <Text pr={3} isTruncated>
+                  Adresse :
+                </Text>
+                <Badge variant='readOnly'>{formState.adresse_mandataire}</Badge>
+              </Flex>
+            </Grid>
+          </GridItem>
+        )}
         <GridItem>
           <Heading size='md' pb={6}>
             Renseignements Entreprise
@@ -146,6 +171,7 @@ const Formulaire = (props) => {
   const [loading, setLoading] = useBoolean(true)
   const [error, setError] = useBoolean()
   const [readOnlyMode, setReadOnlyMode] = useBoolean()
+  const [isMandataire, setIsMandataire] = useBoolean(false)
   const ajouterVoeuxPopup = useDisclosure()
   const confirmationSuppression = useDisclosure()
   const { id_form, origine } = useParams()
@@ -302,7 +328,7 @@ const Formulaire = (props) => {
   }
 
   return (
-    <>
+    <AnimationContainer>
       <Layout background='beige'>
         <AjouterVoeux {...ajouterVoeuxPopup} {...currentOffer} handleSave={saveOffer} />
         <ConfirmationSuppression
@@ -314,7 +340,7 @@ const Formulaire = (props) => {
           <Box pt={3}>
             <Breadcrumb separator={<ArrowDropRightLine color='grey.600' />} textStyle='xs'>
               <BreadcrumbItem>
-                <BreadcrumbLink textDecoration='underline' href='/' textStyle='xs'>
+                <BreadcrumbLink textDecoration='underline' as={Link} to='/' textStyle='xs'>
                   Accueil
                 </BreadcrumbLink>
               </BreadcrumbItem>
@@ -334,6 +360,11 @@ const Formulaire = (props) => {
               validateOnMount={true}
               enableReinitialize={true}
               initialValues={{
+                mandataire: formState?.mandataire ?? false,
+                raison_sociale_mandataire: formState?.raison_sociale_mandataire ?? '',
+                siret_mandataire: formState?.siret_mandataire ? formState?.siret_mandataire.replace(/ /g, '') : '',
+                adresse_mandataire: formState?.adresse_mandataire ?? '',
+                geo_coordonnees_mandataire: formState?.geo_coordonnees_mandataire ?? '',
                 raison_sociale: formState?.raison_sociale ?? '',
                 siret: formState?.siret ? formState?.siret.replace(/ /g, '') : '',
                 adresse: formState?.adresse ?? '',
@@ -383,19 +414,19 @@ const Formulaire = (props) => {
                       </Button>
                     </Flex>
                     <Grid templateColumns='repeat(12, 1fr)'>
-                      <GridItem colSpan={12} bg='white' p={8} border='1px solid' borderColor='bluefrance'>
+                      <GridItem colSpan={12} bg='white' p={8} border='1px solid' borderColor='bluefrance.500'>
                         <Grid templateColumns='repeat(12, 1fr)'>
                           <GridItem colSpan={[12, 6]} p={[, 8]}>
                             <Heading size='md' pb={6}>
                               Renseignements Entreprise
                             </Heading>
+                            <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
                             <CustomInput
                               name='raison_sociale'
                               label="Nom de l'enseigne"
                               type='text'
                               value={values.raison_sociale}
                             />
-                            <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
 
                             <Field name='adresse'>
                               {({ meta, form }) => {
@@ -409,6 +440,7 @@ const Formulaire = (props) => {
                                       }}
                                       defaultValue={values.adresse}
                                       setFieldTouched={form.setFieldTouched}
+                                      name='adresse'
                                     />
                                     <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
                                     <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -460,6 +492,7 @@ const Formulaire = (props) => {
                   removeOffer={removeOffer}
                   editOffer={editOffer}
                   extendOffer={extendOffer}
+                  geo_coordonnees={formState.geo_coordonnees}
                 />
               ) : (
                 <Flex direction='column' alignItems='center' bg='white' p={8} border='1px solid' borderColor='grey.400'>
@@ -487,7 +520,7 @@ const Formulaire = (props) => {
           )}
         </Container>
       </Layout>
-    </>
+    </AnimationContainer>
   )
 }
 

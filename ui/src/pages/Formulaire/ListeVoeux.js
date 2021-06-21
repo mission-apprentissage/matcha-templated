@@ -1,5 +1,5 @@
-import { Button, Box, Flex, Text, Heading, Spacer, Icon, Badge, VStack, HStack, Stack, Tooltip } from '@chakra-ui/react'
-import { AiOutlineEdit, AiOutlineExclamationCircle, AiOutlineDelete } from 'react-icons/ai'
+import { Button, Box, Flex, Text, Heading, Spacer, Icon, Badge, VStack, Stack, Tooltip, Link } from '@chakra-ui/react'
+import { AiOutlineEdit, AiOutlineExclamationCircle, AiOutlineDelete, AiOutlineArrowRight } from 'react-icons/ai'
 import moment from 'moment'
 import 'moment/locale/fr'
 
@@ -24,6 +24,8 @@ export default (props) => {
     return <div />
   }
 
+  const [lat, lon] = props.geo_coordonnees.split(',')
+
   return (
     <Stack direction='column' align='stretch' spacing={3}>
       {props.data
@@ -32,20 +34,29 @@ export default (props) => {
           let isExtendable = moment().to(item.date_expiration) === 'dans 7 jours'
 
           return (
-            <Box bg='white' p={8} border='1px solid' borderColor='bluefrance'>
+            <Box bg='white' p={8} border='1px solid' borderColor='bluefrance.500'>
               <Flex alignItems='flex-start'>
                 <Text fontSize='sm' pr={9}>
                   Postée le {moment(item.date_creation).format('DD/MM/YYYY')}
                 </Text>
                 <Flex alignItems='center'>
-                  <Icon as={AiOutlineExclamationCircle} color='bluefrance' w={5} h={5} />
+                  <Icon as={AiOutlineExclamationCircle} color='bluefrance.500' w={5} h={5} />
                   <Text fontSize='sm' pl={3}>
                     Expire {moment().to(item.date_expiration)}
                   </Text>
                 </Flex>
                 <Spacer />
-                {/* {getStatusBadge(item.statut)} */}
-                {/* <Badge variant='published'>Active</Badge> */}
+
+                <Flex alignItems='center'>
+                  <Link
+                    color='bluefrance.500'
+                    isExternal
+                    href={`https://labonnealternance.apprentissage.beta.gouv.fr/recherche-apprentissage-formation?&caller=matcha&romes=${item.romes}&lon=${lon}&lat=${lat}`}
+                  >
+                    Voir les centres de formations
+                    <Icon ml={1} as={AiOutlineArrowRight} color='bluefrance.500' />
+                  </Link>
+                </Flex>
               </Flex>
               <VStack spacing={2} align='flex-start' pt={3} pb={9}>
                 <Heading textStyle='h3' size='md'>

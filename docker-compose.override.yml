@@ -41,6 +41,33 @@ services:
     ports:
       - "127.0.0.1:5601:5601"
 
+  umami:
+    image: ghcr.io/mikecao/umami:postgresql-latest
+    container_name: matcha_umami
+    environment:
+      DATABASE_URL: postgresql://umami:umami@db:5432/umami
+      DATABASE_TYPE: postgresql
+      HASH_SALT: replace-me-with-a-random-string
+    depends_on:
+      - postgres
+    networks:
+      - matcha_network
+
+  postgres:
+    image: postgres:12-alpine
+    container_name: matcha_umami_db
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: umami
+    volumes:
+      - ./sql/schema.postgresql.sql:/docker-entrypoint-initdb.d/schema.postgresql.sql:ro
+      - matcha_umami_data:/var/lib/postgresql/data
+    depends_on:
+      - server
+    networks:
+      - matcha_network
+
 volumes:
   matcha_elasticsearch_data:
     driver: local
@@ -54,3 +81,6 @@ volumes:
   matcha_server_data:
     driver: local
     name: matcha_server_data
+  matcha_umami_data:
+    driver: local
+    name: matcha_umami_data

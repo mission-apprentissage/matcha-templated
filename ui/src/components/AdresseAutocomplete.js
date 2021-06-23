@@ -22,14 +22,12 @@ const Wrapper = styled.ul`
 `
 
 export default (props) => {
-  // console.log(props)
   const [items, setItems] = useState([])
   const [search, setSearch] = useState('')
   const adresse = []
 
   useEffect(() => {
     setSearch(props.defaultValue)
-    handleSearch()
   }, [props.defaultValue])
 
   const getAddress = async (value) => {
@@ -55,6 +53,12 @@ export default (props) => {
   const itemToString = (item) => (item ? item.name : '')
   const onSelectedItemChange = ({ selectedItem }) => props.handleValues(selectedItem)
 
+  const onStateChange = async ({ inputValue, type }) => {
+    if (type === useCombobox.stateChangeTypes.InputChange) {
+      setSearch(inputValue)
+      setItems(await handleSearch(inputValue))
+    }
+  }
   const onInputValueChange = async ({ inputValue }) => {
     setItems(await handleSearch(inputValue))
     if (inputValue === '') {
@@ -62,12 +66,22 @@ export default (props) => {
     }
   }
 
-  const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps } = useCombobox({
+  const {
+    isOpen,
+    getMenuProps,
+    getInputProps,
+    getComboboxProps,
+    highlightedIndex,
+    getItemProps,
+    openMenu,
+  } = useCombobox({
+    initialIsOpen: items.length > 0 && true,
     itemToString,
+    onStateChange,
     onInputValueChange,
     onSelectedItemChange,
     items,
-    initialInputValue: props.defaultValue,
+    inputValue: search,
   })
 
   console.log(items)
@@ -78,7 +92,7 @@ export default (props) => {
         <Input
           onFocus={() => setTimeout(() => props.setFieldTouched(props.name, true), 100)}
           placeholder='Taper votre adresse complète'
-          {...getInputProps({ value: search })}
+          {...getInputProps()}
         />
       </div>
       <Wrapper {...getMenuProps()}>

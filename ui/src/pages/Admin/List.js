@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
-import { AiOutlineEdit, AiOutlineRight } from 'react-icons/ai'
+import { AiOutlineEdit, AiOutlineRight, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 import {
   Table,
   Tbody,
@@ -20,11 +20,59 @@ import {
   Flex,
   Text,
   Badge,
+  useEditableControls,
+  Editable,
+  EditablePreview,
+  EditableInput,
+  ButtonGroup,
+  IconButton,
+  useToast,
 } from '@chakra-ui/react'
 
 import { AnimationContainer, Layout } from '../../components'
 import useAuth from '../../common/hooks/useAuth'
-import { getWithQS } from '../../api'
+import { getWithQS, putFormulaire } from '../../api'
+
+const EditableField = ({ id_form, value }) => {
+  const toast = useToast()
+
+  const handleEditableSubmit = (value) => {
+    putFormulaire(id_form, { origine: value }).then(() =>
+      toast({
+        title: 'Enregistré avec succès',
+        position: 'top-right',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      })
+    )
+  }
+
+  const EditableControls = () => {
+    const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls()
+
+    return isEditing ? (
+      <ButtonGroup justifyContent='center' size='sm'>
+        <IconButton icon={<AiOutlineCheck />} {...getSubmitButtonProps()} />
+        <IconButton icon={<AiOutlineClose />} {...getCancelButtonProps()} />
+      </ButtonGroup>
+    ) : (
+      <IconButton size='sm' color='bluefrance.500' icon={<AiOutlineEdit />} {...getEditButtonProps()} />
+    )
+  }
+
+  return (
+    <Editable defaultValue={value} onSubmit={handleEditableSubmit} isPreviewFocusable={false}>
+      <Flex alignItems='center' justify='center'>
+        <EditablePreview />
+        <EditableInput />
+        <Box ml={6}>
+          <EditableControls />
+        </Box>
+      </Flex>
+    </Editable>
+  )
+}
 
 const MyTable = ({ formulaires }) => {
   if (formulaires.length < 0) return <div>Chargement en cours</div>
@@ -52,7 +100,10 @@ const MyTable = ({ formulaires }) => {
                 <Td py={4} paddingLeft='30px'>
                   {item.raison_sociale}
                 </Td>
-                <Td>{item.origine}</Td>
+                {/* <Td>{item.origine}</Td> */}
+                <Td>
+                  <EditableField value={item.origine} id_form={item.id_form} />
+                </Td>
                 <Td>{item.offres.length}</Td>
                 <Td>
                   {item.prenom.toLowerCase().charAt(0).toUpperCase() + item.prenom.slice(1)} {item.nom.toUpperCase()}
@@ -91,7 +142,7 @@ export default function List() {
         }
 
   useEffect(() => {
-    getWithQS(query)
+    getWithQS({ query, limit: 500 })
       .then((formulaires) => setState(formulaires.data))
       .finally(() => setLoading(false))
   }, [])

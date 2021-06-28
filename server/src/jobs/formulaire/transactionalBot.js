@@ -47,7 +47,7 @@ const transactionalReports = async (mail) => {
     // Send mail with action links to manage offers
     const mailBody = {
       subject: "Vos offres vont expirer prochainement",
-      email: "k.barnoin@gmail.com",
+      email,
       raison_sociale,
       id_form,
       templateId: 182,

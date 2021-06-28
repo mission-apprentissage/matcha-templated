@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { useCombobox } from 'downshift'
 
@@ -22,12 +22,23 @@ const Wrapper = styled.ul`
 `
 
 export default (props) => {
+  const input = useRef()
   const [items, setItems] = useState([])
   const [search, setSearch] = useState('')
   const adresse = []
 
   useEffect(() => {
     setSearch(props.defaultValue)
+    setTimeout(() => {
+      handleSearch(search).then((result) => {
+        console.log(result)
+        console.log('coucou')
+        setItems(result)
+      })
+    }, 3000)
+    // const event = new KeyboardEvent('keydown', { keyCode: 32, which: 32 })
+    // const elem = document.getElementById('input')
+    // elem.dispatchEvent(event)
   }, [props.defaultValue])
 
   const getAddress = async (value) => {
@@ -54,11 +65,13 @@ export default (props) => {
   const onSelectedItemChange = ({ selectedItem }) => props.handleValues(selectedItem)
 
   const onStateChange = async ({ inputValue, type }) => {
-    if (type === useCombobox.stateChangeTypes.InputChange) {
+    if (type === useCombobox.stateChangeTypes.InputChange || useCombobox.stateChangeTypes.FunctionSetInputValue) {
+      console.log('coucou')
       setSearch(inputValue)
       setItems(await handleSearch(inputValue))
     }
   }
+
   const onInputValueChange = async ({ inputValue }) => {
     setItems(await handleSearch(inputValue))
     if (inputValue === '') {
@@ -92,7 +105,7 @@ export default (props) => {
         <Input
           onFocus={() => setTimeout(() => props.setFieldTouched(props.name, true), 100)}
           placeholder='Taper votre adresse complète'
-          {...getInputProps()}
+          {...getInputProps({ ref: input, id: 'input' })}
         />
       </div>
       <Wrapper {...getMenuProps()}>

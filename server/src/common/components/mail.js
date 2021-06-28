@@ -3,7 +3,7 @@ const request = require("requestretry");
 const mailRules = require("./mail.rules");
 const { Transactional } = require("../model");
 
-module.exports = async () => {
+module.exports = () => {
   return {
     sendmail: async (body) => {
       if (!body.sender) {

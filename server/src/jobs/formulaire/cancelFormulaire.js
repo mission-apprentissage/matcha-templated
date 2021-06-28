@@ -25,6 +25,8 @@ const cancelFormulaire = async () => {
     return acc;
   }, []);
 
+  if (offersToCancel.length === 0) return;
+
   asyncForEach(offersToCancel, async (offre) => {
     await Formulaire.findOneAndUpdate({ "offres._id": offre._id }, { $set: { "offres.$.statut": "Annulée" } });
     console.log(`${offre._id} annulée`);

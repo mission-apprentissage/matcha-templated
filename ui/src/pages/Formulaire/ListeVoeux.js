@@ -31,7 +31,14 @@ export default (props) => {
       {props.data
         .filter((x) => x.statut === 'Active')
         .map((item) => {
-          let isExtendable = moment().to(item.date_expiration) === 'dans 7 jours'
+          let remainingDays = () => {
+            if (moment().to(item.date_expiration, true) === 'un mois') {
+              return 30
+            }
+            return moment().to(item.date_expiration, true)
+          }
+          let remainingDaysAsNumber = parseFloat(remainingDays(), 2)
+          let isExtendable = remainingDaysAsNumber > 7 ? false : true
 
           return (
             <Box bg='white' p={8} border='1px solid' borderColor='bluefrance.500'>

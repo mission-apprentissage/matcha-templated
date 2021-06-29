@@ -376,6 +376,12 @@ const Formulaire = (props) => {
                 origine: formState?.origine ?? '',
               }}
               validationSchema={Yup.object().shape({
+                raison_sociale_mandataire: Yup.string().min(1),
+                siret_mandataire: Yup.string()
+                  .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffres')
+                  .min(14, 'le siret est sur 14 chiffres')
+                  .max(14, 'le siret est sur 14 chiffres'),
+                adresse_mandataire: Yup.string(),
                 raison_sociale: Yup.string().required('champs obligatoire').min(1),
                 siret: Yup.string()
                   .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffres')
@@ -395,6 +401,7 @@ const Formulaire = (props) => {
               onSubmit={submitFormulaire}
             >
               {({ values, isValid, isSubmitting, setFieldValue }) => {
+                console.log(isMandataire, values.mandataire)
                 return (
                   <Form autoComplete='off'>
                     <Flex py={6} alignItems='center'>
@@ -420,12 +427,15 @@ const Formulaire = (props) => {
                             <Box p={5} border='1px solid' borderColor='bluefrance.500'>
                               <FormControl mb={5}>
                                 <Flex alignItems='center'>
-                                  <FormLabel htmlFor='mandataire'>Je suis mandataire d'un établissement</FormLabel>
+                                  <FormLabel htmlFor='mandataire'>
+                                    J'ai le mandat d'une entreprise pour gérer ses offres
+                                  </FormLabel>
                                   <Spacer />
                                   <Flex direction='column' alignItems='center'>
                                     <Switch
                                       onChange={() => {
                                         setIsMandataire.toggle()
+
                                         setFieldValue('mandataire', isMandataire)
                                         setFieldValue('raison_sociale_mandataire', undefined)
                                         setFieldValue('siret_mandataire', undefined)
@@ -528,7 +538,7 @@ const Formulaire = (props) => {
                           </GridItem>
                           <GridItem colSpan={[12, 4]} p={[, 8]}>
                             <Heading size='md' pb={6}>
-                              Informations de contact
+                              Informations de contact {values.mandataire && 'du mandataire'}
                             </Heading>
                             <CustomInput name='nom' label='Nom' type='text' value={values.nom} />
                             <CustomInput name='prenom' label='Prénom' type='test' value={values.prenom} />

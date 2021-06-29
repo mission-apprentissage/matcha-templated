@@ -12,7 +12,7 @@ export default () => {
 
   return (
     <>
-      {process.env.REACT_APP_BASE_URL.includes('local') && (
+      {process.env.REACT_APP_BASE_URL.includes('recette') && (
         <Alert status='info' variant='top-accent' justifyContent='center'>
           <AlertIcon />
           Environnement de test

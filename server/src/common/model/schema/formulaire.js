@@ -34,6 +34,11 @@ const offresSchema = new Schema({
     default: null,
     description: "Date d'expiration de l'offre",
   },
+  relance_mail_sent: {
+    type: Boolean,
+    default: false,
+    description: "Statut de l'envoie du mail de relance avant expiration",
+  },
   statut: {
     type: String,
     default: "Active",

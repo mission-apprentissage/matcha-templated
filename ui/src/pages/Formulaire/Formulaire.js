@@ -536,7 +536,7 @@ const Formulaire = (props) => {
                               }}
                             </Field>
                           </GridItem>
-                          <GridItem colSpan={[12, 4]} p={[, 8]}>
+                          <GridItem colSpan={[12, 6]} p={[, 8]}>
                             <Heading size='md' pb={6}>
                               Informations de contact {values.mandataire && 'du mandataire'}
                             </Heading>

@@ -401,7 +401,6 @@ const Formulaire = (props) => {
               onSubmit={submitFormulaire}
             >
               {({ values, isValid, isSubmitting, setFieldValue }) => {
-                console.log(isMandataire, values.mandataire)
                 return (
                   <Form autoComplete='off'>
                     <Flex py={6} alignItems='center'>

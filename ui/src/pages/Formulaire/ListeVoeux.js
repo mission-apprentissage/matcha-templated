@@ -42,11 +42,11 @@ export default (props) => {
 
           return (
             <Box bg='white' p={8} border='1px solid' borderColor='bluefrance.500'>
-              <Flex alignItems='flex-start'>
-                <Text fontSize='sm' pr={9}>
+              <Flex alignItems='flex-start' direction={['column', 'row']}>
+                <Text fontSize='sm' pr={9} pb={[3, 0]}>
                   Postée le {moment(item.date_creation).format('DD/MM/YYYY')}
                 </Text>
-                <Flex alignItems='center'>
+                <Flex alignItems='center' pb={[3, 0]}>
                   <Icon as={AiOutlineExclamationCircle} color='bluefrance.500' w={5} h={5} />
                   <Text fontSize='sm' pl={3}>
                     Expire {moment().to(item.date_expiration)}
@@ -54,7 +54,7 @@ export default (props) => {
                 </Flex>
                 <Spacer />
 
-                <Flex alignItems='center'>
+                <Flex alignItems='center' display={['none', 'block']}>
                   <Link
                     color='bluefrance.500'
                     isExternal
@@ -94,6 +94,7 @@ export default (props) => {
                 >
                   <Box>
                     <Button
+                      w={['100%', 'inherit']}
                       variant='secondary'
                       isDisabled={!isExtendable}
                       leftIcon={<AiOutlineEdit />}
@@ -104,7 +105,7 @@ export default (props) => {
                         })
                       }
                     >
-                      Modifier l'échéance
+                      Prolonger l'échéance
                     </Button>
                   </Box>
                 </Tooltip>

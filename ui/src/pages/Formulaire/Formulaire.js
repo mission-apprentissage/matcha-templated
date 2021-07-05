@@ -69,7 +69,7 @@ const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
   return (
     <>
       <Flex py={6} alignItems='center'>
-        <Box as='h2' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
+        <Box as='h2' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800' maxW={[100, 'none']}>
           {formState.raison_sociale}
         </Box>
         <Spacer />
@@ -120,16 +120,20 @@ const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
             Renseignements Entreprise
           </Heading>
           <Grid templateRows='repeat(3, 1fr)' gap={4}>
-            <Flex>
-              <Text pr={3}>Nom de l'enseigne :</Text>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
+                Nom de l'enseigne :
+              </Text>
               <Badge variant='readOnly'>{formState.raison_sociale}</Badge>
             </Flex>
-            <Flex>
-              <Text pr={3}>SIRET :</Text>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
+                SIRET :
+              </Text>
               <Badge variant='readOnly'>{formState.siret}</Badge>
             </Flex>
-            <Flex>
-              <Text pr={3} isTruncated>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
                 Adresse :
               </Text>
               <Badge variant='readOnly'>{formState.adresse}</Badge>
@@ -141,20 +145,28 @@ const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
             Information de contact
           </Heading>
           <Grid templateRows='repeat(4, 1fr)' gap={4}>
-            <Flex>
-              <Text pr={3}>Nom :</Text>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
+                Nom :
+              </Text>
               <Badge variant='readOnly'>{formState.nom}</Badge>
             </Flex>
-            <Flex>
-              <Text pr={3}>Prénom :</Text>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
+                Prénom :
+              </Text>
               <Badge variant='readOnly'>{formState.prenom}</Badge>
             </Flex>
-            <Flex>
-              <Text pr={3}>Téléphone :</Text>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
+                Téléphone :
+              </Text>
               <Badge variant='readOnly'>{formState.telephone}</Badge>
             </Flex>
-            <Flex>
-              <Text pr={3}>Email :</Text>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
+                Email :
+              </Text>
               <Badge variant='readOnly'>{formState.email}</Badge>
             </Flex>
           </Grid>

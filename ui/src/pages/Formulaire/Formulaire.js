@@ -69,7 +69,7 @@ const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
   return (
     <>
       <Flex py={6} alignItems='center'>
-        <Box as='h2' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
+        <Box as='h2' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800' maxW={[100, 'none']}>
           {formState.raison_sociale}
         </Box>
         <Spacer />
@@ -120,16 +120,20 @@ const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
             Renseignements Entreprise
           </Heading>
           <Grid templateRows='repeat(3, 1fr)' gap={4}>
-            <Flex>
-              <Text pr={3}>Nom de l'enseigne :</Text>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
+                Nom de l'enseigne :
+              </Text>
               <Badge variant='readOnly'>{formState.raison_sociale}</Badge>
             </Flex>
-            <Flex>
-              <Text pr={3}>SIRET :</Text>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
+                SIRET :
+              </Text>
               <Badge variant='readOnly'>{formState.siret}</Badge>
             </Flex>
-            <Flex>
-              <Text pr={3} isTruncated>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
                 Adresse :
               </Text>
               <Badge variant='readOnly'>{formState.adresse}</Badge>
@@ -141,20 +145,28 @@ const FormulaireLectureSeul = ({ formState, buttonSize, setEditionMode }) => {
             Information de contact
           </Heading>
           <Grid templateRows='repeat(4, 1fr)' gap={4}>
-            <Flex>
-              <Text pr={3}>Nom :</Text>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
+                Nom :
+              </Text>
               <Badge variant='readOnly'>{formState.nom}</Badge>
             </Flex>
-            <Flex>
-              <Text pr={3}>Prénom :</Text>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
+                Prénom :
+              </Text>
               <Badge variant='readOnly'>{formState.prenom}</Badge>
             </Flex>
-            <Flex>
-              <Text pr={3}>Téléphone :</Text>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
+                Téléphone :
+              </Text>
               <Badge variant='readOnly'>{formState.telephone}</Badge>
             </Flex>
-            <Flex>
-              <Text pr={3}>Email :</Text>
+            <Flex direction={['column', 'row']}>
+              <Text pr={3} pb={[3, 0]}>
+                Email :
+              </Text>
               <Badge variant='readOnly'>{formState.email}</Badge>
             </Flex>
           </Grid>
@@ -328,199 +340,208 @@ const Formulaire = (props) => {
   }
 
   return (
-    <AnimationContainer>
-      <Layout background='beige'>
-        <AjouterVoeux {...ajouterVoeuxPopup} {...currentOffer} handleSave={saveOffer} />
-        <ConfirmationSuppression
-          {...confirmationSuppression}
-          currentOffer={currentOffer}
-          setOffersList={setOffersList}
-        />
-        <Container maxW='container.xl' pb={16}>
-          <Box pt={3}>
-            <Breadcrumb separator={<ArrowDropRightLine color='grey.600' />} textStyle='xs'>
-              <BreadcrumbItem>
-                <BreadcrumbLink textDecoration='underline' as={Link} to='/' textStyle='xs'>
-                  Accueil
-                </BreadcrumbLink>
-              </BreadcrumbItem>
+    <>
+      <AnimationContainer>
+        <Layout background='beige' widget={props?.widget ?? false}>
+          <AjouterVoeux {...ajouterVoeuxPopup} {...currentOffer} handleSave={saveOffer} />
+          <ConfirmationSuppression
+            {...confirmationSuppression}
+            currentOffer={currentOffer}
+            setOffersList={setOffersList}
+          />
+          <Container maxW='container.xl' pb={16}>
+            <Box pt={3}>
+              <Breadcrumb separator={<ArrowDropRightLine color='grey.600' />} textStyle='xs'>
+                <BreadcrumbItem>
+                  <BreadcrumbLink textDecoration='underline' as={Link} to='/' textStyle='xs'>
+                    Accueil
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
 
-              <BreadcrumbItem isCurrentPage>
-                <BreadcrumbLink href='#' textStyle='xs'>
-                  {formState._id ? 'Consulter vos offres en cours' : "Nouveau dépot d'offre"}
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            </Breadcrumb>
-          </Box>
+                <BreadcrumbItem isCurrentPage>
+                  <BreadcrumbLink href='#' textStyle='xs'>
+                    {formState._id ? 'Consulter vos offres en cours' : "Nouveau dépot d'offre"}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+              </Breadcrumb>
+            </Box>
 
-          {readOnlyMode ? (
-            <FormulaireLectureSeul formState={formState} buttonSize={buttonSize} setEditionMode={setReadOnlyMode} />
-          ) : (
-            <Formik
-              validateOnMount={true}
-              enableReinitialize={true}
-              initialValues={{
-                mandataire: formState?.mandataire ?? false,
-                raison_sociale_mandataire: formState?.raison_sociale_mandataire ?? '',
-                siret_mandataire: formState?.siret_mandataire ? formState?.siret_mandataire.replace(/ /g, '') : '',
-                adresse_mandataire: formState?.adresse_mandataire ?? '',
-                geo_coordonnees_mandataire: formState?.geo_coordonnees_mandataire ?? '',
-                raison_sociale: formState?.raison_sociale ?? '',
-                siret: formState?.siret ? formState?.siret.replace(/ /g, '') : '',
-                adresse: formState?.adresse ?? '',
-                geo_coordonnees: formState?.geo_coordonnees ?? '',
-                nom: formState?.nom ?? '',
-                prenom: formState?.prenom ?? '',
-                telephone: formState?.telephone ? formState?.telephone.replace(/ /g, '') : '',
-                email: formState?.email ?? '',
-                origine: formState?.origine ?? '',
-              }}
-              validationSchema={Yup.object().shape({
-                raison_sociale: Yup.string().required('champs obligatoire').min(1),
-                siret: Yup.string()
-                  .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffres')
-                  .min(14, 'le siret est sur 14 chiffres')
-                  .max(14, 'le siret est sur 14 chiffres')
-                  .required('champs obligatoire'),
-                adresse: Yup.string().required('champ obligatoire'),
-                nom: Yup.string().required('champ obligatoire'),
-                prenom: Yup.string().required('champ obligatoire'),
-                telephone: Yup.string()
-                  .matches(/^[0-9]+$/, 'Le téléphone est composé uniquement de chiffres')
-                  .min(10, 'le téléphone est sur 10 chiffres')
-                  .max(10, 'le téléphone est sur 10 chiffres')
-                  .required('champ obligatoire'),
-                email: Yup.string().email('Insérez un email valide').required('champ obligatoire'),
-              })}
-              onSubmit={submitFormulaire}
-            >
-              {({ values, isValid, isSubmitting, setFieldValue }) => {
-                return (
-                  <Form autoComplete='off'>
-                    <Flex py={6} alignItems='center'>
-                      <Box as='h2' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
-                        {formState.id_form ? formState.raison_sociale : 'Nouveau formulaire'}
-                      </Box>
-                      <Spacer />
-                      <Button
-                        type='submit'
-                        size={buttonSize}
-                        variant='primary'
-                        leftIcon={<AiOutlineEdit />}
-                        isActive={isValid}
-                        disabled={!isValid || isSubmitting}
-                      >
-                        Enregistrer les informations
-                      </Button>
-                    </Flex>
-                    <Grid templateColumns='repeat(12, 1fr)'>
-                      <GridItem colSpan={12} bg='white' p={8} border='1px solid' borderColor='bluefrance.500'>
-                        <Grid templateColumns='repeat(12, 1fr)'>
-                          <GridItem colSpan={[12, 6]} p={[, 8]}>
-                            <Heading size='md' pb={6}>
-                              Renseignements Entreprise
-                            </Heading>
-                            <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
-                            <CustomInput
-                              name='raison_sociale'
-                              label="Nom de l'enseigne"
-                              type='text'
-                              value={values.raison_sociale}
-                            />
+            {readOnlyMode ? (
+              <FormulaireLectureSeul formState={formState} buttonSize={buttonSize} setEditionMode={setReadOnlyMode} />
+            ) : (
+              <Formik
+                validateOnMount={true}
+                enableReinitialize={true}
+                initialValues={{
+                  mandataire: formState?.mandataire ?? false,
+                  raison_sociale_mandataire: formState?.raison_sociale_mandataire ?? '',
+                  siret_mandataire: formState?.siret_mandataire ? formState?.siret_mandataire.replace(/ /g, '') : '',
+                  adresse_mandataire: formState?.adresse_mandataire ?? '',
+                  geo_coordonnees_mandataire: formState?.geo_coordonnees_mandataire ?? '',
+                  raison_sociale: formState?.raison_sociale ?? '',
+                  siret: formState?.siret ? formState?.siret.replace(/ /g, '') : '',
+                  adresse: formState?.adresse ?? '',
+                  geo_coordonnees: formState?.geo_coordonnees ?? '',
+                  nom: formState?.nom ?? '',
+                  prenom: formState?.prenom ?? '',
+                  telephone: formState?.telephone ? formState?.telephone.replace(/ /g, '') : '',
+                  email: formState?.email ?? '',
+                  origine: formState?.origine ?? '',
+                }}
+                validationSchema={Yup.object().shape({
+                  raison_sociale: Yup.string().required('champs obligatoire').min(1),
+                  siret: Yup.string()
+                    .matches(/^[0-9]+$/, 'Le siret est composé uniquement de chiffres')
+                    .min(14, 'le siret est sur 14 chiffres')
+                    .max(14, 'le siret est sur 14 chiffres')
+                    .required('champs obligatoire'),
+                  adresse: Yup.string().required('champ obligatoire'),
+                  nom: Yup.string().required('champ obligatoire'),
+                  prenom: Yup.string().required('champ obligatoire'),
+                  telephone: Yup.string()
+                    .matches(/^[0-9]+$/, 'Le téléphone est composé uniquement de chiffres')
+                    .min(10, 'le téléphone est sur 10 chiffres')
+                    .max(10, 'le téléphone est sur 10 chiffres')
+                    .required('champ obligatoire'),
+                  email: Yup.string().email('Insérez un email valide').required('champ obligatoire'),
+                })}
+                onSubmit={submitFormulaire}
+              >
+                {({ values, isValid, isSubmitting, setFieldValue }) => {
+                  return (
+                    <Form autoComplete='off'>
+                      <Flex py={6} alignItems='center'>
+                        <Box as='h2' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
+                          {formState.id_form ? formState.raison_sociale : 'Nouveau formulaire'}
+                        </Box>
+                        <Spacer />
+                        <Button
+                          type='submit'
+                          size={buttonSize}
+                          variant='primary'
+                          leftIcon={<AiOutlineEdit />}
+                          isActive={isValid}
+                          disabled={!isValid || isSubmitting}
+                        >
+                          Enregistrer les informations
+                        </Button>
+                      </Flex>
+                      <Grid templateColumns='repeat(12, 1fr)'>
+                        <GridItem colSpan={12} bg='white' p={8} border='1px solid' borderColor='bluefrance.500'>
+                          <Grid templateColumns='repeat(12, 1fr)'>
+                            <GridItem colSpan={[12, 6]} p={[, 8]}>
+                              <Heading size='md' pb={6}>
+                                Renseignements Entreprise
+                              </Heading>
+                              <CustomInput name='siret' label='SIRET' type='text' value={values.siret} maxLength='14' />
+                              <CustomInput
+                                name='raison_sociale'
+                                label="Nom de l'enseigne"
+                                type='text'
+                                value={values.raison_sociale}
+                              />
 
-                            <Field name='adresse'>
-                              {({ meta, form }) => {
-                                return (
-                                  <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
-                                    <FormLabel>Adresse</FormLabel>
-                                    <AdresseAutocomplete
-                                      handleValues={(value) => {
-                                        setFieldValue('geo_coordonnees', value.geo_coordonnees)
-                                        setFieldValue('adresse', value.name)
-                                      }}
-                                      defaultValue={values.adresse}
-                                      setFieldTouched={form.setFieldTouched}
-                                      name='adresse'
-                                    />
-                                    <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
-                                    <FormErrorMessage>{meta.error}</FormErrorMessage>
-                                  </FormControl>
-                                )
-                              }}
-                            </Field>
-                          </GridItem>
-                          <GridItem colSpan={[12, 6]} p={[, 8]}>
-                            <Heading size='md' pb={6}>
-                              Informations de contact
-                            </Heading>
-                            <CustomInput name='nom' label='Nom' type='text' value={values.nom} />
-                            <CustomInput name='prenom' label='Prénom' type='test' value={values.prenom} />
-                            <CustomInput
-                              name='telephone'
-                              label='Téléphone'
-                              type='tel'
-                              pattern='[0-9]{10}'
-                              maxLength='10'
-                              value={values.telephone}
-                              helper='ex: 0632923456'
-                            />
-                            <CustomInput name='email' label='Email' type='email' value={values.email} />
-                          </GridItem>
-                        </Grid>
-                      </GridItem>
-                    </Grid>
-                  </Form>
-                )
-              }}
-            </Formik>
-          )}
+                              <Field name='adresse'>
+                                {({ meta, form }) => {
+                                  return (
+                                    <FormControl pb={5} isInvalid={meta.error && meta.touched} isRequired>
+                                      <FormLabel>Adresse</FormLabel>
+                                      <AdresseAutocomplete
+                                        handleValues={(value) => {
+                                          setFieldValue('geo_coordonnees', value.geo_coordonnees)
+                                          setFieldValue('adresse', value.name)
+                                        }}
+                                        defaultValue={values.adresse}
+                                        setFieldTouched={form.setFieldTouched}
+                                        name='adresse'
+                                      />
+                                      <FormHelperText>ex: 110 rue de Grenelle 75007 Paris</FormHelperText>
+                                      <FormErrorMessage>{meta.error}</FormErrorMessage>
+                                    </FormControl>
+                                  )
+                                }}
+                              </Field>
+                            </GridItem>
+                            <GridItem colSpan={[12, 6]} p={[, 8]}>
+                              <Heading size='md' pb={6}>
+                                Informations de contact
+                              </Heading>
+                              <CustomInput name='nom' label='Nom' type='text' value={values.nom} />
+                              <CustomInput name='prenom' label='Prénom' type='test' value={values.prenom} />
+                              <CustomInput
+                                name='telephone'
+                                label='Téléphone'
+                                type='tel'
+                                pattern='[0-9]{10}'
+                                maxLength='10'
+                                value={values.telephone}
+                                helper='ex: 0632923456'
+                              />
+                              <CustomInput name='email' label='Email' type='email' value={values.email} />
+                            </GridItem>
+                          </Grid>
+                        </GridItem>
+                      </Grid>
+                    </Form>
+                  )
+                }}
+              </Formik>
+            )}
 
-          {formState?._id && (
-            <Box mb={12}>
-              <Flex pt={12} pb={6} alignItems='center'>
-                <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
-                  Offre(s) disponible(s)
-                </Box>
-                <Spacer />
-                <Button variant='primary' size={buttonSize} leftIcon={<IoIosAddCircleOutline />} onClick={addOffer}>
-                  Ajouter une offre
-                </Button>
-              </Flex>
-              {hasActiveOffers.length > 0 ? (
-                <ListeVoeux
-                  data={offersList}
-                  removeOffer={removeOffer}
-                  editOffer={editOffer}
-                  extendOffer={extendOffer}
-                  geo_coordonnees={formState.geo_coordonnees}
-                />
-              ) : (
-                <Flex direction='column' alignItems='center' bg='white' p={8} border='1px solid' borderColor='grey.400'>
-                  <Image src={addOfferImage} pb={3} />
-                  <Box align='center' textStyle='h3' fontSize={['md', '3xl']} fontWeight='700' color='grey.800'>
-                    Créez votre première offre d'emploi en alternance
+            {formState?._id && (
+              <Box mb={12}>
+                <Flex pt={12} pb={6} alignItems='center'>
+                  <Box textStyle='h3' fontSize={['sm', '3xl']} fontWeight='700' color='grey.800'>
+                    Offre(s) disponible(s)
                   </Box>
-                  <Text align='center'>En quelques secondes, exprimez vos besoins de recrutement pour les</Text>
-                  <Text align='center'>
-                    afficher sur le site <span style={{ fontWeight: 700 }}>La Bonne Alternance</span> dès aujourd’hui.
-                  </Text>
-                  <Button
-                    mt={6}
-                    mb={3}
-                    variant='primary'
-                    size={buttonSize}
-                    leftIcon={<IoIosAddCircleOutline />}
-                    onClick={addOffer}
-                  >
+                  <Spacer />
+                  <Button variant='primary' size={buttonSize} leftIcon={<IoIosAddCircleOutline />} onClick={addOffer}>
                     Ajouter une offre
                   </Button>
                 </Flex>
-              )}
-            </Box>
-          )}
-        </Container>
-      </Layout>
-    </AnimationContainer>
+                {hasActiveOffers.length > 0 ? (
+                  <ListeVoeux
+                    data={offersList}
+                    removeOffer={removeOffer}
+                    editOffer={editOffer}
+                    extendOffer={extendOffer}
+                    geo_coordonnees={formState.geo_coordonnees}
+                  />
+                ) : (
+                  <Flex
+                    direction='column'
+                    alignItems='center'
+                    bg='white'
+                    p={8}
+                    border='1px solid'
+                    borderColor='grey.400'
+                  >
+                    <Image src={addOfferImage} pb={3} />
+                    <Box align='center' textStyle='h3' fontSize={['md', '3xl']} fontWeight='700' color='grey.800'>
+                      Créez votre première offre d'emploi en alternance
+                    </Box>
+                    <Text align='center'>En quelques secondes, exprimez vos besoins de recrutement pour les</Text>
+                    <Text align='center'>
+                      afficher sur le site <span style={{ fontWeight: 700 }}>La Bonne Alternance</span> dès aujourd’hui.
+                    </Text>
+                    <Button
+                      mt={6}
+                      mb={3}
+                      variant='primary'
+                      size={buttonSize}
+                      leftIcon={<IoIosAddCircleOutline />}
+                      onClick={addOffer}
+                    >
+                      Ajouter une offre
+                    </Button>
+                  </Flex>
+                )}
+              </Box>
+            )}
+          </Container>
+        </Layout>
+      </AnimationContainer>
+    </>
   )
 }
 

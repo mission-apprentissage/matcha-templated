@@ -48,7 +48,7 @@ export default (props) => {
 
           return (
             <Box bg='white' p={8} border='1px solid' borderColor='bluefrance.500'>
-              <Flex alignItems='flex-start' direction={['column', 'row']}>
+              <Flex alignItems='flex-start'>
                 <Text fontSize='sm' pr={9} pb={[3, 0]}>
                   Postée le {moment(item.date_creation).format('DD/MM/YYYY')}
                 </Text>
@@ -79,7 +79,7 @@ export default (props) => {
                   {item.niveau}
                 </Text>
                 {item.date_debut_apprentissage && (
-                  <Flex direction='row'>
+                  <Flex direction={['column', 'row']}>
                     <Text fontSize='md' fontWeight='400' pr={1}>
                       Date de début du contrat:
                     </Text>

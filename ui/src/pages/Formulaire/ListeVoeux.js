@@ -1,5 +1,11 @@
 import { Button, Box, Flex, Text, Heading, Spacer, Icon, Badge, VStack, Stack, Tooltip, Link } from '@chakra-ui/react'
-import { AiOutlineEdit, AiOutlineExclamationCircle, AiOutlineDelete, AiOutlineArrowRight } from 'react-icons/ai'
+import {
+  AiOutlineEdit,
+  AiOutlineExclamationCircle,
+  AiOutlineDelete,
+  AiOutlineArrowRight,
+  AiOutlineRetweet,
+} from 'react-icons/ai'
 import moment from 'moment'
 import 'moment/locale/fr'
 
@@ -97,7 +103,7 @@ export default (props) => {
                       w={['100%', 'inherit']}
                       variant='secondary'
                       isDisabled={!isExtendable}
-                      leftIcon={<AiOutlineEdit />}
+                      leftIcon={<AiOutlineRetweet />}
                       onClick={() =>
                         props.extendOffer(item._id, {
                           ...item,

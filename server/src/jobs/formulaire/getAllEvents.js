@@ -1,7 +1,6 @@
 const logger = require("../../common/logger");
 const { Formulaire } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { runScript } = require("../scriptWrapper");
 
 async function getAllEvents(mail) {
   /**
@@ -30,7 +29,3 @@ async function getAllEvents(mail) {
 }
 
 module.exports = { getAllEvents };
-
-runScript(async ({ mail }) => {
-  await getAllEvents(mail);
-});

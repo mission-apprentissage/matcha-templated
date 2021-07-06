@@ -76,27 +76,23 @@ module.exports = new Schema(
     },
     raison_sociale_mandataire: {
       type: String,
-      default: null,
       description: "Raison social de l'etablissement mandataire",
     },
     siret_mandataire: {
       type: String,
-      default: null,
       description: "Numéro SIRET de l'etablissement mandataire",
     },
     adresse_mandataire: {
       type: String,
-      default: null,
       description: "Adresse de l'etablissement mandataire",
     },
     geo_coordonnees_mandataire: {
       type: String,
-      default: null,
       description: "Longitude/Latitude de l'adresse de l'etablissement mandataire ",
     },
     mandataire: {
       type: Boolean,
-      default: null,
+      default: false,
       description: "le formulaire est-il géré par un mandataire ?",
     },
     nom: {

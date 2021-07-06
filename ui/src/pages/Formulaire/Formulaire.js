@@ -374,10 +374,12 @@ const Formulaire = (props) => {
                 enableReinitialize={true}
                 initialValues={{
                   mandataire: formState?.mandataire ?? false,
-                  raison_sociale_mandataire: formState?.raison_sociale_mandataire ?? '',
-                  siret_mandataire: formState?.siret_mandataire ? formState?.siret_mandataire.replace(/ /g, '') : '',
-                  adresse_mandataire: formState?.adresse_mandataire ?? '',
-                  geo_coordonnees_mandataire: formState?.geo_coordonnees_mandataire ?? '',
+                  raison_sociale_mandataire: formState?.raison_sociale_mandataire ?? undefined,
+                  siret_mandataire: formState?.siret_mandataire
+                    ? formState?.siret_mandataire.replace(/ /g, '')
+                    : undefined,
+                  adresse_mandataire: formState?.adresse_mandataire ?? undefined,
+                  geo_coordonnees_mandataire: formState?.geo_coordonnees_mandataire ?? undefined,
                   raison_sociale: formState?.raison_sociale ?? '',
                   siret: formState?.siret ? formState?.siret.replace(/ /g, '') : '',
                   adresse: formState?.adresse ?? '',

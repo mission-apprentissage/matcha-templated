@@ -13,14 +13,13 @@
     "cli": "node src/cli.js",
     "test": "mocha --recursive --exit --timeout 5000 tests/",
     "lint": "eslint src/tests",
+    "clear": "node src/jobs/clear/index.js",
     "docker:start": "docker-compose up -d --build --force-recreate",
     "docker:stop": "docker-compose stop",
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
     "admin:user": "node src/jobs/seed/createUsers.js",
     "form:dummy": "node src/jobs/seed/createFormulaire.js",
-    "form:campagne": "node src/jobs/formulaire/campagne.js",
-    "form:index": "node src/jobs/formulaire/generateEsIndex.js",
-    "clear": "node src/jobs/clear/index.js"
+    "form:campagne": "node src/jobs/formulaire/campagne.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.9.1",

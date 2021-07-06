@@ -1,8 +1,8 @@
 const logger = require("../../common/logger");
-const { Questionnaire, User } = require("../../common/model");
+const { User, Formulaire } = require("../../common/model");
 
 module.exports = async (db) => {
-  await Questionnaire.deleteMany({});
+  await Formulaire.deleteMany({});
   await User.deleteMany({});
-  logger.info(`Questionnaires & Users successfully cleared in db ${db.name}`);
+  logger.info(`Formulaires & Users successfully cleared in db ${db.name}`);
 };

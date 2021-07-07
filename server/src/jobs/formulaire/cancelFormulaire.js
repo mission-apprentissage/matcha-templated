@@ -1,6 +1,7 @@
 const axios = require("axios");
 const config = require("config");
 const moment = require("moment");
+const logger = require("../../common/logger");
 const { Formulaire } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 
@@ -26,7 +27,10 @@ const cancelFormulaire = async () => {
     return acc;
   }, []);
 
-  if (offersToCancel.length === 0) return;
+  if (offersToCancel.length === 0) {
+    logger.info("Aucune offre à annuler.");
+    return;
+  }
 
   const stats = {
     offersToCancel: offersToCancel.length,

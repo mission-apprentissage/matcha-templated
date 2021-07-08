@@ -22,9 +22,9 @@ const RelanceFormulaire = async (mail) => {
     formulaire.offres
       .filter((x) => x.relance_mail_sent === false && x.status === "Active")
       .forEach((offre) => {
-        let remainingDays = moment(offre.date_expiration).diff(moment(), "day");
+        let remainingDays = moment(offre.date_expiration).diff(moment(), "days");
 
-        // if the current date is not equal or above the trigger date, do nothing
+        // if the number of days to the expiration date is strictly above the threshold, do nothing
         if (remainingDays > threshold) return;
 
         acc[formulaire._id].offres.push(offre);
@@ -35,7 +35,10 @@ const RelanceFormulaire = async (mail) => {
   // format array and remove formulaire without offers
   const formulaireToExpire = Object.values(format).filter((x) => x.offres.length !== 0);
 
-  if (formulaireToExpire.length === 0) return;
+  if (formulaireToExpire.length === 0) {
+    logger.info("Aucune offre à relancer aujourd'hui.");
+    return;
+  }
 
   const nbOffres = formulaireToExpire.reduce((acc, formulaire) => (acc += formulaire.offres.length), 0);
 

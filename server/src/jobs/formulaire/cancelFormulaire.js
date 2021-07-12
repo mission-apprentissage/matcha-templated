@@ -21,7 +21,6 @@ const cancelFormulaire = async () => {
       .forEach((offre) => {
         // if the expiration date is not equal or above today's date, do nothing
         if (!moment(offre.date_expiration).isSameOrBefore(today)) return;
-
         acc.push(offre);
       });
     return acc;
@@ -46,6 +45,7 @@ const cancelFormulaire = async () => {
   });
 
   if (offersToCancel.length > 0) {
+    logger.info(`${stats.totalCanceled} offres expirés`);
     await axios.post(config.slackWebhookUrl, {
       text: `[JOB MATCHA - EXPIRATION] *${stats.offersToCancel}/${stats.totalCanceled} offres* ont expirées et ont été annulées automatiquement`,
     });

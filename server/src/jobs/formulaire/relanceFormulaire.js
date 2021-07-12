@@ -79,11 +79,11 @@ const RelanceFormulaire = async (mail) => {
     await asyncForEach(formulaire.offres, async (offre) => {
       // update record using MongoDB API to avoid timestamp automatic update
       await Formulaire.collection.update({ "offres._id": offre._id }, { $set: { "offres.$.relance_mail_sent": true } });
-      console.log("coucou", offre._id);
     });
   });
 
   if (nbOffres > 0) {
+    logger.info(`${nbOffres} offres relancé aujourd'hui.`);
     await axios.post(config.slackWebhookUrl, {
       text: `[JOB MATCHA - RELANCE] *${nbOffres} offres* (${formulaireToExpire.length} formulaires) ont été relancés`,
     });

@@ -1,6 +1,8 @@
-const { Formulaire } = require("../../common/model");
-const { runScript } = require("../scriptWrapper");
+const axios = require("axios");
+const config = require("config");
 const moment = require("moment");
+const logger = require("../../common/logger");
+const { Formulaire } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 
 const cancelFormulaire = async () => {
@@ -15,7 +17,7 @@ const cancelFormulaire = async () => {
   // reduce formulaire with eligible offers
   const offersToCancel = formulaires.reduce((acc, formulaire) => {
     formulaire.offres
-      .filter((x) => x.relance_mail_sent === true)
+      .filter((x) => x.relance_mail_sent === true && x.statut === "Active")
       .forEach((offre) => {
         // if the expiration date is not equal or above today's date, do nothing
         if (!moment(offre.date_expiration).isSameOrBefore(today)) return;
@@ -25,8 +27,10 @@ const cancelFormulaire = async () => {
     return acc;
   }, []);
 
-  console.log(offersToCancel.length, formulaires.length);
-  if (offersToCancel.length === 0) return;
+  if (offersToCancel.length === 0) {
+    logger.info("Aucune offre à annuler.");
+    return;
+  }
 
   const stats = {
     offersToCancel: offersToCancel.length,
@@ -38,9 +42,11 @@ const cancelFormulaire = async () => {
     stats.totalCanceled += 1;
   });
 
-  return stats;
+  if (offersToCancel.length > 0) {
+    await axios.post(config.slackWebhookUrl, {
+      text: `[JOB MATCHA - EXPIRATION] *${stats.offersToCancel}/${stats.totalCanceled} offres* ont expirées et ont été annulées automatiquement`,
+    });
+  }
 };
 
 module.exports = { cancelFormulaire };
-
-runScript(async () => await cancelFormulaire());

@@ -1,11 +1,11 @@
+const axios = require("axios");
+const config = require("config");
+const moment = require("moment");
+const logger = require("../../common/logger");
 const { Formulaire } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const moment = require("moment");
-const { runScript } = require("../scriptWrapper");
 
-const logger = require("../../common/logger");
-
-const transactionalReports = async (mail) => {
+const RelanceFormulaire = async (mail) => {
   // number of days to expiration for the reminder email to be sent
   let threshold = 7;
 
@@ -20,11 +20,11 @@ const transactionalReports = async (mail) => {
     acc[formulaire._id] = { ...formulaire, offres: [] };
 
     formulaire.offres
-      .filter((x) => x.relance_mail_sent === false)
+      .filter((x) => x.relance_mail_sent === false && x.status === "Active")
       .forEach((offre) => {
-        let remainingDays = moment(offre.date_expiration).diff(moment(), "day");
+        let remainingDays = moment(offre.date_expiration).diff(moment(), "days");
 
-        // if the current date is not equal or above the trigger date, do nothing
+        // if the number of days to the expiration date is strictly above the threshold, do nothing
         if (remainingDays > threshold) return;
 
         acc[formulaire._id].offres.push(offre);
@@ -35,11 +35,12 @@ const transactionalReports = async (mail) => {
   // format array and remove formulaire without offers
   const formulaireToExpire = Object.values(format).filter((x) => x.offres.length !== 0);
 
-  if (formulaireToExpire.length === 0) return;
+  if (formulaireToExpire.length === 0) {
+    logger.info("Aucune offre à relancer aujourd'hui.");
+    return;
+  }
 
   const nbOffres = formulaireToExpire.reduce((acc, formulaire) => (acc += formulaire.offres.length), 0);
-
-  logger.info(`${nbOffres} offres à relancer (${formulaireToExpire.length} formulaires)`);
 
   await asyncForEach(formulaireToExpire, async (formulaire) => {
     let { email, raison_sociale, id_form, _id } = formulaire;
@@ -78,8 +79,12 @@ const transactionalReports = async (mail) => {
       console.log("coucou", offre._id);
     });
   });
+
+  if (nbOffres > 0) {
+    await axios.post(config.slackWebhookUrl, {
+      text: `[JOB MATCHA - RELANCE] *${nbOffres} offres* (${formulaireToExpire.length} formulaires) ont été relancés`,
+    });
+  }
 };
 
-module.exports = { transactionalReports };
-
-runScript(async ({ mail }) => await transactionalReports(mail));
+module.exports = { RelanceFormulaire };

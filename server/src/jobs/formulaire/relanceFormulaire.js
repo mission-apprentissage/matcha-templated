@@ -20,7 +20,7 @@ const RelanceFormulaire = async (mail) => {
     acc[formulaire._id] = { ...formulaire, offres: [] };
 
     formulaire.offres
-      .filter((x) => x.relance_mail_sent === false && x.status === "Active")
+      .filter((x) => x.relance_mail_sent === false && x.statut === "Active")
       .forEach((offre) => {
         let remainingDays = moment(offre.date_expiration).diff(moment(), "days");
 
@@ -37,6 +37,9 @@ const RelanceFormulaire = async (mail) => {
 
   if (formulaireToExpire.length === 0) {
     logger.info("Aucune offre à relancer aujourd'hui.");
+    await axios.post(config.slackWebhookUrl, {
+      text: `[JOB MATCHA - RELANCE] Aucune relance à effectuer`,
+    });
     return;
   }
 

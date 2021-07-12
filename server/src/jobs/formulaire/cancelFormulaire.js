@@ -29,6 +29,9 @@ const cancelFormulaire = async () => {
 
   if (offersToCancel.length === 0) {
     logger.info("Aucune offre à annuler.");
+    await axios.post(config.slackWebhookUrl, {
+      text: `[JOB MATCHA - EXPIRATION] Aucune offre à annuler`,
+    });
     return;
   }
 

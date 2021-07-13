@@ -31,6 +31,7 @@ import {
   Switch,
   Collapse,
   Center,
+  Link as ChakraLink,
 } from '@chakra-ui/react'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { ArrowDropRightLine } from '../../theme/components/icons/'
@@ -323,15 +324,16 @@ const Formulaire = (props) => {
       <Layout background='beige'>
         <Center p={5}>
           <Box>
-            <Text align='center'>Une erreur est survenu lors du chargement du formulaire.</Text>
+            <Text align='center'>Une erreur est survenue lors du chargement du formulaire.</Text>
             <Text align='center' pt={3}>
               Merci de prendre contact directement avec un administrateur en cliquant sur le lien suivant :&nbsp;
-              <Link
-                href="mailto:matcha@apprentissage.beta.gouv.fr?subject=Problème d'accès au formulaire"
+              <ChakraLink
+                href={`mailto:matcha@apprentissage.beta.gouv.fr?subject=Problème d'accès au formulaire — ${id_form}`}
                 target='_blank'
+                variant='unstyled'
               >
                 contact
-              </Link>
+              </ChakraLink>
             </Text>
           </Box>
         </Center>

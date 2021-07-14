@@ -4,6 +4,8 @@ const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
 const { Formulaire } = require("../../../common/model");
 const cliProgress = require("cli-progress");
+const { oleoduc, writeData } = require("oleoduc");
+const { Readable } = require("stream");
 
 const progress = new cliProgress.SingleBar({}, cliProgress.Presets.rect);
 
@@ -13,20 +15,24 @@ const importer = async () => {
 
   progress.start(data.length, 0);
 
-  await Promise.all(
-    data.map(async (e) => {
-      let { siret, raisonsociale, email } = e;
+  await oleoduc(
+    Readable.from(data),
+    writeData(
+      async (e) => {
+        let { siret, raisonsociale, email } = e;
 
-      const payload = {
-        siret,
-        email,
-        raison_sociale: raisonsociale,
-        origine: "1J1S",
-      };
+        const payload = {
+          siret,
+          email,
+          raison_sociale: raisonsociale,
+          origine: "1J1S",
+        };
 
-      await Formulaire.create(payload);
-      progress.increment();
-    })
+        await Formulaire.create(payload);
+        progress.increment();
+      },
+      { parallel: 500 }
+    )
   );
 
   progress.stop();

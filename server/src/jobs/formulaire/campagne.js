@@ -4,38 +4,41 @@ const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 // const { CLICKED } = require("../../common/components/mail.constant");
 const { paginator } = require("../../common/utils/paginator");
+const config = require("config");
 
 const launch = async (mail) => {
   await paginator(
     Formulaire,
-    { $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }] },
-    { lean: true },
+    { origine: "1J1S" },
+    // { $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }] },
+    { lean: true, maxItems: 42000 }, // premier envoi 1J1S
+    // { lean: true, maxItems: 1, limit: 1 }, // Test 1 formulaire
+    // { lean: true, offset: 42000 }, // second envoi 1J1S
     async (form) => {
-      const campagne = "matcha-lbb-20210517-relance";
+      const campagne = "matcha-1J1S";
       // const campagne = "test";
 
       const { raison_sociale, email, id_form, _id } = form;
       const params = {
-        URL: `https://matcha.apprentissage.beta.gouv.fr/formulaire/${id_form}`,
+        URL: `${config.publicUrl}/formulaire/${id_form}`,
       };
       const body = {
         sender: {
-          name: "Mission interministérielle pour l'apprentissage",
-          email: "charlotte.lecuit@beta.gouv.fr",
+          name: "Ministère du Travail",
+          email: "matcha@apprentissage.beta.gouv.fr",
         },
         to: [
           {
             name: `${raison_sociale}`,
-            // email: "k.barnoin@gmail.com",
             email: `${email}`,
           },
         ],
         replyTo: {
-          name: "Charlotte Lecuit",
-          email: "charlotte.lecuit@beta.gouv.fr",
+          name: "Equipe Matcha",
+          email: "matcha@apprentissage.beta.gouv.fr",
         },
-        subject: `Vos offres d'apprentissage sur la bonnes alternance`,
-        templateId: 179,
+        // subject: `Recrutez un alternant en 3 clics`,
+        templateId: 194,
         tags: [campagne],
         params: params,
       };

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 
@@ -18,6 +19,7 @@ function PrivateRoute({ children, ...rest }) {
 }
 
 const App = () => {
+  const [isWidget, setWidget] = useState(false)
   return (
     <AnimatePresence>
       <Switch>
@@ -29,7 +31,19 @@ const App = () => {
         </PrivateRoute>
         <Route exact path='/' component={HomePage} />
         <Route exact path='/login' component={Login} />
-        <Route exact path='/formulaire/:id_form' render={(props) => <Formulaire {...props} byId={true} />} />
+        <Route
+          exact
+          path='/formulaire/:id_form'
+          render={(props) => <Formulaire {...props} byId={true} widget={isWidget} />}
+        />
+        <Route
+          exact
+          path='/widget/:origine/'
+          render={(props) => {
+            setWidget(true)
+            return <Formulaire {...props} widget={isWidget} />
+          }}
+        />
         <Route strict path='/:origine/' component={Formulaire} />
         <Route component={NotFound} />
       </Switch>

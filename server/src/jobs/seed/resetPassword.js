@@ -8,7 +8,7 @@ const passwordOptions = {
   numbers: true,
 };
 
-module.exports = async (users, email) => {
+module.exports = async (email) => {
   logger.info(`-- START - Reset password --`);
   let password = passwordGenerator.generate(passwordOptions);
 

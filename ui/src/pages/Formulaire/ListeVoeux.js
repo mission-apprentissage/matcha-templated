@@ -1,5 +1,11 @@
 import { Button, Box, Flex, Text, Heading, Spacer, Icon, Badge, VStack, Stack, Tooltip, Link } from '@chakra-ui/react'
-import { AiOutlineEdit, AiOutlineExclamationCircle, AiOutlineDelete, AiOutlineArrowRight } from 'react-icons/ai'
+import {
+  AiOutlineEdit,
+  AiOutlineExclamationCircle,
+  AiOutlineDelete,
+  AiOutlineArrowRight,
+  AiOutlineRetweet,
+} from 'react-icons/ai'
 import moment from 'moment'
 import 'moment/locale/fr'
 
@@ -31,15 +37,22 @@ export default (props) => {
       {props.data
         .filter((x) => x.statut === 'Active')
         .map((item) => {
-          let isExtendable = moment().to(item.date_expiration) === 'dans 7 jours'
+          let remainingDays = () => {
+            if (moment().to(item.date_expiration, true) === 'un mois') {
+              return 30
+            }
+            return moment().to(item.date_expiration, true)
+          }
+          let remainingDaysAsNumber = parseFloat(remainingDays(), 2)
+          let isExtendable = remainingDaysAsNumber > 7 ? false : true
 
           return (
             <Box bg='white' p={8} border='1px solid' borderColor='bluefrance.500'>
               <Flex alignItems='flex-start'>
-                <Text fontSize='sm' pr={9}>
+                <Text fontSize='sm' pr={9} pb={[3, 0]}>
                   Postée le {moment(item.date_creation).format('DD/MM/YYYY')}
                 </Text>
-                <Flex alignItems='center'>
+                <Flex alignItems='center' pb={[3, 0]}>
                   <Icon as={AiOutlineExclamationCircle} color='bluefrance.500' w={5} h={5} />
                   <Text fontSize='sm' pl={3}>
                     Expire {moment().to(item.date_expiration)}
@@ -47,7 +60,7 @@ export default (props) => {
                 </Flex>
                 <Spacer />
 
-                <Flex alignItems='center'>
+                <Flex alignItems='center' display={['none', 'block']}>
                   <Link
                     color='bluefrance.500'
                     isExternal
@@ -66,7 +79,7 @@ export default (props) => {
                   {item.niveau}
                 </Text>
                 {item.date_debut_apprentissage && (
-                  <Flex direction='row'>
+                  <Flex direction={['column', 'row']}>
                     <Text fontSize='md' fontWeight='400' pr={1}>
                       Date de début du contrat:
                     </Text>
@@ -87,9 +100,10 @@ export default (props) => {
                 >
                   <Box>
                     <Button
+                      w={['100%', 'inherit']}
                       variant='secondary'
                       isDisabled={!isExtendable}
-                      leftIcon={<AiOutlineEdit />}
+                      leftIcon={<AiOutlineRetweet />}
                       onClick={() =>
                         props.extendOffer(item._id, {
                           ...item,
@@ -97,7 +111,7 @@ export default (props) => {
                         })
                       }
                     >
-                      Modifier l'échéance
+                      Prolonger l'échéance
                     </Button>
                   </Box>
                 </Tooltip>

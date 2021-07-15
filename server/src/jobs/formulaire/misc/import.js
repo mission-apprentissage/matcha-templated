@@ -11,7 +11,7 @@ const progress = new cliProgress.SingleBar({}, cliProgress.Presets.rect);
 
 const importer = async () => {
   const file = path.resolve(__dirname, "../assets/lbb-1j1s.csv");
-  const data = await (await csv().fromFile(file)).filter((x) => x.score > 50);
+  const data = await (await csv().fromFile(file)).filter((x) => x.score > 50 && x.email !== "null");
 
   progress.start(data.length, 0);
 

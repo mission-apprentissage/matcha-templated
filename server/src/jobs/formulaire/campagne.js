@@ -11,7 +11,7 @@ const launch = async (mail) => {
     Formulaire,
     { origine: "1J1S" },
     // { $nor: [{ offres: { $exists: false } }, { offres: { $size: 0 } }] },
-    { lean: true, maxItems: 42000 }, // premier envoi 1J1S
+    { lean: true, maxItems: 42000, limit: 30 }, // premier envoi 1J1S
     // { lean: true, maxItems: 1, limit: 1 }, // Test 1 formulaire
     // { lean: true, offset: 42000 }, // second envoi 1J1S
     async (form) => {
